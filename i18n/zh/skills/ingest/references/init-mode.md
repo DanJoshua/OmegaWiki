@@ -27,7 +27,7 @@
 
 ## 并行安全写入
 
-即便不在 INIT MODE 下，也应假设有另一个 `/ingest` 在并发运行 —— 批量 ingest 已在路线图上。三条规则能让并发写入安全：
+即便不在 INIT MODE 下，也应假设有另一个 `/ingest` 在并发运行 —— `/batch-ingest` 以同样的方式 fan-out subagent（见 `references/batch-mode.md`）。三条规则能让并发写入安全：
 
 1. **共享文件的每次写入都经过工具。** `graph/edges.jsonl`、`graph/citations.jsonl`、`index.md`、`log.md` 分别通过 `tools/research_wiki.py add-edge`、`add-citation`、index 更新命令、`log` 写入。工具层使用 append 语义，仓库 `.gitattributes` 对这几条路径声明了 `merge=union`，并行 worktree 可以无冲突地 merge。
 2. **slug 的分配是确定性的。** `tools/research_wiki.py slug "<title>"` 对同一 title 始终给出同一 slug，和 worktree 无关。冲突由工具内部以数字后缀解决，不允许临时自行重命名。

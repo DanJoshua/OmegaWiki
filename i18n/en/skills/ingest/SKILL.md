@@ -13,6 +13,7 @@ Use these local references on demand:
 - `references/dedup-policy.md` — merge-vs-create decision rule for concepts and claims, and the line that separates `/ingest` shape checks from `/check` semantic audits
 - `references/cross-references.md` — forward/reverse link matrix and paper-to-paper edge-type selection
 - `references/init-mode.md` — manifest-driven handoff from `/init` and parallel-safety conventions
+- `references/batch-mode.md` — manifest-driven handoff from `/batch-ingest`; same parallel-safety rules as INIT MODE, different parent fan-in cadence
 - `references/error-handling.md` — source parse, API, and slug-collision fallbacks
 
 Open `docs/runtime-page-templates.en.md` before drafting any wiki page frontmatter or body sections, and `docs/runtime-support-files.en.md` for `index.md`, `log.md`, and `graph/` formats.
@@ -48,8 +49,8 @@ Open `docs/runtime-page-templates.en.md` before drafting any wiki page frontmatt
 - `wiki/topics/{slug}.md` — EDIT only (no CREATE from `/ingest`)
 - `wiki/graph/edges.jsonl` — APPEND via tool
 - `wiki/graph/citations.jsonl` — APPEND via tool
-- `wiki/graph/context_brief.md` — REBUILD (skipped in INIT MODE)
-- `wiki/graph/open_questions.md` — REBUILD (skipped in INIT MODE)
+- `wiki/graph/context_brief.md` — REBUILD (skipped in INIT MODE / BATCH MODE)
+- `wiki/graph/open_questions.md` — REBUILD (skipped in INIT MODE / BATCH MODE)
 - `wiki/index.md` — APPEND
 - `wiki/log.md` — APPEND via tool
 
@@ -70,19 +71,30 @@ paper-to-concept or paper-to-paper types on new writes.
 **Pre-condition**: working directory contains `wiki/`, `raw/`, and `tools/`. Resolve the Python interpreter once and reuse it:
 
 ```bash
-if [ -x .venv/bin/python ]; then
-  PYTHON_BIN=.venv/bin/python
-elif [ -x .venv/Scripts/python.exe ]; then
-  PYTHON_BIN=.venv/Scripts/python.exe
-else
-  PYTHON_BIN=python3
+# Find the project root via git so worktree subagents can still locate .venv.
+# .venv is gitignored, so a subagent whose cwd is ../.worktrees/<branch>/
+# doesn't have one — without this lookup it falls back to system python3 and
+# misses the .env-loaded API keys plus the installed deps (deepxiv-sdk etc.).
+# git rev-parse --git-common-dir returns the main repo's .git regardless of
+# which worktree the shell is in; its parent is the project root.
+GIT_COMMON_DIR=$(git rev-parse --git-common-dir 2>/dev/null || true)
+PROJECT_ROOT=""
+if [ -n "$GIT_COMMON_DIR" ]; then
+  PROJECT_ROOT=$(cd "$(dirname "$GIT_COMMON_DIR")" 2>/dev/null && pwd)
+fi
+
+if   [ -x "$PROJECT_ROOT/.venv/bin/python" ];         then PYTHON_BIN="$PROJECT_ROOT/.venv/bin/python"
+elif [ -x "$PROJECT_ROOT/.venv/Scripts/python.exe" ]; then PYTHON_BIN="$PROJECT_ROOT/.venv/Scripts/python.exe"
+elif [ -x .venv/bin/python ];                         then PYTHON_BIN=.venv/bin/python
+elif [ -x .venv/Scripts/python.exe ];                 then PYTHON_BIN=.venv/Scripts/python.exe
+else                                                       PYTHON_BIN=python3
 fi
 export PYTHON_BIN
 ```
 
 ### Step 1: Resolve the source
 
-1. If `/init` passed a `canonical_ingest_path`, enter **INIT MODE** and consume that path verbatim. Do not rescan `raw/`. See `references/init-mode.md`.
+1. If `/init` passed a `canonical_ingest_path`, enter **INIT MODE** and consume that path verbatim. Do not rescan `raw/`. See `references/init-mode.md`. If `/batch-ingest` passed a `canonical_ingest_path`, enter **BATCH MODE** instead — same parallel-safety contract, different parent. See `references/batch-mode.md`.
 2. If the source is an arXiv URL, fetch the `.tex` under `raw/discovered/` via `"$PYTHON_BIN" tools/fetch_arxiv.py`. Fall back to PDF if the source archive is unavailable.
 3. If the source is a local `.tex`, use it directly.
 4. If the source is a local `.pdf`, run the preprocessing pipeline in `references/pdf-preprocessing.md` to produce a prepared `.tex` under `raw/tmp/` before continuing.
@@ -105,7 +117,7 @@ Raw persistence rule: never copy or duplicate a file already under `raw/discover
    ```
 
    Use the result for `venue`, `year`, `s2_id`, citation count, and the evidence behind the `importance` score (1-5).
-4. Optional DeepXiv enrichment, when available. Skip silently if it fails:
+4. Optional DeepXiv enrichment, when available. If `fetch_deepxiv.py` returns `deepxiv-sdk not installed`, surface that in the final report so the user knows to run `./setup.sh`; for any other DeepXiv failure (network, auth, missing record) skip silently:
 
    ```bash
    "$PYTHON_BIN" tools/fetch_deepxiv.py brief <arxiv-id>
@@ -140,7 +152,7 @@ Follow `references/dedup-policy.md`. In short:
 
 ### Step 5: Paper-to-paper edges and `cited_by`
 
-Skip this whole step in INIT MODE — the parent `/init` handles it at fan-in.
+Skip this whole step in INIT MODE or BATCH MODE — the parent (`/init` or `/batch-ingest`) handles citation and paper-paper edge backfill at fan-in.
 
 ```bash
 "$PYTHON_BIN" tools/fetch_s2.py references <arxiv-id>
@@ -153,6 +165,8 @@ Skip this whole step in INIT MODE — the parent `/init` handles it at fan-in.
 - Surface unmatched high-citation references in the final report so the user can decide whether to follow up with another `/ingest`.
 
 ### Step 6: Topics and index
+
+Skip the topic part of this step in INIT MODE or BATCH MODE — concurrent topic appends from sibling subagents will merge-conflict, and the parent (`/init` or `/batch-ingest`) defers topic content updates to `/edit` after fan-in. The `wiki/index.md` append at the end of this step still runs (the `merge=union` `.gitattributes` rule keeps it safe).
 
 1. Match the paper's domain and tags against existing `wiki/topics/*.md`. For each match:
    - importance ≥ 4 → append to the topic's `## Seminal works`
@@ -167,7 +181,7 @@ Skip this whole step in INIT MODE — the parent `/init` handles it at fan-in.
 "$PYTHON_BIN" tools/research_wiki.py log wiki/ "ingest | added papers/<slug> | updated: <list>"
 ```
 
-Unless in INIT MODE:
+Unless in INIT MODE or BATCH MODE:
 
 ```bash
 "$PYTHON_BIN" tools/research_wiki.py rebuild-context-brief wiki/
@@ -184,7 +198,7 @@ Wiki: +1 paper, +{N} claims, +{M} concepts, +{K} edges
 
 ## Constraints
 
-- `raw/papers/`, `raw/notes/`, `raw/web/` are user-owned and read-only. Direct local `/ingest` may add prepared sidecars under `raw/tmp/`; direct arXiv ingests may write fetched source artifacts under `raw/discovered/`. INIT MODE treats all of `raw/` as read-only.
+- `raw/papers/`, `raw/notes/`, `raw/web/` are user-owned and read-only. Direct local `/ingest` may add prepared sidecars under `raw/tmp/`; direct arXiv ingests may write fetched source artifacts under `raw/discovered/`. INIT MODE and BATCH MODE both treat all of `raw/` as strictly read-only — the parent does any preparation before fan-out.
 - `wiki/graph/` is tool-owned. Edit only through `tools/research_wiki.py`.
 - Slugs always come from `tools/research_wiki.py slug`. Never hand-craft.
 - Every forward link writes its reverse link in the same turn — the wiki's bidirectional-link invariant. The only exception is links to `wiki/foundations/`, which are terminal.
@@ -195,7 +209,7 @@ Wiki: +1 paper, +{N} claims, +{M} concepts, +{K} edges
   - Any further candidates must be merged into their nearest `find-similar-*` result, or left out for `/check` to flag. Rationale and matching rules: `references/dedup-policy.md`.
 - `/ingest` runs a shape check on its own output (required keys, enum ranges, YAML parses) and stops there. Backlink symmetry, dangling nodes, and full semantic audits belong to `/check`. Do not re-implement them here.
 - Assume another `/ingest` may run concurrently in a sibling worktree. All shared-file writes (`graph/edges.jsonl`, `graph/citations.jsonl`, `index.md`, `log.md`) must go through `tools/research_wiki.py` or use append-only semantics. See `references/init-mode.md`.
-- In INIT MODE, skip `fetch_s2.py citations`, `fetch_s2.py references`, and the `rebuild-*` commands — the parent `/init` runs them once after fan-in.
+- In INIT MODE or BATCH MODE, skip `fetch_s2.py citations`, `fetch_s2.py references`, and the `rebuild-*` commands — the parent (`/init` or `/batch-ingest`) runs them once after fan-in.
 
 ## Error Handling
 
@@ -226,6 +240,7 @@ See `references/error-handling.md`. Highlights: source parse failures cascade te
 ### Skills
 
 - `/init` — calls `/ingest` in parallel subagents via INIT MODE
+- `/batch-ingest` — calls `/ingest` in batched parallel subagents via BATCH MODE
 - `/check` — audits wiki state after `/ingest` completes; owns every semantic check `/ingest` intentionally does not perform
 
 ### External APIs

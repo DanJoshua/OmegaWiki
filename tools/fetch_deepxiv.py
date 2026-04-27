@@ -312,7 +312,8 @@ def main() -> None:
 
     if not HAS_DEEPXIV:
         _error_exit(
-            "deepxiv-sdk not installed. Run: pip install deepxiv-sdk"
+            "deepxiv-sdk not installed. Run: ./setup.sh "
+            "(or: pip install -r requirements.txt)"
         )
 
     try:

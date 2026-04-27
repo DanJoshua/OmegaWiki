@@ -35,7 +35,7 @@ Keep this mental map in immediate context:
 
 - `raw/papers/`, `raw/notes/`, and `raw/web/` are user-owned inputs
 - `raw/discovered/` stores externally fetched papers from `/init` and `/daily-arxiv`
-- `raw/tmp/` stores generated prepared local sidecars for `/init` and direct local `/ingest`
+- `raw/tmp/` stores generated prepared local sidecars for `/init`, `/batch-ingest`, and direct local `/ingest`
 - `config/` holds environment and remote-server templates
 
 ---
@@ -112,9 +112,9 @@ Standard log line:
 
 ## Constraints
 
-- **`raw/papers/`, `raw/notes/`, `raw/web/` are user-owned**: treat them as authoritative inputs. `/init` and `/daily-arxiv` may add externally fetched papers only under `raw/discovered/`. `/init` and direct local `/ingest` may add generated prepared local sidecars under `raw/tmp/` (additions only — never overwrite an existing user-owned file). `/edit` may add raw sources only when the user explicitly asked for it. `/init` subagents running `/ingest` in INIT MODE still treat `raw/` as strictly read-only and must consume the handed-off canonical path directly.
+- **`raw/papers/`, `raw/notes/`, `raw/web/` are user-owned**: treat them as authoritative inputs. `/init`, `/batch-ingest`, and `/daily-arxiv` may add externally fetched papers only under `raw/discovered/`. `/init`, `/batch-ingest`, and direct local `/ingest` may add generated prepared local sidecars under `raw/tmp/` (additions only — never overwrite an existing user-owned file). `/edit` may add raw sources only when the user explicitly asked for it. `/init` and `/batch-ingest` subagents running `/ingest` in INIT MODE or BATCH MODE still treat `raw/` as strictly read-only and must consume the handed-off canonical path directly.
 - **User-facing skill parameters are user-owned**: flags and values shown in a skill's `argument-hint` belong to the user's command, not to agent strategy. Do not invent, flip, or drop those parameters from repository state alone. If the user omitted a parameter, only use a default or derived value when that skill explicitly documents omission behavior; otherwise leave it unset or ask the user. Internal derived settings that are not user-facing parameters may still be inferred by the skill.
-- **INIT MODE handoff is manifest-driven**: when `/init` writes `.checkpoints/init-sources.json`, that manifest becomes the single source of truth for ingest order and canonical source paths. Prepared local inputs should point to `raw/tmp/`; introduced external papers should point to `raw/discovered/`.
+- **INIT MODE / BATCH MODE handoff is manifest-driven**: when `/init` writes `.checkpoints/init-sources.json` or `/batch-ingest` writes `.checkpoints/batch-ingest-sources.json`, that manifest becomes the single source of truth for ingest order and canonical source paths. Prepared local inputs should point to `raw/tmp/`; introduced external papers should point to `raw/discovered/`.
 - **graph/ is auto-generated**: never manually edit files in `graph/` — only via `tools/research_wiki.py`.
 - **Bidirectional links**: always write the reverse link when writing a forward link.
 - **tex priority**: .tex > .pdf; fallback chain: tex fails → PDF parse, PDF fails → vision API.
@@ -139,6 +139,7 @@ Standard log line:
 | `/init` | `skills/init/SKILL.md` | manual |
 | `/prefill` | `skills/prefill/SKILL.md` | manual (`[domain] [--add concept]`) |
 | `/ingest` | `skills/ingest/SKILL.md` | manual |
+| `/batch-ingest` | `skills/batch-ingest/SKILL.md` | manual (`<pdf-dir-or-url-list-file> [--batch-size N]`) |
 | `/ask` | `skills/ask/SKILL.md` | manual |
 | `/edit` | `skills/edit/SKILL.md` | manual |
 | `/check` | `skills/check/SKILL.md` | biweekly/manual |

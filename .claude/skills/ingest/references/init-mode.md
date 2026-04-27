@@ -27,7 +27,7 @@ When both signals are absent, treat the invocation as a direct user call and run
 
 ## Parallel-safe writes
 
-Even outside INIT MODE, assume another `/ingest` may be running concurrently — batch ingest is already on the roadmap. Three rules make concurrent writes safe:
+Even outside INIT MODE, assume another `/ingest` may be running concurrently — `/batch-ingest` runs subagents the same way (see `references/batch-mode.md`). Three rules make concurrent writes safe:
 
 1. **Every shared-file write goes through a tool.** `graph/edges.jsonl`, `graph/citations.jsonl`, `index.md`, and `log.md` are written via `tools/research_wiki.py add-edge`, `add-citation`, index updates, and `log`. The tool layer uses append semantics and the repository's `.gitattributes` declares `merge=union` for these paths, so parallel worktrees can merge without conflict.
 2. **Slugs are allocated deterministically.** `tools/research_wiki.py slug "<title>"` produces the same slug from the same title regardless of which worktree runs it. Collisions are resolved by numeric suffix via the tool, not by ad-hoc renaming.

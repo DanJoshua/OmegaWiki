@@ -13,7 +13,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.9+](https://img.shields.io/badge/Python-3.9+-yellow.svg)](https://www.python.org/)
 [![Tests](https://img.shields.io/badge/Tests-2263_passing-brightgreen.svg)](#testing)
-[![Skills](https://img.shields.io/badge/Skills-23-purple.svg)](#skills)
+[![Skills](https://img.shields.io/badge/Skills-24-purple.svg)](#skills)
 [![Claude Code](https://img.shields.io/badge/Powered_by-Claude_Code-d97706.svg)](https://docs.anthropic.com/en/docs/claude-code)
 [![Bilingual](https://img.shields.io/badge/i18n-EN_|_中文-orange.svg)](#bilingual-support)
 
@@ -27,7 +27,7 @@
 
 Andrej Karpathy proposed LLM-Wiki: an LLM that **builds and maintains a persistent, structured wiki** from your sources — not a throwaway RAG answer, but compounding knowledge that grows smarter with every paper you feed it.
 
-**ΩmegaWiki takes that idea and runs the full distance.** It's not just a wiki builder — it's a complete research lifecycle platform: from paper ingestion → knowledge graph → gap detection → idea generation → experiment design → paper writing → peer review response. All driven by 23 Claude Code skills, all centered on one wiki as the single source of truth.
+**ΩmegaWiki takes that idea and runs the full distance.** It's not just a wiki builder — it's a complete research lifecycle platform: from paper ingestion → knowledge graph → gap detection → idea generation → experiment design → paper writing → peer review response. All driven by 24 Claude Code skills, all centered on one wiki as the single source of truth.
 
 Drop your `.tex` / `.pdf` files in a folder. Run one command. Get a fully cross-referenced knowledge base — and then use it to **generate novel research ideas, design experiments, write papers, and respond to reviewers**.
 
@@ -138,6 +138,7 @@ and are best run from WSL2 or Linux/macOS.
 | `/prefill <domain>` | Optionally seed `foundations/` with background knowledge |
 | `/init [topic]` | Bootstrap a full wiki from user raw sources plus optional discovery |
 | `/ingest <source>` | Parse a paper → wiki pages + cross-references |
+| `/batch-ingest <pdf-dir-or-url-list>` | Chronologically ingest many papers in small parallel batches; cross-batch dedup is built in |
 | `/edit <request>` | Add/remove sources or update wiki content |
 | `/ask <question>` | Query the wiki, crystallize answers back |
 | `/check` | Health scan: broken links, missing cross-refs, consistency |
@@ -233,7 +234,7 @@ OmegaWiki/
 │   ├── fetch_deepxiv.py         #   DeepXiv semantic search
 │   ├── fetch_wikipedia.py       #   Wikipedia fetcher (used by /prefill)
 │   └── remote.py                #   SSH ops for remote experiments
-├── .claude/skills/              # 23 Claude Code skill definitions
+├── .claude/skills/              # 24 Claude Code skill definitions
 ├── i18n/                        # Bilingual: en/ (canonical) + zh/
 ├── config/                      # Configuration templates
 ├── tests/                       # 2263 tests
@@ -264,7 +265,7 @@ python -m pytest tests/ -v
 ## Roadmap
 
 - [x] Wiki knowledge engine (20+ CLI commands, 9 entity types, semantic graph + citation layer)
-- [x] 23 Claude Code skills (full research lifecycle)
+- [x] 24 Claude Code skills (full research lifecycle)
 - [x] Cross-model review (any OpenAI-compatible API)
 - [x] Daily arXiv automation (GitHub Actions)
 - [x] Remote GPU experiment support
@@ -441,6 +442,7 @@ claude
 | `/prefill` | 可选地预填 `foundations/` 背景知识 |
 | `/init` | 基于用户 raw 素材并按需做外部发现来搭建 wiki |
 | `/ingest` | 消化论文，创建页面 + 交叉引用 |
+| `/batch-ingest` | 把多篇论文按时间顺序分小批并行 ingest，自带跨批次去重 |
 | `/edit` | 增删 raw 或更新 wiki |
 | `/ask` | 对 wiki 提问 |
 | `/check` | wiki 健康检查 |
