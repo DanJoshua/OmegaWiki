@@ -286,10 +286,12 @@ All pages use **Obsidian `[[wikilink]]` format** — open `wiki/` in Obsidian fo
 
 ## Automation
 
-**GitHub Actions** runs `/daily-arxiv` at UTC 00:00 daily:
+**GitHub Actions** runs the inform-only `/daily-arxiv` scaffold at UTC 00:17 daily (08:17 Beijing time):
 
-1. Add `ANTHROPIC_API_KEY` to repo **Settings → Secrets**
-2. `.github/workflows/daily-arxiv.yml` fetches arXiv, runs ingestion, auto-commits
+1. Add SMTP secrets to repo **Settings → Secrets** when e-mail delivery is enabled: `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`, `DAILY_ARXIV_EMAIL_TO`
+2. `.github/workflows/daily-arxiv.yml` fetches arXiv, deduplicates against the wiki, uploads `feed.json` / `digest.md` / `digest.json` artifacts, and sends the digest by SMTP
+
+The scaffold does not run Claude Code, does not require `ANTHROPIC_API_KEY`, does not auto-ingest, and does not commit daily artifacts. Use manual dispatch with `send_email=false` for a dry run without SMTP secrets.
 
 ## Project Structure
 
@@ -517,6 +519,14 @@ claude
 | `SEMANTIC_SCHOLAR_API_KEY` | 可选 | [semanticscholar.org](https://www.semanticscholar.org/product/api)（免费） | 引用图谱、论文搜索 |
 | `DEEPXIV_TOKEN` | 可选 | `setup.sh` 自动注册 | 语义搜索、热门趋势 |
 | `LLM_API_KEY` + `LLM_BASE_URL` + `LLM_MODEL` | 可选 | 任意 OpenAI 兼容 API | 跨模型评审 |
+
+### 自动化
+
+GitHub Actions 每天 UTC 00:17（北京时间 08:17）运行 inform-only `/daily-arxiv` scaffold：拉取 arXiv、按 wiki 去重、上传 `feed.json` / `digest.md` / `digest.json` artifacts，并可通过 SMTP 发送 digest 邮件。
+
+启用邮件时，在 repo **Settings → Secrets** 添加：`SMTP_HOST`、`SMTP_PORT`、`SMTP_USER`、`SMTP_PASSWORD`、`SMTP_FROM`、`DAILY_ARXIV_EMAIL_TO`。
+
+该 scaffold 不运行 Claude Code，不需要 `ANTHROPIC_API_KEY`，不自动 ingest，也不提交每日 artifacts。手动触发时可设置 `send_email=false`，用于无 SMTP secrets 的 dry run。
 
 ### 24 个 Skill 命令
 

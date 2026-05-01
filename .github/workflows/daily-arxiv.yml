@@ -2,52 +2,151 @@ name: Daily arXiv digest
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # UTC 00:00 = 08:00 Beijing time
+    - cron: '17 0 * * *'  # 00:17 UTC = 08:17 Beijing time
   workflow_dispatch:
+    inputs:
+      hours:
+        description: "Lookback window in hours"
+        required: false
+        default: "24"
+      categories:
+        description: "Optional arXiv categories, separated by spaces or commas"
+        required: false
+        default: ""
+      max_items:
+        description: "Maximum new candidates to list in the digest"
+        required: false
+        default: "20"
+      send_email:
+        description: "Send the digest by SMTP"
+        required: false
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-arxiv-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
   digest:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: requirements.txt
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-
-      - name: Install Claude Code
-        run: npm install -g @anthropic-ai/claude-code
-
-      - name: Fetch arXiv feed
-        run: python tools/fetch_arxiv.py -o /tmp/arxiv_feed.json
-
-      - name: Run daily-arxiv
+      - name: Resolve run configuration
         env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          INPUT_HOURS: ${{ github.event.inputs.hours }}
+          INPUT_CATEGORIES: ${{ github.event.inputs.categories }}
+          INPUT_MAX_ITEMS: ${{ github.event.inputs.max_items }}
+          INPUT_SEND_EMAIL: ${{ github.event.inputs.send_email }}
         run: |
           set -euo pipefail
-          claude -p "Run /daily-arxiv using the feed at /tmp/arxiv_feed.json." | tee /tmp/claude_output.txt
-          if ! grep -qi 'ingest\|added\|updated\|no new papers\|0 papers' /tmp/claude_output.txt; then
-            echo "::warning::claude -p produced no recognized output — check logs"
+
+          hours="${INPUT_HOURS:-24}"
+          categories="${INPUT_CATEGORIES:-}"
+          max_items="${INPUT_MAX_ITEMS:-20}"
+          send_email="${INPUT_SEND_EMAIL:-true}"
+          send_email="${send_email,,}"
+
+          if [[ ! "$hours" =~ ^[0-9]+$ ]] || [ "$hours" -lt 1 ]; then
+            echo "::error::hours must be a positive integer"
+            exit 1
+          fi
+          if [[ ! "$max_items" =~ ^[0-9]+$ ]]; then
+            echo "::error::max_items must be a non-negative integer"
+            exit 1
+          fi
+          if [ "$send_email" != "true" ] && [ "$send_email" != "false" ]; then
+            echo "::error::send_email must be true or false"
+            exit 1
           fi
 
-      - name: Commit changes
+          run_dir="$RUNNER_TEMP/daily-arxiv"
+          mkdir -p "$run_dir"
+
+          {
+            echo "DAILY_ARXIV_HOURS=$hours"
+            echo "DAILY_ARXIV_CATEGORIES=$categories"
+            echo "DAILY_ARXIV_MAX_ITEMS=$max_items"
+            echo "DAILY_ARXIV_SEND_EMAIL=$send_email"
+            echo "DAILY_ARXIV_RUN_DIR=$run_dir"
+            echo "DAILY_ARXIV_FEED=$run_dir/feed.json"
+            echo "DAILY_ARXIV_DIGEST_MD=$run_dir/digest.md"
+            echo "DAILY_ARXIV_DIGEST_JSON=$run_dir/digest.json"
+          } >> "$GITHUB_ENV"
+
+      - name: Fetch arXiv feed
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add wiki/
-          if git diff --cached --quiet; then
-            echo "No wiki changes to commit"
+          set -euo pipefail
+
+          if [ -n "$DAILY_ARXIV_CATEGORIES" ]; then
+            normalized="${DAILY_ARXIV_CATEGORIES//,/ }"
+            read -r -a category_args <<< "$normalized"
+            python tools/fetch_arxiv.py \
+              --hours "$DAILY_ARXIV_HOURS" \
+              --categories "${category_args[@]}" \
+              -o "$DAILY_ARXIV_FEED"
           else
-            git commit -m "daily-digest: $(date +%Y-%m-%d)"
-            git push
+            python tools/fetch_arxiv.py \
+              --hours "$DAILY_ARXIV_HOURS" \
+              -o "$DAILY_ARXIV_FEED"
           fi
+
+      - name: Build digest
+        run: |
+          set -euo pipefail
+          python tools/daily_arxiv.py digest \
+            --feed "$DAILY_ARXIV_FEED" \
+            --wiki-root wiki \
+            --out-md "$DAILY_ARXIV_DIGEST_MD" \
+            --out-json "$DAILY_ARXIV_DIGEST_JSON" \
+            --max-items "$DAILY_ARXIV_MAX_ITEMS"
+
+      - name: Add digest to job summary
+        run: cat "$DAILY_ARXIV_DIGEST_MD" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload digest artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-arxiv-${{ github.run_id }}
+          path: |
+            ${{ runner.temp }}/daily-arxiv/feed.json
+            ${{ runner.temp }}/daily-arxiv/digest.md
+            ${{ runner.temp }}/daily-arxiv/digest.json
+          if-no-files-found: error
+
+      - name: Send digest e-mail
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.send_email != 'false'
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_FROM: ${{ secrets.SMTP_FROM }}
+          DAILY_ARXIV_EMAIL_TO: ${{ secrets.DAILY_ARXIV_EMAIL_TO }}
+        run: |
+          set -euo pipefail
+          python tools/send_email.py --check-config
+          subject="OmegaWiki daily arXiv digest $(date -u +%F)"
+          python tools/send_email.py \
+            --subject "$subject" \
+            --body-file "$DAILY_ARXIV_DIGEST_MD"
+
+      - name: Note skipped e-mail
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.send_email == 'false'
+        run: echo "E-mail sending disabled for this run." >> "$GITHUB_STEP_SUMMARY"
