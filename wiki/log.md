@@ -7,3 +7,4 @@
 ## [2026-05-02] ingest | added papers/agentsearchbench-benchmark-ai-agent-search-wild | new: concepts/agent-search, claims/execution-grounded-relevance-vs-semantic-similarity
 ## [2026-05-02] ingest | added papers/flex-continuous-agent-evolution-forward-learning | concepts: experience-library, forward-learning-from-experience, experience-inheritance | claims: claim-experience-library-scaling-law, claim-gradient-free-agents-can-match-parameter-tuning | people: hao-zhou, jiangtao-feng | edges: 5 (3 introduces_concept, 2 supports)
 ## [2026-05-02] ingest | added papers/evolver-self-evolving-llm-agents-through | created concepts/experience-driven-self-evolution-lifecycle, claims/self-distillation-vs-external-teacher-crossover (INIT MODE)
+## [2026-05-02] ingest | added papers/deepwidesearch-benchmarking-depth-width-agentic-information | created concepts/deep-and-wide-information-seeking, claims/sota-agents-fail-deep-wide-information-seeking
