@@ -1,0 +1,270 @@
+\newpage
+\clearpage
+\appendix
+\textbf{\Large Appendix}
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+
+\tableofcontents
+\clearpage
+\section{Experimental Details}
+\label{appendix:setup}
+
+\method evaluates memory mechanisms under realistic streaming multi-task conditions. In what follows, we describe the benchmark datasets, metrics, configurations and the methods compared in details.
+
+
+\subsection{Datasets}
+We evaluate our approach on a diverse suite of benchmarks that span factual knowledge, reasoning, mathematics, programming, and goal-oriented interaction.
+
+We first introduce a suite of single-turn datasets designed to evaluate diverse reasoning abilities. \textbf{MMLU-Pro}~\citep{zheng2024mmlu} extends the original MMLU benchmark with stronger robustness and challenge by filtering data leakage, reducing ambiguity, and introducing more difficult questions across domains such as engineering, philosophy, and economics, making it a more reliable testbed for assessing multi-disciplinary reasoning. \textbf{GPQA-Diamond}~\citep{rein2023gpqa} is a graduate-level benchmark featuring expert-written, ``Google-proof'' questions in physics and related sciences, with its Diamond split being the most challenging and requiring rigorous multi-step reasoning. \textbf{AIME-24} and \textbf{AIME-25}~\citep{aime2024,aime2025} consist of Olympiad-style mathematics problems from the 2024 and 2025 American Invitational Mathematics Examinations, testing symbolic manipulation and problem-solving under strict exact-match criteria. Finally, \textbf{ToolBench}~\citep{patil2023gorilla} assesses a model’s ability to identify and configure external APIs, reflecting practical tool-use capabilities.
+
+
+We then evaluate on a suite of multi-turn, goal-oriented benchmarks designed to evaluate memory in embodied and interactive environments. It includes several representative domains:
+\textbf{AlfWorld}~\citep{shridhar2021alfworld} for household instruction following, 
+\textbf{BabyAI}~\citep{chevalier2018babyai} for grounded navigation and compositional reasoning,
+\textbf{ScienceWorld}~\citep{wang2022scienceworld} for open-ended scientific experimentation, 
+\textbf{Jericho}~\citep{hausknecht2019interactive} for text-based game exploration, 
+and \textbf{PDDL} tasks~\citep{yang2023pddlbench} for symbolic planning. 
+Together, these environments emphasize long-horizon reasoning, sequential decision-making, and the use of accumulated experience to achieve complex goals.
+
+Together, these datasets form a comprehensive benchmark suite that evaluates factual recall, domain expertise, mathematical reasoning, and procedural memory in interactive settings. This diversity enables a unified evaluation of both static and evolving capabilities, reflecting how LLMs learn, act, and adapt across academic and real-world scenarios.
+
+\subsection{Configuration}
+
+For efficient retrieval and fair comparison across methods, we utilize the BAAI/bge-base-en-v1.5~\citep{bge_m3} encoder as the retriever to index both queries and memory items.
+During inference, the current question is encoded as a query and compared with all stored memory embeddings, retrieving the top-$k$ most relevant items (default $k=4$) for contextual augmentation.
+This setting ensures a consistent retrieval budget across all methods.
+For efficiency, retrieved texts and task inputs are truncated to fit within the same prompt length constraint used by the generation models.
+
+While all baselines adopt the same retrieval configuration, certain methods (e.g., \textsc{Self-RAG}, \textsc{ReMem}) introduce additional reasoning modules that determine \emph{whether to retrieve} and \emph{what to retrieve} at each step. These adaptive behaviors operate on top of the same retrieval pool to ensure comparability.
+
+Across all experiments, we maintain a unified task sequence ordering within each dataset, ensuring consistent memory evolution dynamics for all models. Unless otherwise specified, retrieval and generation operate within the same pipeline, and the retrieved items are appended to the prompt following the order of relevance, from most to least similar.
+
+We benchmark a broad range of agents and memory architectures instantiated on two strong \textbf{LLM backbones}: the Gemini-2.5 series~\citep{comanici2025gemini} (\textsc{Flash}, \textsc{Flash-Lite}, and \textsc{Pro}) and the Claude family~\citep{anthropic_claude4_2025} (\textsc{3.5-Haiku} and \textsc{3.7-Sonnet}).
+
+\subsection{Evaluation}
+
+\method evaluates both task performance and memory quality along four key dimensions: \begin{itemize}[itemsep=-0.2em, topsep=-0.3em, leftmargin=*] \item \textbf{Answer accuracy.} Evaluates whether the LLM produces correct outputs across tasks, reflecting its ability to incorporate past experiences into inference. \item \textbf{Success rate.} Measures whether the LLM agent successfully completes task goals, indicating its overall effectiveness in interactive or goal-oriented settings. \item \textbf{Step efficiency.} Tracks the number of steps required to complete a goal, assessing whether memory usage enables concise and scalable reasoning. \item \textbf{Sequence robustness.} Examines whether the LLM maintains consistent knowledge and performance across varying task orders, reflecting its ability to stably reuse prior experiences. \end{itemize}
+
+
+
+
+
+\subsection{Methods}
+
+We benchmark \method with a wide spectrum of agent and memory architectures to study how different designs impact \emph{test-time memory evolution}. All methods are instantiated on two strong \textbf{LLM backbones}: Gemini-2.5~\citep{comanici2025gemini} and Claude-3.5/3.7~\citep{anthropic_claude4_2025}. Our comparisons isolate the impact of memory architecture and update strategy. Differences in backbone capability are not the focus of the study. We group the evaluated approaches into four major families:
+
+\paragraph{Agent Pipelines without Persistent Memory.}
+\textbf{ReAct}~\citep{yao2023react} serves as a representative reasoning–action pipeline, where memory is limited to the immediate context. It generates interleaved reasoning traces and tool calls but does not explicitly store or evolve information.  
+\textbf{Amem} extends this pipeline with a lightweight agentic memory that caches recent observations and reflections. It provides a minimal form of experience reuse without dedicated search or update policies, forming a bridge between memory-free agents and adaptive memory systems.
+
+\paragraph{Adaptive Agentic Memory Methods.}
+This group focuses on adaptive retrieval and self-evolving memory. \textbf{SelfRAG}~\citep{asai2023self} integrates dynamic retrieval and reflection to adaptively ground reasoning in prior contexts.  
+\textbf{MemOS}~\citep{Li2025MemOSAO}, \textbf{Mem0}~\citep{mem0}, and \textbf{LangMem}~\citep{langchain} implement structured, agent-level memory systems that support read, write, and update operations. Within our unified interface, retrieval corresponds to the \emph{search} stage and updates correspond to \emph{evolve}. These methods represent adaptive long-term agents capable of continual refinement.
+
+\paragraph{Memory-Based Agents for Procedural Memory.}
+\textbf{Dynamic Cheatsheet (DC)}~\citep{suzgun2025dynamic} and \textbf{Agent Workflow Memory (AWM)}~\citep{Wang2024AgentWM} emphasize the reuse of procedural knowledge, encoding “how-to” information rather than static facts.  
+We evaluate two DC variants, \textbf{DC-RS} (retrieval-based) and \textbf{DC-Cu} (curated), to analyze how workflow induction and update mechanisms influence stability and transfer. These methods test the potential of procedural memory as reusable strategy repositories.
+
+\paragraph{Proposed: Evolving Memory Framework.}
+\textbf{ExpRecent} maintains condensed episodic traces of recent task trajectories, while our \textbf{ExpRAG} family integrates the principles of retrieval-augmented reasoning with explicit \emph{test-time evolution}. \textbf{ReMem} applies iterative reflection and synthesis to refine memory embeddings over time.  
+Together, these methods instantiate \method's design philosophy, treating reasoning, acting, and memory refinement as interleaved processes that co-adapt during deployment, enabling continual self-improvement and more human-like adaptation.
+
+\section{Experiments}
+
+We provide more experiments in the following.
+\subsection{Additional Experiments}
+\label{app:exp}
+We further validate our findings through extensive benchmarking across multiple model families (Gemini-2.5-Flash-Lite, Claude-3.5-Haiku) and diverse datasets, as shown in Tables~\ref{tab:multi_full} and~\ref{tab:single_full}.
+The performance trends remain consistent across all settings.
+On both multi-turn embodied reasoning tasks (AlfWorld, BabyAI, PDDL, ScienceWorld) and single-turn reasoning tasks (AIME-24/25, GPQA, MMLU-Pro, ToolBench), \alg consistently outperforms conventional baselines and adaptive retrieval methods across model backbones.
+These results confirm that the advantages of evolving-memory architectures are model-agnostic, highlighting continual task-level reflection as a general mechanism for improving adaptability in problem-solving.
+
+
+
+\input{tables/multi_step_table_full}
+
+\input{tables/single_step_table_full}
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/memory_pruning_analysis.png}
+    \caption{Memory pruning rates by dataset. Retained (blue) and pruned (coral) 
+memory proportions show varying selectivity across benchmarks.}
+    \label{fig:prune}
+\end{figure}
+\subsection{Additional Analysis of Memory Pruning}
+\label{app:memory_prune}
+Figure~\ref{fig:prune} shows memory pruning rates across datasets, revealing varying selectivity in memory retention. The pruning ratios differ substantially across benchmarks, which appears related to task diversity and domain coverage. Datasets with broader domain coverage such as GPQA, which encompasses diverse problem types across engineering, physics, and other domains, exhibit higher pruning rates (36.8\%), suggesting that more memories are deemed redundant across heterogeneous tasks. In contrast, datasets with more concentrated problem types like AIME show lower pruning rates (17.5\% and 10.8\% respectively), indicating that memories remain more relevant due to higher task similarity. This pattern suggests that the pruning mechanism effectively identifies and discards domain-irrelevant experiences, though the precise relationship between task diversity and memory selectivity warrants further investigation.
+
+
+
+
+
+
+
+
+\subsection{Additional Comparative Curves on Single-turn Tasks}
+\label{app:curve}
+Figure~\ref{fig:compare_single} presents cumulative accuracy curves comparing \alg with the baseline across single-turn reasoning benchmarks and model variants.
+As task instances accumulate, \alg shows consistent improvement on GPQA, ToolBench, and MMLU-PRO (Engineer) for both Gemini-2.5-Flash-Lite and Claude-3.7-Sonnet.
+Similar to the multi-turn results, History performs comparably at the beginning due to the cold-start phase, but \alg quickly surpasses it as more tasks are processed, indicating the cumulative advantage of continual task-level adaptation.
+
+
+
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/model_comparison_2x3.png}
+    \caption{Cumulative accuracy comparison across model variants and benchmarks. 
+ReMem (solid blue) demonstrates consistent improvements over the History baseline 
+(dashed red) across Gemini-2.5-Flash-Lite and Claude-3.7-Sonnet models on GPQA, 
+TOOLBENCH, and MMLU\_PRO\_ENG datasets. The curves show learning trends as task 
+instances accumulate, with ReMem achieving faster convergence and higher final accuracy.}
+    \label{fig:compare_single}
+\end{figure}
+\section{Prompts}
+
+
+\begin{prompt}{Memory Prompt Template for Multi-turn Dataset}
+\small
+\textbf{ ==================================================}
+
+\textbf{ENVIRONMENT INSTRUCTIONS}
+
+\textbf{==================================================}
+
+\textit{[Detailed task environment description and rules]}
+
+\textit{Example: Go to kitchen, pick up apple, put it in bag, etc.}
+
+\vspace{12pt}
+\textbf{==================================================}
+
+\textbf{EXAMPLE DEMONSTRATIONS}
+
+\textbf{==================================================}
+
+\textit{[Static few-shot examples]}
+
+\textit{Example 1: Goal: ... | Action: ... | Observation: ...}
+
+\textit{Example 2: Goal: ... | Action: ... | Observation: ...}
+
+\vspace{12pt}
+\textbf{==================================================}
+
+\textbf{RELEVANT EXPERIENCE FROM SIMILAR TASKS}
+
+\textbf{==================================================}
+
+\textit{[Experience \#1]}
+
+\textit{Goal: [similar goal]}
+
+\textit{Trajectory: [action sequence]}
+
+\textit{Correctness: [success/failure]}
+
+\vspace{6pt}
+\textit{[Experience \#2, \#3, ...]}
+
+\vspace{12pt}
+\textbf{==================================================}
+
+\textbf{YOUR CURRENT TASK}
+
+\textbf{==================================================}
+
+\textbf{Goal:} \textit{[specific task goal]}
+
+\textit{Help: type 'check valid actions' if action fails}
+
+\textit{Help: type 'inventory' to check items}
+
+\vspace{12pt}
+\textbf{==================================================}
+
+\textbf{RECENT HISTORY}
+
+\textbf{==================================================}
+
+\texttt{Observation: [initial environment state]}
+
+\texttt{Action: [previous action]}
+
+\texttt{Observation: [result of previous action]}
+
+\texttt{Action: [previous action]}
+
+\texttt{Observation: [current state]}
+
+\vspace{12pt}
+\textbf{==================================================}
+
+\textbf{OUTPUT FORMAT}
+
+\textbf{==================================================}
+
+You MUST respond in EXACTLY ONE of these formats:
+
+\vspace{8pt}
+\textbf{Format 1 - Prune experiences:}
+
+\texttt{Think-Prune: <IDs>}
+
+Remove unhelpful experiences from 'RELEVANT EXPERIENCE' section (e.g., ``1,3'' or ``2-4'')
+
+\vspace{8pt}
+\textbf{Format 2 - Internal reasoning:}
+
+\texttt{Think: <your reasoning>}
+
+Free-form explanation of your next step
+
+\vspace{8pt}
+\textbf{Format 3 - Execute action:}
+
+\texttt{Action: <exact command>}
+
+Must be valid command from ENVIRONMENT INSTRUCTIONS with exact names from RECENT HISTORY
+
+
+\end{prompt}
+
+
+
+\begin{prompt}{Memory Prompt Template for Single-turn Dataset}
+You are a helpful assistant with access to LOCAL EXPERIENCE MEMORY. Each memory may contain past experience, rationales, domains, and skills. Below are some retrieved LOCAL EXPERIENCE MEMORIES:
+
+\vspace{6pt}
+\textit{[Retrieved/synthesized memories]}
+
+\vspace{6pt}
+Now solve the following problem.
+
+\textbf{Question:} \textit{[Your question here]}
+
+\vspace{6pt}
+\noindent\textbf{Provide your output in the following format:}
+\begin{itemize}
+  \item \textbf{Rationale:} your short reasoning, may cite memory if useful
+  \item \textbf{Final Answer:} your final answer
+\end{itemize}
+\end{prompt}
+
+
+\section{Limitations}
+While \method offers a comprehensive evaluation of self-evolving memory, several practical constraints remain. 
+Due to budget and API limits, we focus on a selected set of strong LLMs rather than exhaustively covering all available models. 
+Additional evaluations on open-weight or multilingual models could further validate the generality of our findings. 
+Moreover, our benchmark primarily emphasizes textual and goal-oriented tasks; extending it to richer multimodal or real-world environments would provide a more complete picture of continual memory evolution. 
+Despite these limitations, the current study already spans diverse domains, tasks, and architectures, offering a solid foundation for future extensions.
+
+
+\section{Use of Large Language Models}
+During the preparation of this paper, we made limited and controlled use of large language models (LLMs), specifically ChatGPT, as an auxiliary writing aid. 
+The LLM was used only for stylistic refinement, including improvements in clarity, grammar, and readability of text originally drafted by the authors. 
+All scientific ideas, analyses, experiments, and conclusions were fully developed, written, and verified by the authors. 
+Thus, LLMs were employed solely as a language-editing tool, without contributing to the intellectual or scientific content of the work.
+

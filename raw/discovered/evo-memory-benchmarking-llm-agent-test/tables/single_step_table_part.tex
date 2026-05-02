@@ -1,0 +1,127 @@
+\begin{comment}
+\begin{table*}[t!]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabular}{l l*{8}{c}}
+\toprule
+\multirow{2}{*}{Model} & \multirow{2}{*}{Method} & \multicolumn{6}{c}{Exact Match $\uparrow$} & \multicolumn{1}{c}{API / Acc. $\uparrow$}\\
+\cmidrule(lr){3-8}\cmidrule(lr){9-9}
+ &  & AIME24 & AIME25 & GPQA & MMLU-Pro (Eco) & MMLU-Pro (Eng) & MMLU-Pro (Philo) & ToolBench& \multicolumn{1}{c}{Avg $\uparrow$}\\
+\midrule
+
+% ---------------- Claude 3.7 ----------------
+\multirow{15}{*}{Claude 3.7 Sonnet}
+ & Baseline            & 0.17 & 0.13 & 0.55 & 0.84 & 0.63 & 0.78 & 0.76/0.62 & 0.54 \\
+ & History       & 0.13 & \textbf{0.23} & 0.56 & 0.85 & 0.64 & 0.78 & 0.76/0.61 & 0.55 \\
+\cmidrule(lr){2-10}
+ & ReAct                     & 0.17 & 0.10 & 0.57 & 0.84 & 0.63 & 0.76 & 0.76/0.61 & 0.54 \\
+ & Amem                      & \textbf{0.27} & 0.17 & 0.54 & 0.83 & 0.63 & 0.79 & 0.77/0.63 & 0.56 \\
+\cmidrule(lr){2-10}
+ & SelfRAG                   & 0.20 & 0.10 & 0.58 & 0.84 & 0.65 & 0.77 & 0.77/0.63 & 0.55 \\
+ & MemOS                     & 0.17 & 0.20 & 0.55 & 0.84 & 0.64 & 0.76 & 0.76/0.62 & 0.55 \\
+ & Mem0                      & 0.20 & 0.13 & 0.58 & 0.84 & 0.62 & 0.77 & 0.76/0.61 & 0.55 \\
+ & LangMem                   & 0.10 & 0.13 & 0.53 & 0.77 & 0.56 & 0.66 & 0.77/0.63 & 0.49 \\
+\cmidrule(lr){2-10}
+ & DC-RS                     & 0.20 & 0.20 & 0.62 & 0.79 & 0.52 & 0.60 & 0.77/0.62 & 0.52 \\
+ & AWM                       & 0.03 & 0.03 & 0.53 & 0.80 & 0.56 & 0.72 & 0.76/0.62 & 0.48 \\
+ & DC-Cu                     & 0.17 & \textbf{0.23} & 0.57 & 0.79 & 0.52 & 0.65 & 0.77/0.62 & 0.52 \\
+\cmidrule(lr){2-10}
+ & ExpRecent                 & 0.13 & 0.20 & 0.61 & \textbf{0.86} & 0.63 & 0.78 & 0.82/0.66 & 0.56 \\
+ & ExpRAG                    & 0.17 & 0.17 & \textbf{0.70} & 0.85 & \textbf{0.67} & \textbf{0.80} & \textbf{0.88/0.72} & \textbf{0.59} \\
+ & ReMem                     & 0.13 & 0.13 & 0.67 & \textbf{0.86} & 0.65 & 0.80 & 0.87/0.71 & 0.58 \\
+\midrule
+
+
+% ---------------- Gemini 2.5 Flash ----------------
+\multirow{15}{*}{Gemini 2.5 Flash}
+ & Baseline           & 0.47 & 0.47 & 0.48 & 0.83 & \textbf{0.46} & 0.75 & 0.71/0.61 & 0.59 \\
+ & History       & 0.60 & 0.47 & 0.43 & 0.84 & 0.42 & 0.78 & 0.62/0.54 & 0.58 \\
+\cmidrule(lr){2-10}
+ & ReAct                    & 0.30 & 0.27 & 0.05 & 0.64 & 0.16 & 0.54 & 0.64/0.57 & 0.37 \\
+ & Amem                     & \textbf{0.70} & \textbf{0.57} & 0.52 & 0.83 & 0.42 & 0.72 & 0.72/0.60 & 0.63 \\
+\cmidrule(lr){2-10}
+ & SelfRAG                  & 0.50 & 0.47 & 0.46 & 0.83 & 0.45 & 0.75 & 0.72/0.61 & 0.59 \\
+ & MemOS                    & 0.47 & 0.47 & 0.50 & 0.82 & \textbf{0.46} & 0.75 & 0.71/0.61 & 0.59 \\
+ & Mem0                     & 0.50 & 0.47 & 0.45 & 0.83 & \textbf{0.46} & 0.74 & 0.71/0.61 & 0.59 \\
+ & LangMem                  & 0.43 & 0.50 & \textbf{0.53} & 0.79 & 0.39 & 0.71 & 0.68/0.57 & 0.57 \\
+\cmidrule(lr){2-10}
+ & DC-RS                    & 0.53 & 0.37 & 0.48 & 0.80 & 0.42 & 0.69 & 0.68/0.57 & 0.56 \\
+ & DC-Cu                    & 0.60 & 0.40 & 0.48 & 0.79 & 0.44 & 0.69 & 0.70/0.59 & 0.58 \\
+ & AWM                      & 0.50 & 0.37 & 0.49 & 0.79 & 0.43 & 0.72 & 0.71/0.59 & 0.56 \\
+\cmidrule(lr){2-10}
+ & ExpRecent                & 0.47 & 0.47 & 0.42 & 0.83 & 0.39 & 0.75 & 0.78/0.66 & 0.58 \\
+ & ExpRAG                   & 0.43 & 0.47 & 0.42 & 0.83 & 0.43 & 0.78 & \textbf{0.87/0.73} & 0.60 \\
+ & ReMem                    & 0.60 & 0.53 & 0.51 & \textbf{0.85} & \textbf{0.46} & \textbf{0.79} & 0.85/0.71 & \textbf{0.65} \\
+\bottomrule
+\end{tabular}
+\caption{Cross-dataset results of diverse memory architectures across models. 
+Categories are separated by horizontal rules; results (Exact Match↑ and API/Acc↑) compare zero-shot, agentic, adaptive, procedural, and proposed memory methods. }
+\label{tab:big-multirow-clean}
+\end{table*}
+\end{comment}
+
+
+\begin{table*}[t!]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3.5pt}
+\renewcommand{\arraystretch}{1.1}
+\scalebox{0.88}{
+\begin{tabular}{l l*{8}{c}}
+\toprule
+\multirow{2}{*}{\textbf{LLM Backbone}} & \multirow{2}{*}{\textbf{Method}} & \multicolumn{6}{c}{\textbf{Exact Match $\uparrow$}} & \multicolumn{1}{c}{\textbf{API / Acc. $\uparrow$}}\\
+\cmidrule(lr){3-8}\cmidrule(lr){9-9}
+ &  & AIME24 & AIME25 & GPQA & MMLU-Pro (Eco.) & MMLU-Pro (Eng.) & MMLU-Pro (Philo.) & ToolBench& \multicolumn{1}{c}{Avg. $\uparrow$}\\
+\midrule
+
+% ---------------- Claude 3.7 ----------------
+\multirow{15}{*}{Claude 3.7 Sonnet}
+ & Baseline            & 0.17 & 0.13 & 0.55 & 0.84 & 0.63 & 0.78 & 0.76/0.62 & 0.54 \\
+ & History       & 0.13 & \textbf{0.23} & 0.56 & 0.85 & 0.64 & 0.78 & 0.76/0.61 & 0.55 \\
+\cmidrule(lr){2-10}
+ & ReAct                     & 0.17 & 0.10 & 0.57 & 0.84 & 0.63 & 0.76 & 0.76/0.61 & 0.54 \\
+ & Amem                      & \textbf{0.27} & 0.17 & 0.54 & 0.83 & 0.63 & 0.79 & 0.77/0.63 & 0.56 \\
+\cmidrule(lr){2-10}
+ & SelfRAG                   & 0.20 & 0.10 & 0.58 & 0.84 & 0.65 & 0.77 & 0.77/0.63 & 0.55 \\
+ & MemOS                     & 0.17 & 0.20 & 0.55 & 0.84 & 0.64 & 0.76 & 0.76/0.62 & 0.55 \\
+ & Mem0                      & 0.20 & 0.13 & 0.58 & 0.84 & 0.62 & 0.77 & 0.76/0.61 & 0.55 \\
+ & LangMem                   & 0.10 & 0.13 & 0.53 & 0.77 & 0.56 & 0.66 & 0.77/0.63 & 0.49 \\
+\cmidrule(lr){2-10}
+ & DC-Cu                     & 0.17 & \textbf{0.23} & 0.57 & 0.79 & 0.52 & 0.65 & 0.77/0.62 & 0.52 \\
+  & DC-RS                     & 0.20 & 0.20 & 0.62 & 0.79 & 0.52 & 0.60 & 0.77/0.62 & 0.52 \\
+  & AWM                       & 0.03 & 0.03 & 0.53 & 0.80 & 0.56 & 0.72 & 0.76/0.62 & 0.48 \\
+\cmidrule(lr){2-10}
+ & ExpRecent                 & 0.13 & 0.20 & 0.61 & \textbf{0.86} & 0.63 & 0.78 & 0.82/0.66 & 0.56 \\
+ & ExpRAG                    & 0.17 & 0.17 & \textbf{0.70} & 0.85 & \textbf{0.67} & \textbf{0.80} & \textbf{0.88/0.72} & \textbf{0.59} \\
+ & ReMem                     & 0.13 & 0.13 & 0.67 & \textbf{0.86} & 0.65 & 0.80 & 0.87/0.71 & 0.58 \\
+\midrule
+
+
+% ---------------- Gemini 2.5 Flash ----------------
+\multirow{15}{*}{Gemini 2.5 Flash}
+ & Baseline           & 0.47 & 0.47 & 0.48 & 0.83 & \textbf{0.46} & 0.75 & 0.71/0.61 & 0.59 \\
+ & History       & 0.60 & 0.47 & 0.43 & 0.84 & 0.42 & 0.78 & 0.62/0.54 & 0.58 \\
+\cmidrule(lr){2-10}
+ & ReAct                    & 0.30 & 0.27 & 0.05 & 0.64 & 0.16 & 0.54 & 0.64/0.57 & 0.37 \\
+ & Amem                     & \textbf{0.70} & \textbf{0.57} & 0.52 & 0.83 & 0.42 & 0.72 & 0.72/0.60 & 0.63 \\
+\cmidrule(lr){2-10}
+ & SelfRAG                  & 0.50 & 0.47 & 0.46 & 0.83 & 0.45 & 0.75 & 0.72/0.61 & 0.59 \\
+ & MemOS                    & 0.47 & 0.47 & 0.50 & 0.82 & \textbf{0.46} & 0.75 & 0.71/0.61 & 0.59 \\
+ & Mem0                     & 0.50 & 0.47 & 0.45 & 0.83 & \textbf{0.46} & 0.74 & 0.71/0.61 & 0.59 \\
+ & LangMem                  & 0.43 & 0.50 & \textbf{0.53} & 0.79 & 0.39 & 0.71 & 0.68/0.57 & 0.57 \\
+\cmidrule(lr){2-10}
+ & DC-Cu                    & 0.60 & 0.40 & 0.48 & 0.79 & 0.44 & 0.69 & 0.70/0.59 & 0.58 \\
+ & DC-RS                    & 0.53 & 0.37 & 0.48 & 0.80 & 0.42 & 0.69 & 0.68/0.57 & 0.56 \\
+ & AWM                      & 0.50 & 0.37 & 0.49 & 0.79 & 0.43 & 0.72 & 0.71/0.59 & 0.56 \\
+\cmidrule(lr){2-10}
+ & ExpRecent                & 0.47 & 0.47 & 0.42 & 0.83 & 0.39 & 0.75 & 0.78/0.66 & 0.58 \\
+ & ExpRAG                   & 0.43 & 0.47 & 0.42 & 0.83 & 0.43 & 0.78 & \textbf{0.87/0.73} & 0.60 \\
+ & ReMem                    & 0.60 & 0.53 & 0.51 & \textbf{0.85} & \textbf{0.46} & \textbf{0.79} & 0.85/0.71 & \textbf{0.65} \\
+\bottomrule
+\end{tabular}}
+\caption{Cross-dataset results of diverse memory architectures across models on the single-turn reasoning and question answering datasets. 
+Categories are separated by horizontal rules; results (Exact Match↑ and API/Acc↑) compare zero-shot, agentic, adaptive, procedural, and proposed memory methods. }
+\label{tab:single_part}
+\end{table*}

@@ -1,0 +1,97 @@
+{
+   "sources" : [
+      {
+         "usage" : "toplevel",
+         "filename" : "paper.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "custom.bib"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "figs/aime_case.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "figs/fig-td.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "figs/main_results.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "figs/method_pic.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "figs/protein_case.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "figs/results.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "figs/retro_case.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "figs/training_dynamics.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "gensi/Sora-Bold.ttf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "gensi/Sora-Medium.ttf"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "gensi/shlab_logo.png"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "gensi/sora.tfm"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "gensi/soramedium.tfm"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "others/01Introduction-pre.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "others/Intro-pre.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "others/main.tex"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "others/neurips_2025.sty"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "paper.bbl"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "refs.bib"
+      },
+      {
+         "usage" : "ignore",
+         "filename" : "style.bst"
+      }
+   ],
+   "spec_version" : 1,
+   "texlive_version" : "2025",
+   "process" : {
+      "compiler" : "pdflatex"
+   }
+}

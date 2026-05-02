@@ -1,0 +1,51 @@
+\section{Introduction}
+Autonomous agents have achieved remarkable advances across diverse domains, including code generation (e.g., Claude Code~\cite{anthropic2025claude}), scientific discovery (e.g., Biomni~\cite{huang2025biomni}, STELLA~\cite{jin2025stellaselfevolvingllmagent}, and SciMaster~\cite{chai2025scimastergeneralpurposescientificai}), and in-depth research (e.g., Tongyi, OpenAI, and Gemini DeepResearch~\cite{tongyidr,openai2025deepresearch,google2025gemini}), showcasing their immense potential to solve complex, open-ended real-world tasks end to end. 
+
+%然而，在特定任务上预训练完的agent不能和环境交互积累经验，持续进化，从而在困难、未训练的任务上表现很差。现有的基于梯度的训练方法存在训练开销大和灾难性遗忘的问题。并且，很多SOTA的LLM模型都是闭源的，让更新参数的梯度优化不可能实现。
+However, pretrained agents remain static with frozen parameters, fundamentally precludes learning from on-the-fly experience concluded during trial-and-error, causing substantial performance degradation on challenging or untrained tasks~\cite{wu2023autogen,liu2023agentbench}.
+While gradient-based learning has underpinned model optimization~\cite{rumelhart1986learning,ruder2016overview,hu2022lora}, it is inherently ill-suited for continuous agent evolution due to three key obstacles:
+(i) back-propagation incurs prohibitive computational costs~\cite{goodfellow2013empirical,cai2025training};
+(ii) parameter-centric paradigm suffers from catastrophic forgetting~\cite{abbas2023loss,hadi2023large}, failing to effectively learn form accumulated experiences over times;
+(iii) the closed-source nature of most state-of-the-art LLMs~\cite{google2025gemini2_5_pro,openai2025gpt5,anthropic2025sonnet4.5,anthropic2025claude4,xai2025grok4} renders direct parameter optimization infeasible.
+
+%现有self-evolving agent的工作通过环境交互，进化prompt，workflow，tools，提升agent表现。
+Recent self-evolving paradigms attempt to overcome this limitation by evolving \textit{non-parametric} components (\textit{i.e.,} prompts~\cite{yuksekgonul2024textgrad,zhang2025agentic}, workflows~\cite{lin2025se,zhang2025multi,shang2024agentsquare}, and tools~\cite{qian2023creator,qiu2025alita}) through environmental feedback and textual gradient~\cite{yuksekgonul2024textgrad,shinn2023reflexion,zhang2024revolve}. 
+%然而，只能针对特定任务优化，不具备continuous evolution
+%（感觉这里介词换成over会不会比towards更好？ --xinyuan）
+%over语法不对，现在我们要说的是阻碍evolution (GET)
+Nevertheless, these approaches encounter three vital bottlenecks towards continuous agent evolution: 
+%缺一个逻辑，为什么（这里缺的是什么逻辑呢？）
+(i) their evolving components are task-specific, thus they cannot generalize across tasks, limiting cross-task evolution.
+(ii) Their evolving components (\textit{i.e.} prompts, workflows, and tools) are not continuously scalable, thus they can only leverage a limited set of experiences, preventing performance from scaling with accumulated knowledge.
+(iii) Their evolving components are model-specific, thus new agents must interact from scratch during deployment, unable to continuously evolve from agents' previous off-policy experiences, leading to substantial computational overhead.
+
+% Our methods
+To address these limitations, we propose \textbf{F}orward \textbf{L}earning from \textbf{Ex}perience~(\textbf{\method{}}), a novel learning paradigm that shifts learning from modifying \textit{model parameters} to constructing and leveraging an evolvable \textit{experience library} (Fig.\ref{fig:main_method_overview}).
+%显式对比 + 三个要点 (explore, update, guide future)
+In contrast to traditional gradient-based learning paradigms, which optimize through both forward- and backward-propagation, \method{} involves mere forward passes in three stages: 
+(i) exploring forwardly to acquire extensive problem-solving experiences;
+(ii) evolving the experience library via the updater;
+(iii) guiding forward reasoning by utilizing pertinent experiences from the library.
+
+%% More details of this method
+%需要层层递进地解释为什么我们没有上面的问题（exp-lib是跨session持久化的，除此之外我们还发现了两大特性）
+Hence, \method{} overcomes the prevailing bottlenecks with three profound properties for continuous evolution: 
+(i) \method{} evolves a persistent experience library that continuously aggregates cross-task experiences, ensuring that knowledge is retained and available for future use.
+(ii) The library continuously expands and refines, enabling agents to progressively acquire deeper insights and knowledge. This accumulation allows agent performance to scale with experience.
+(iii) \method{} stores strategies distilled from experiences in a semantic form, making the library both transferable and interpretable. This design enables seamless inheritance across agents, avoiding redundant and costly re-training.
+%(i) The evolving object of \method{} is the persistent experience library, which can continuously collect cross-task experience, guaranteeing experience accumulation and preservation for future utilization.
+%(ii) The library can continuously expand and refine, enabling agents to progressively acquire deeper insights and knowledge, scaling their cognitive capabilities with accumulated experiences, achieving continuous evolution.
+%(iii) \method{} stores strategies inducted from experiences in a semantic form, endowing the experience library with transferability and interpretability, enabling seamless inheritance across agents without redundant and costly re-training.
+%(iii) The inheritance of the experience library, where learned experience libraries can be seamlessly inherited across agents. \method{} overcomes this bottleneck by leveraging the great transferability and interpretability of inducted textual signals.
+
+% Experimental Results
+To validate the general effectiveness of \method{} paradigm, we conduct extensive experiments across diverse challenging scientific domains, including Olympiad-level mathematics (AIME25~\cite{aime2025problems}), chemical retrosynthesis (USPTO50k~\cite{schneider2016s}), and protein fitness prediction (ProteinGym~\cite{notin2023proteingym}). \method{} demonstrates substantial and consistent improvements on these tasks, from $40\%$ to $63\%$ on AIME25, $20\%$ to $30\%$ on USPTO50k, and $46\%$ to $60\%$ on ProteinGym, exhibiting great enhancement in the capacity of reasoning and knowledge leverage. 
+
+% Contribution summary
+In summary, our contributions are as follows:
+\begin{itemize}
+\item We propose \textbf{\method{}}, a new learning paradigm for the agentic era. It redefines learning as a forward exploration and experience distillation process, enabling LLM agents to continuously evolve through accumulated experience without gradient-based tuning.
+\item We provide a comprehensive framework for \method{}, including a unified mathematical formulation with theoretical justifications, a practical instantiation with concrete mechanisms, and an empirical demonstration of its effectiveness on diverse scientific benchmarks.
+\item We identify and empirically validate a \textit{scaling law} of the experience library, showing that agent performance scales predictably with accumulated experience. %and revealing a path towards a collaborative experience ecosystem.
+We also introduce and demonstrate the principle of \textit{experience inheritance}, where distilled experience can be transferred between agents in a plug-and-play manner, enabling instant knowledge assimilation and bypassing redundant learning.
+\end{itemize}

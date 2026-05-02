@@ -1,0 +1,205 @@
+\subsection{Experiments}
+
+Below are the conducted experiments to answer the proposed research questions.
+% \input{tables/single_step_table_full}
+
+% \input{tables/multi_step_table_full}
+
+
+
+
+% \begin{table*}[t]
+% \centering
+% \small
+% \renewcommand{\arraystretch}{1.15}
+% \setlength{\tabcolsep}{8pt}
+% \begin{tabular}{lccccc}
+% \hline
+% \textbf{Method} & \textbf{Alfworld} & \textbf{BabyAI} & \textbf{Jericho} & \textbf{PDDL} & \textbf{ScienceWorld} \\
+% \hline
+% Baseline & 0.12 & 0.61 & 0.05 & 0.12 & 0.24 \\
+% Full History & 0.28 & 0.52 & 0.30 & 0.08 & 0.31 \\
+% \hline
+% \multicolumn{6}{l}{\textit{Agentic Solving Pipeline}} \\
+% ReAct & 0.24 & 0.48 & 0.30 & 0.22 & 0.34 \\
+% Amem  & 0.26 & 0.53 & 0.40 & 0.10 & 0.36 \\
+% \hline
+% \multicolumn{6}{l}{\textit{Adaptive agentic memory methods}} \\
+% SelfRAG & 0.26 & 0.52 & 0.40 & 0.08 & 0.34 \\
+% Mem0    & 0.27 & 0.54 & 0.30 & 0.10 & 0.32 \\
+% \hline
+% \multicolumn{6}{l}{\textit{Memory-based agents for procedural memory}} \\
+% DC-Cu (Dynamic Cheatsheet) & 0.25 & 0.53 & 0.30 & 0.08 & 0.29 \\
+% DC-RS (Dynamic Cheatsheet) & 0.27 & 0.53 & 0.30 & 0.07 & 0.33 \\
+% AWM                        & 0.26 & 0.52 & 0.25 & 0.08 & 0.33 \\
+% \hline
+% \multicolumn{6}{l}{\textit{Proposed agentic memory}} \\
+% ExpRecent               & 0.37 & 0.53 & 0.30 & 0.13 & 0.53 \\
+% ExpRAG & 0.66 & 0.56 & 0.40 & 0.12 & 0.56 \\
+% ReMem &  &  &  &  & \\
+% \hline
+% \end{tabular}
+% \caption{Results across datasets (higher is better). Ordering follows the figure. Name mapping: \emph{vanilla} $\rightarrow$ Full-history; \emph{vanilla\_no} $\rightarrow$ Baseline; \emph{fewshot\_rag} $\rightarrow$ SelfStream.}
+% \label{tab:agentic-memory-results}
+% \end{table*}
+
+
+
+\subsection{Analysis of Results (RQ1)}
+
+Tables~\ref{tab:single_part} and~\ref{tab:multi_part} summarize the results across single-turn and multi-turn settings. 
+Overall, \method demonstrates that self-evolving memory architectures provide consistent improvements. In single-turn reasoning and QA benchmarks (AIME-24/25, GPQA, MMLU-Pro, ToolBench), evolving-memory methods show consistent improvements, with \textsc{ReMem} achieving 0.65 average exact match and 0.85/0.71 API accuracy under Gemini-2.5~Flash. 
+Adaptive retrieval methods enhance factual grounding, yet only evolving systems maintain consistent gains through iterative refinement. 
+Agents with procedural knowledge perform well on structured domains such as AIME but lag in scientific reasoning and tool use, showing limited flexibility. \textsc{ExpRAG} serves as a simple yet highly effective baseline, outperforming several more complex designs.
+While improvements in single-turn settings are moderate, the overall trend remains consistent across datasets and model families.
+
+
+
+In multi-turn reasoning environments (AlfWorld, BabyAI, PDDL, ScienceWorld), \textsc{ReMem} and \textsc{ExpRAG} achieve strong and stable performance on both Gemini-2.5 and Claude backbones, reaching 0.92/0.96 on BabyAI and 0.95/0.62 on ScienceWorld.
+These results indicate that continual reflection and refinement substantially improve procedural knowledge accumulation.
+Performance gains are notably larger in multi-turn settings, underscoring that continual adaptation becomes increasingly valuable as task horizons lengthen. While many baselines enhance retrieval grounding, they struggle to reuse long-horizon experiences and often falter in open-ended environments. Notably, lightweight variants such as \textsc{ExpRecent} and \textsc{ExpRAG} still perform competitively despite their simplicity, suggesting that explicit task-level utilization during test-time evolution is both promising and underexplored.
+
+
+
+
+
+Across all experiments, evolving-memory methods demonstrate consistent gains on both Gemini and Claude backbones. 
+Smaller models benefit particularly from self-evolving memory, suggesting that test-time refinement is a practical path to enhancing the capability of lighter LLMs.
+Together, these findings establish task-level memory utilization and continual reorganization as valuable directions for future research, providing a standardized reference point for developing and evaluating evolving-memory agents. Additional results across more LLM families are presented in Appendix \ref{app:exp}.
+
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/correlation_side_by_side.png}
+    \caption{ReMem performance gain over history baseline versus within-dataset task similarity.}
+    \label{fig:correlate}
+\end{figure}
+
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.85\linewidth]{figures/steps_comparison.png}
+    \caption{Average steps to complete tasks across four benchmarks. We compare four methods: History, ExpRecent, ExpRAG, and ReMem. Lower is better. ReMem consistently requires fewer steps to complete tasks across all datasets, demonstrating more efficient task execution..}
+    \label{fig:step}
+\end{figure}
+
+
+
+
+\subsection{Analysis of Memory Improvement (RQ2)}
+
+Figure~\ref{fig:correlate} shows that \textsc{ReMem}'s improvement strongly correlates with within-dataset task similarity (Pearson $r=0.717$ on Gemini~2.5~Flash and $r=0.563$ on Claude~3.7~Sonnet).
+Task similarity is measured by computing the average cosine distance between each task embedding and its dataset cluster center, where embeddings are obtained from the retriever encoder.
+A smaller average distance indicates higher intra-dataset coherence and thus stronger structural similarity.
+Tasks with higher embedding cluster ratios, such as PDDL and AlfWorld, yield larger gains, suggesting that recurring task structures facilitate memory reuse and generalization.
+In contrast, more diverse or low-similarity datasets like AIME-25 or GPQA show smaller gains, reflecting limited transferable experiences.
+These findings highlight the importance of embedding organization and semantic overlap in driving effective memory evolution. Further analysis of memory pruning rates can be found in Appendix~\ref{app:memory_prune}.
+
+Figure~\ref{fig:step} compares step efficiency across four environments. 
+Evolving-memory methods consistently require fewer steps to reach completion, with \textsc{ReMem} achieving the strongest and most stable reductions (e.g., from 22.6 to 11.5 steps on AlfWorld). 
+The lightweight \textsc{ExpRAG} and \textsc{ExpRecent} also perform competitively, showing that simple task-level evolution can greatly improve efficiency without extra complexity. 
+Overall, continual refinement not only boosts accuracy but also makes reasoning more focused and efficient.
+
+\begin{table}[t!]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.2}
+\scalebox{0.8}{
+\begin{tabular}{llccccccc}
+\toprule
+\multirow{2}{*}{\textbf{Direction}} & \multirow{2}{*}{\textbf{Method}} 
+& \multicolumn{2}{c}{\textbf{AlfWorld}} 
+& \multicolumn{2}{c}{\textbf{ScienceWorld}} 
+& \multicolumn{2}{c}{\textbf{Avg.}} \\
+\cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8}
+ &  & S & P & S & P & S & P \\
+\midrule
+\multicolumn{2}{c}{Base} & 0.50 & 0.73 & 0.32 & 0.74 & 0.41 & 0.74 \\
+\midrule
+\multirow{3}{*}{Easy→Hard} 
+ & ExpRecent & 0.66 & 0.82 & 0.48 & 0.83 & 0.57 & 0.83 \\
+ & ExpRAG & 0.77 & 0.87 & 0.37 & 0.71 & 0.57 & 0.79 \\
+ & ReMem & \textbf{0.91} & \textbf{0.96} & \textbf{0.63} & \textbf{0.88} & \textbf{0.77} & \textbf{0.92} \\
+\midrule
+\multirow{3}{*}{Hard→Easy} 
+ & ExpRecent & 0.72 & 0.85 & 0.47 & 0.80 & 0.60 & 0.83 \\
+
+ & ExpRAG & 0.87 & 0.92 & 0.51 & 0.81 & 0.69 & 0.87 \\
+ & ReMem & \textbf{0.94} & \textbf{0.97} & \textbf{0.68} & \textbf{0.90} & \textbf{0.81} & \textbf{0.94} \\
+\bottomrule
+\end{tabular}}
+\caption{Comparison of memory-based agents under different sequence difficulty directions. 
+Each cell reports Success (S) and Progress (P). Easy→Hard and Hard→Easy indicate task order transitions, and averages (Avg) summarize per-direction performance.}
+\label{tab:seq_difficulty}
+\end{table}
+
+\input{tables/multi_step_norm}
+
+
+
+
+\subsection{Task Sequence: Easy v.s. Hard (RQ3)}
+
+Table~\ref{tab:seq_difficulty} examines how memory-based agents adapt to changes in task difficulty.
+Baseline methods exhibit noticeable degradation when moving from easier to harder tasks, revealing limited robustness under distribution shifts.
+In contrast, evolving-memory agents, particularly \textsc{ReMem}, maintain strong and consistent performance across both directions, reaching up to 0.94/0.97 success and progress in the Hard$\rightarrow$Easy setting.
+This stability shows that continual reflection enables \textsc{ReMem} to retain transferable knowledge even as task complexity varies.
+The results further indicate that the design of task sequences, especially the ordering of difficulty levels, has a substantial impact on evaluating memory adaptation.
+They also suggest that well-structured task progressions can actively facilitate learning by allowing models to build on prior experiences and generalize across increasingly complex challenges.
+Together, these findings highlight the importance of standardized and thoughtfully organized task sequences for both fair evaluation and effective model development in future benchmarks.
+
+
+
+\begin{figure}[t!]
+    \centering
+    \includegraphics[width=0.8\linewidth]{figures/all_datasets_success_rate.png}
+    \caption{Cumulative success rate across four interactive agent datasets. ReMem (solid blue) outperforms the History baseline (dashed red) on ALFWorld, BabyAI, PDDL, and ScienceWorld tasks. The rolling average shows performance trends as more task instances are evaluated.}
+    \label{fig:curve}
+    \vspace{-0.2cm}
+\end{figure}
+
+
+
+\subsection{Analysis of Feedback (RQ4)}
+Table~\ref{tab:multi_norm} evaluates how agents perform when both successful and failed task experiences are stored in memory.
+Baseline methods experience a clear performance drop when exposed to unfiltered failures, indicating that naive memory accumulation introduces noise and disrupts subsequent retrieval.
+In contrast, evolving-memory approaches, particularly \textsc{ReMem}, remain robust by actively refining stored experiences, achieving the highest overall success and progress rates under both Claude and Gemini backbones.
+These results demonstrate that selective utilization, which involves learning from successes while appropriately leveraging information from failures, is crucial for stable test-time adaptation.
+They further highlight that memory refinement plays a central role in handling imperfect experiences and suggest that future work should explore failure-aware strategies for memory evolution.
+
+
+
+
+
+
+
+\subsection{Performance w.r.t Time Steps (RQ5)}
+
+Figure~\ref{fig:curve} shows the cumulative accuracy as tasks progress across four interactive environments.
+The curves mainly serve to compare \textsc{ReMem} with the History baseline, as individual trajectories carry limited standalone meaning.
+Across all environments, \textsc{ReMem} consistently achieves faster adaptation and more stable retention over time.
+These results highlight that continual reflection enables \textsc{ReMem} to sustain performance across long task sequences, illustrating its robustness in test-time learning. More comparative results on single-turn tasks are presented in Appendix~\ref{app:curve}.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=0.9\linewidth]{figures/rolling.pdf}
+%     \caption{Rolling accuracy of the memory methods.}
+%     \label{fig:placeholder}
+% \end{figure}
+
+

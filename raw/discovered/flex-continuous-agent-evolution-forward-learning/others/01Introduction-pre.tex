@@ -1,0 +1,47 @@
+\section{Introduction}
+Autonomous agents have achieved remarkable advances across diverse domains, including code generation (e.g., Claude Code~\cite{anthropic2025claude}), scientific discovery (e.g., Biomni~\cite{huang2025biomni}, STELLA~\cite{jin2025stellaselfevolvingllmagent}, and SciMaster~\cite{chai2025scimastergeneralpurposescientificai}), and in-depth research (e.g., Tongyi, OpenAI, and Gemini DeepResearch~\cite{tongyidr,openai2025deepresearch,google2025gemini}), showcasing their immense potential to solve complex, open-ended real-world tasks end to end. 
+%[这里具体的工作名字可以考虑删，放cite就行；有其他更好的应用吗]
+
+%然而，static的agent不能和环境交互积累经验，不断进化，从而在困难、未训练的任务上表现很差。
+However, the static nature of agents fundamentally precludes learning from ongoing experience, suffering catastrophic performance degradation on challenging or unseen tasks~\cite{abbas2023loss,hadi2023large,goodfellow2013empirical}. 
+%现有self-evolving agent的工作通过环境交互，进化prompt，workflow，tools，提升agent表现。
+Recent self-evolving paradigms aim to overcome this issue by evolving non-parametric components (\textit{i.e.,} prompts~\cite{yuksekgonul2024textgrad,zhang2025agentic}, workflows~\cite{lin2025se,zhang2025multi,shang2024agentsquare}, and tools~\cite{qian2023creator,qiu2025alita}) through environmental feedback and textual gradient~\cite{yuksekgonul2024textgrad,shinn2023reflexion,zhang2024revolve}. 
+%然而，现有se-agent的优化方式导致其无法充分利用experience，带来本质上的推理能力和知识利用能力的增长。同时优化对象限制性能增长，无法保证performance scales with experience；如何简洁的体现客观因果逻辑呢
+Nevertheless, these evolving objects fail to directly and effectively learn the semantic knowledge from growing experiences to correspondingly scale up the reasoning capacity.
+%These evolving components primarily enhance performance within fixed paradigms, but do not fully exploit the potential of accumulated experience to grow reasoning power or knowledge utilization. As a result, the optimization targets do not scale with experience, hindering performance improvements in dynamic, real-world scenarios.
+%此外，当使用新的LLM agents时，都必须重新交互而无法从其他agent的经验中off-policy的学习，造成极大的计算浪费。
+%注意这里不能先入为主的 claim 继承性，不然很懵逼，继承性是什么？为什么一定要继承性？避免这种“跳跃式”的断言
+Moreover, new agents are required to conduct interactions from scratch when deploying, unable to learn off-policy from other agents' experiences, resulting in substantial computational waste.
+
+
+% Our methods (what's new?): The Road Ahead
+%% A high-level introduction [ToDo]
+To address these limitations, we propose \textbf{F}orward \textbf{L}earning from \textbf{Ex}perience~(\textbf{\method{}}), a novel learning paradigm that shifts learning from modifying model parameters to constructing and leveraging an evolvable experience library.
+By continuously expanding and refining this library, agents can progressively acquire deeper insights and knowledge, enhancing their cognitive capabilities with accumulated experiences.
+%As the library expands and refines, more insights and knowledge are continuously contained, thus the agent's cognitive abilities is progressively enhanced with accumulated experiences.
+%[呼应上文] 通过不断扩张积累experience library，agent能学到更多。。。。；从而持续进化agent能力。
+%This endows static agents with the ability to capture the dynamics of the environment and actively learn and self-evolve through ongoing environmental interactions. %[overclaim]
+
+%% More details of this method [ToDo]
+Specifically, \method{} formulates learning as a forward-looking process of experiential exploration and distillation.
+\method{} drives LLM agents to conduct extensive explorations forwardly, reflecting on their reasoning trajectories to distill both successful strategies and failure lessons. These distilled experiences are dynamically integrated into an evolving experience library, guided by semantic signals that replace traditional gradient flows. 
+At inference, agents retrieve pertinent experiences from the library, invoking learned strategies or latent cognitive patterns, thus enhancing their ability to tackle new problems with superior reasoning and knowledge utilization.
+%The agent continuously explores the environment to generate extensive interaction trajectories. 
+%generalizable knowledge, such as principles, methodologies and concrete patterns. 
+
+
+% Experimental Results
+To validate the general effectiveness of \method{} paradigm, we conduct extensive experiments across diverse challenging scientific domains, including Olympiad-level mathematics (AIME25~\cite{aime2025problems}), chemical retrosynthesis (USPTO50k~\cite{schneider2016s}), and protein fitness prediction (ProteinGym~\cite{notin2023proteingym}). \method{} demonstrates substantial and consistent improvements on these tasks, from 40\% to 63\% on AIME25 and 20\% to 30\% on USPTO50k, exhibiting great enhancement in the capacity of reasoning and knowledge leverage.
+
+Beyond these quantitative achievements, \method{} unveils two profound properties. First, we identify a precise \textbf{scaling law}, where agent performance scales predictably with the size of the experience library. Furthermore, we demonstrate the principle of \textbf{intelligence inheritance}, where learned experience libraries can be seamlessly inherited across agents. This plug-and-play capability allows a new agent to instantly assimilate the distilled wisdom of another, bypassing redundant and costly re-learning.
+%[顺序对应。加个总结句?]
+% This finding suggests a clear path from self-evolving individual agents to a powerful, collaborative \textbf{experience ecosystem}, where multiple agents contribute to and benefit from a shared knowledge pool, driving collective and continuous improvement.
+
+% Contribution summary
+In summary, our contributions are as follows:
+\begin{itemize}
+\item We propose \textbf{\method{}}, a new learning paradigm for the agentic era. It redefines learning as a forward exploration and experience distillation process, enabling LLM agents to continuously evolve through accumulated experience without gradient-based tuning.
+\item We provide a comprehensive framework for \method{}, including a unified mathematical formulation with theoretical justifications, a practical instantiation with concrete mechanisms, and an empirical demonstration of its effectiveness on diverse scientific benchmarks.
+\item We discover and empirically validate a \textbf{scaling law} for the experience library, showing that agent performance scales predictably with accumulated knowledge. %and revealing a path towards a collaborative experience ecosystem.
+We also introduce and demonstrate the principle of \textbf{intelligence inheritance}, where distilled experience can be transferred between agents in a plug-and-play manner, enabling instant knowledge assimilation and bypassing redundant learning.
+\end{itemize}

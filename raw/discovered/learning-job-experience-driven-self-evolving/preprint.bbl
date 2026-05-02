@@ -1,0 +1,229 @@
+\begin{thebibliography}{10}
+
+\bibitem{team2023gemini}
+Gemini Team, Rohan Anil, Sebastian Borgeaud, Jean-Baptiste Alayrac, Jiahui Yu, Radu Soricut, Johan Schalkwyk, Andrew~M Dai, Anja Hauth, Katie Millican, et~al.
+\newblock Gemini: a family of highly capable multimodal models.
+\newblock {\em arXiv preprint arXiv:2312.11805}, 2023.
+
+\bibitem{yang2025qwen3}
+An~Yang, Anfeng Li, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo~Zheng, Bowen Yu, Chang Gao, Chengen Huang, Chenxu Lv, et~al.
+\newblock Qwen3 technical report.
+\newblock {\em arXiv preprint arXiv:2505.09388}, 2025.
+
+\bibitem{liu2024deepseek}
+Aixin Liu, Bei Feng, Bing Xue, Bingxuan Wang, Bochao Wu, Chengda Lu, Chenggang Zhao, Chengqi Deng, Chenyu Zhang, Chong Ruan, et~al.
+\newblock Deepseek-v3 technical report.
+\newblock {\em arXiv preprint arXiv:2412.19437}, 2024.
+
+\bibitem{dubey2024llama}
+Abhimanyu Dubey, Abhinav Jauhri, Abhinav Pandey, Abhishek Kadian, Ahmad Al-Dahle, Aiesha Letman, Akhil Mathur, Alan Schelten, Amy Yang, Angela Fan, et~al.
+\newblock The llama 3 herd of models.
+\newblock {\em arXiv e-prints}, pages arXiv--2407, 2024.
+
+\bibitem{anthropic2025claude4}
+{Anthropic}.
+\newblock Introducing claude 4.
+\newblock https://www.anthropic.com/news/claude-4, 2025.
+\newblock Accessed: 2024-09-24.
+
+\bibitem{openai2025gpt5}
+OpenAI.
+\newblock Introducing gpt-5.
+\newblock https://openai.com/index/introducing-gpt-5/, 2025.
+\newblock Accessed: 2024-09-24.
+
+\bibitem{rein2024gpqa}
+David Rein, Betty~Li Hou, Asa~Cooper Stickland, Jackson Petty, Richard~Yuanzhe Pang, Julien Dirani, Julian Michael, and Samuel~R Bowman.
+\newblock Gpqa: A graduate-level google-proof q\&a benchmark.
+\newblock In {\em First Conference on Language Modeling}, 2024.
+
+\bibitem{lu2023mathvista}
+Pan Lu, Hritik Bansal, Tony Xia, Jiacheng Liu, Chunyuan Li, Hannaneh Hajishirzi, Hao Cheng, Kai-Wei Chang, Michel Galley, and Jianfeng Gao.
+\newblock Mathvista: Evaluating mathematical reasoning of foundation models in visual contexts.
+\newblock {\em arXiv preprint arXiv:2310.02255}, 2023.
+
+\bibitem{aime}
+{Mathematical Association of America}.
+\newblock American invitational mathematics examination.
+\newblock \url{https://www.maa.org/math-competitions/aime}, 2025.
+\newblock Annual mathematics competition for high school students.
+
+\bibitem{chen2021codex}
+Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique~Ponde de~Oliveira~Pinto, Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph, Greg Brockman, Alex Ray, Raul Puri, Gretchen Krueger, Michael Petrov, Heidy Khlaaf, Girish Sastry, Pamela Mishkin, Brooke Chan, Scott Gray, Nick Ryder, Mikhail Pavlov, Alethea Power, Lukasz Kaiser, Mohammad Bavarian, Clemens Winter, Philippe Tillet, Felipe~Petroski Such, Dave Cummings, Matthias Plappert, Fotios Chantzis, Elizabeth Barnes, Ariel Herbert-Voss, William~Hebgen Guss, Alex Nichol, Alex Paino, Nikolas Tezak, Jie Tang, Igor Babuschkin, Suchir Balaji, Shantanu Jain, William Saunders, Christopher Hesse, Andrew~N. Carr, Jan Leike, Josh Achiam, Vedant Misra, Evan Morikawa, Alec Radford, Matthew Knight, Miles Brundage, Mira Murati, Katie Mayer, Peter Welinder, Bob McGrew, Dario Amodei, Sam McCandlish, Ilya Sutskever, and Wojciech Zaremba.
+\newblock Evaluating large language models trained on code.
+\newblock 2021.
+
+\bibitem{xie2024osworld}
+Tianbao Xie, Danyang Zhang, Jixuan Chen, Xiaochuan Li, Siheng Zhao, Ruisheng Cao, Toh~J Hua, Zhoujun Cheng, Dongchan Shin, Fangyu Lei, et~al.
+\newblock Osworld: Benchmarking multimodal agents for open-ended tasks in real computer environments.
+\newblock {\em Advances in Neural Information Processing Systems}, 37:52040--52094, 2024.
+
+\bibitem{zhou2023webarena}
+Shuyan Zhou, Frank~F Xu, Hao Zhu, Xuhui Zhou, Robert Lo, Abishek Sridhar, Xianyi Cheng, Tianyue Ou, Yonatan Bisk, Daniel Fried, et~al.
+\newblock Webarena: A realistic web environment for building autonomous agents.
+\newblock {\em arXiv preprint arXiv:2307.13854}, 2023.
+
+\bibitem{xu2024theagentcompanybenchmarkingllmagents}
+Frank~F. Xu, Yufan Song, Boxuan Li, Yuxuan Tang, Kritanjali Jain, Mengxue Bao, Zora~Z. Wang, Xuhui Zhou, Zhitong Guo, Murong Cao, Mingyang Yang, Hao~Yang Lu, Amaad Martin, Zhe Su, Leander Maben, Raj Mehta, Wayne Chi, Lawrence Jang, Yiqing Xie, Shuyan Zhou, and Graham Neubig.
+\newblock Theagentcompany: Benchmarking llm agents on consequential real world tasks, 2024.
+
+\bibitem{gao2025survey}
+Huan-ang Gao, Jiayi Geng, Wenyue Hua, Mengkang Hu, Xinzhe Juan, Hongzhang Liu, Shilong Liu, Jiahao Qiu, Xuan Qi, Yiran Wu, et~al.
+\newblock A survey of self-evolving agents: On path to artificial super intelligence.
+\newblock {\em arXiv preprint arXiv:2507.21046}, 2025.
+
+\bibitem{zhou2022large}
+Yongchao Zhou, Andrei~Ioan Muresanu, Ziwen Han, Keiran Paster, Silviu Pitis, Harris Chan, and Jimmy Ba.
+\newblock Large language models are human-level prompt engineers.
+\newblock In {\em The eleventh international conference on learning representations}, 2022.
+
+\bibitem{wang2023promptagent}
+Xinyuan Wang, Chenxi Li, Zhen Wang, Fan Bai, Haotian Luo, Jiayou Zhang, Nebojsa Jojic, Eric~P Xing, and Zhiting Hu.
+\newblock Promptagent: Strategic planning with language models enables expert-level prompt optimization.
+\newblock {\em arXiv preprint arXiv:2310.16427}, 2023.
+
+\bibitem{pryzant2023automatic}
+Reid Pryzant, Dan Iter, Jerry Li, Yin~Tat Lee, Chenguang Zhu, and Michael Zeng.
+\newblock Automatic prompt optimization with" gradient descent" and beam search.
+\newblock {\em arXiv preprint arXiv:2305.03495}, 2023.
+
+\bibitem{wang2023voyager}
+Guanzhi Wang, Yuqi Xie, Yunfan Jiang, Ajay Mandlekar, Chaowei Xiao, Yuke Zhu, Linxi Fan, and Anima Anandkumar.
+\newblock Voyager: An open-ended embodied agent with large language models.
+\newblock {\em arXiv preprint arXiv:2305.16291}, 2023.
+
+\bibitem{wu2024copilot}
+Zhiyong Wu, Chengcheng Han, Zichen Ding, Zhenmin Weng, Zhoumianze Liu, Shunyu Yao, Tao Yu, and Lingpeng Kong.
+\newblock Os-copilot: Towards generalist computer agents with self-improvement.
+\newblock {\em arXiv preprint arXiv:2402.07456}, 2024.
+
+\bibitem{qian2024iterative}
+Chen Qian, Jiahao Li, Yufan Dang, Wei Liu, YiFei Wang, Zihao Xie, Weize Chen, Cheng Yang, Yingli Zhang, Zhiyuan Liu, et~al.
+\newblock Iterative experience refinement of software-developing agents.
+\newblock {\em arXiv preprint arXiv:2405.04219}, 2024.
+
+\bibitem{tang2025agent}
+Xiangru Tang, Tianrui Qin, Tianhao Peng, Ziyang Zhou, Daniel Shao, Tingting Du, Xinming Wei, He~Zhu, Ge~Zhang, Jiaheng Liu, et~al.
+\newblock Agent kb: A hierarchical memory framework for cross-domain agentic problem solving.
+\newblock In {\em ICML 2025 Workshop on Collaborative and Federated Agentic Workflows}.
+
+\bibitem{qiu2025alita}
+Jiahao Qiu, Xuan Qi, Tongcheng Zhang, Xinzhe Juan, Jiacheng Guo, Yifu Lu, Yimin Wang, Zixin Yao, Qihan Ren, Xun Jiang, et~al.
+\newblock Alita: Generalist agent enabling scalable agentic reasoning with minimal predefinition and maximal self-evolution.
+\newblock {\em arXiv preprint arXiv:2505.20286}, 2025.
+
+\bibitem{shinn2023reflexion}
+Noah Shinn, Federico Cassano, Ashwin Gopinath, Karthik Narasimhan, and Shunyu Yao.
+\newblock Reflexion: Language agents with verbal reinforcement learning.
+\newblock {\em Advances in Neural Information Processing Systems}, 36:8634--8652, 2023.
+
+\bibitem{liang2025sage}
+Xuechen Liang, Meiling Tao, Yinghui Xia, Jianhui Wang, Kun Li, Yijin Wang, Yangfan He, Jingsong Yang, Tianyu Shi, Yuantao Wang, et~al.
+\newblock Sage: Self-evolving agents with reflective and memory-augmented abilities.
+\newblock {\em Neurocomputing}, page 130470, 2025.
+
+\bibitem{krishnan2025ai}
+Naveen Krishnan.
+\newblock Ai agents: Evolution, architecture, and real-world applications.
+\newblock {\em arXiv preprint arXiv:2503.12687}, 2025.
+
+\bibitem{douze2024faiss}
+Matthijs Douze, Alexandr Guzhva, Chengqi Deng, Jeff Johnson, Gergely Szilvasy, Pierre-Emmanuel Mazar{\'e}, Maria Lomeli, Lucas Hosseini, and Herv{\'e} J{\'e}gou.
+\newblock The faiss library.
+\newblock {\em arXiv preprint arXiv:2401.08281}, 2024.
+
+\bibitem{webber2012programmatic}
+Jim Webber.
+\newblock A programmatic introduction to neo4j.
+\newblock In {\em Proceedings of the 3rd annual conference on Systems, programming, and applications: software for humanity}, pages 217--218. ACM, 2012.
+
+\bibitem{chhikara2025mem0}
+Prateek Chhikara, Dev Khant, Saket Aryan, Taranjeet Singh, and Deshraj Yadav.
+\newblock Mem0: Building production-ready ai agents with scalable long-term memory.
+\newblock {\em arXiv preprint arXiv:2504.19413}, 2025.
+
+\bibitem{salama2025meminsight}
+Rana Salama, Jason Cai, Michelle Yuan, Anna Currey, Monica Sunkara, Yi~Zhang, and Yassine Benajiba.
+\newblock Meminsight: Autonomous memory augmentation for llm agents.
+\newblock {\em arXiv preprint arXiv:2503.21760}, 2025.
+
+\bibitem{zhao2024expel}
+Andrew Zhao, Daniel Huang, Quentin Xu, Matthieu Lin, Yong-Jin Liu, and Gao Huang.
+\newblock Expel: Llm agents are experiential learners.
+\newblock In {\em Proceedings of the AAAI Conference on Artificial Intelligence}, volume~38, pages 19632--19642, 2024.
+
+\bibitem{wang2024agent}
+Zora~Zhiruo Wang, Jiayuan Mao, Daniel Fried, and Graham Neubig.
+\newblock Agent workflow memory.
+\newblock {\em arXiv preprint arXiv:2409.07429}, 2024.
+
+\bibitem{fang2025memp}
+Runnan Fang, Yuan Liang, Xiaobin Wang, Jialong Wu, Shuofei Qiao, Pengjun Xie, Fei Huang, Huajun Chen, and Ningyu Zhang.
+\newblock Memp: Exploring agent procedural memory.
+\newblock {\em arXiv preprint arXiv:2508.06433}, 2025.
+
+\bibitem{yang2018hotpotqa}
+Zhilin Yang, Peng Qi, Saizheng Zhang, Yoshua Bengio, William~W Cohen, Ruslan Salakhutdinov, and Christopher~D Manning.
+\newblock Hotpotqa: A dataset for diverse, explainable multi-hop question answering.
+\newblock {\em arXiv preprint arXiv:1809.09600}, 2018.
+
+\bibitem{shridhar2020alfworld}
+Mohit Shridhar, Xingdi Yuan, Marc-Alexandre C{\^o}t{\'e}, Yonatan Bisk, Adam Trischler, and Matthew Hausknecht.
+\newblock Alfworld: Aligning text and embodied environments for interactive learning.
+\newblock {\em arXiv preprint arXiv:2010.03768}, 2020.
+
+\bibitem{yao2022webshop}
+Shunyu Yao, Howard Chen, John Yang, and Karthik Narasimhan.
+\newblock Webshop: Towards scalable real-world web interaction with grounded language agents.
+\newblock {\em Advances in Neural Information Processing Systems}, 35:20744--20757, 2022.
+
+\bibitem{thorne2018fever}
+James Thorne, Andreas Vlachos, Christos Christodoulopoulos, and Arpit Mittal.
+\newblock Fever: a large-scale dataset for fact extraction and verification.
+\newblock {\em arXiv preprint arXiv:1803.05355}, 2018.
+
+\bibitem{deng2023mind2web}
+Xiang Deng, Yu~Gu, Boyuan Zheng, Shijie Chen, Sam Stevens, Boshi Wang, Huan Sun, and Yu~Su.
+\newblock Mind2web: Towards a generalist agent for the web.
+\newblock {\em Advances in Neural Information Processing Systems}, 36:28091--28114, 2023.
+
+\bibitem{yao2023react}
+Shunyu Yao, Jeffrey Zhao, Dian Yu, Nan Du, Izhak Shafran, Karthik Narasimhan, and Yuan Cao.
+\newblock React: Synergizing reasoning and acting in language models.
+\newblock In {\em International Conference on Learning Representations (ICLR)}, 2023.
+
+\bibitem{qin2023toolllm}
+Yujia Qin, Shihao Liang, Yining Ye, Kunlun Zhu, Lan Yan, Yaxi Lu, Yankai Lin, Xin Cong, Xiangru Tang, Bill Qian, et~al.
+\newblock Toolllm: Facilitating large language models to master 16000+ real-world apis.
+\newblock {\em arXiv preprint arXiv:2307.16789}, 2023.
+
+\bibitem{patil2024gorilla}
+Shishir~G Patil, Tianjun Zhang, Xin Wang, and Joseph~E Gonzalez.
+\newblock Gorilla: Large language model connected with massive apis.
+\newblock {\em Advances in Neural Information Processing Systems}, 37:126544--126565, 2024.
+
+\bibitem{comanici2025gemini}
+Gheorghe Comanici, Eric Bieber, Mike Schaekermann, Ice Pasupat, Noveen Sachdeva, Inderjit Dhillon, Marcel Blistein, Ori Ram, Dan Zhang, Evan Rosen, et~al.
+\newblock Gemini 2.5: Pushing the frontier with advanced reasoning, multimodality, long context, and next generation agentic capabilities.
+\newblock {\em arXiv preprint arXiv:2507.06261}, 2025.
+
+\bibitem{soni2025codingagentsmultimodalbrowsing}
+Aditya~Bharat Soni, Boxuan Li, Xingyao Wang, Valerie Chen, and Graham Neubig.
+\newblock Coding agents with multimodal browsing are generalist problem solvers, 2025.
+
+\bibitem{wang2024openhands}
+Xingyao Wang, Boxuan Li, Yufan Song, Frank~F Xu, Xiangru Tang, Mingchen Zhuge, Jiayi Pan, Yueqi Song, Bowen Li, Jaskirat Singh, et~al.
+\newblock Openhands: An open platform for ai software developers as generalist agents.
+\newblock {\em arXiv preprint arXiv:2407.16741}, 2024.
+
+\bibitem{hu2025owl}
+Mengkang Hu, Yuhang Zhou, Wendong Fan, Yuzhou Nie, Bowei Xia, Tao Sun, Ziyu Ye, Zhaoxuan Jin, Yingru Li, Qiguang Chen, Zeyu Zhang, Yifeng Wang, Qianshuo Ye, Bernard Ghanem, Ping Luo, and Guohao Li.
+\newblock Owl: Optimized workforce learning for general multi-agent assistance in real-world task automation, 2025.
+
+\bibitem{browseruse2025browseruse}
+{Browser-Use}.
+\newblock Browser-use.
+\newblock https://github.com/browser-use/browser-use, 2025.
+\newblock Accessed: 2025-08-23.
+
+\end{thebibliography}

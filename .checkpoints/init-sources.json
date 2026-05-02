@@ -1,0 +1,105 @@
+{
+  "status": "ok",
+  "sources": [
+    {
+      "candidate_id": "arxiv:2511.20857",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/evo-memory-benchmarking-llm-agent-test",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/evo-memory-benchmarking-llm-agent-test",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 1
+    },
+    {
+      "candidate_id": "arxiv:2604.22436",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/agentsearchbench-benchmark-ai-agent-search-wild",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/agentsearchbench-benchmark-ai-agent-search-wild",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 2
+    },
+    {
+      "candidate_id": "arxiv:2511.06449",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/flex-continuous-agent-evolution-forward-learning",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/flex-continuous-agent-evolution-forward-learning",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 3
+    },
+    {
+      "candidate_id": "arxiv:2510.16079",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/evolver-self-evolving-llm-agents-through",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/evolver-self-evolving-llm-agents-through",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 4
+    },
+    {
+      "candidate_id": "arxiv:2510.20168",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/deepwidesearch-benchmarking-depth-width-agentic-information",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/deepwidesearch-benchmarking-depth-width-agentic-information",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 5
+    },
+    {
+      "candidate_id": "arxiv:2602.20867",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/sok-agentic-skills-beyond-tool-use",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/sok-agentic-skills-beyond-tool-use",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 6
+    },
+    {
+      "candidate_id": "arxiv:2603.04900",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/evotool-self-evolving-tool-use-policy",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/evotool-self-evolving-tool-use-policy",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 8
+    },
+    {
+      "candidate_id": "arxiv:2510.08002",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/learning-job-experience-driven-self-evolving",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/learning-job-experience-driven-self-evolving",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 9
+    },
+    {
+      "candidate_id": "arxiv:2508.07407",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/comprehensive-survey-self-evolving-ai-agents",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/comprehensive-survey-self-evolving-ai-agents",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 10
+    },
+    {
+      "candidate_id": "arxiv:2507.21046",
+      "origin": "introduced",
+      "canonical_ingest_path": "raw/discovered/survey-self-evolving-agents-what-when",
+      "prepared_path": null,
+      "discovered_path": "raw/discovered/survey-self-evolving-agents-what-when",
+      "source_path": null,
+      "ingest_format": "directory",
+      "shortlist_rank": 12
+    }
+  ]
+}

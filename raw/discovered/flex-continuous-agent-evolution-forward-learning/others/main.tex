@@ -1,0 +1,847 @@
+\documentclass{article}
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2025
+
+
+% ready for submission
+\usepackage[preprint]{neurips_2025}
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2025}
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2025}
+% to avoid loading the natbib package, add option nonatbib:
+%    \usepackage[nonatbib]{neurips_2025}
+\usepackage{wrapfig}
+\usepackage{amsthm}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{colortbl}       % for table colors
+\usepackage{enumitem}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{tikz}
+\usepackage{graphicx}  % 引入插图包
+\usepackage{subfigure}
+\usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
+\usepackage{pifont}
+\usepackage[svgnames]{xcolor}
+\usepackage[table]{xcolor}
+\pgfplotsset{compat=1.5}
+
+\newcommand{\ie}{\textit{i.e.}\xspace}
+\newcommand{\eg}{\textit{e.g.}\xspace}
+\newcommand{\aili}[1]{\textcolor{blue}{{[aili: #1]}}}
+\newcommand{\var}{\mathrm{Var}}
+\newcommand{\wo}{\textit{w/o}\xspace}
+\newcommand{\w}{\textit{w/}\xspace}
+% 为我们的待定方法名建一个宏
+\newcommand{\method}{Forward Learning}
+
+\makeatletter
+\def\adl@drawiv#1#2#3{%
+        \hskip.5\tabcolsep
+        \xleaders#3{#2.5\@tempdimb #1{1}#2.5\@tempdimb}%
+                #2\z@ plus1fil minus1fil\relax
+        \hskip.5\tabcolsep}
+\newcommand{\cdashlinelr}[1]{%
+  \noalign{\vskip\aboverulesep
+           \global\let\@dashdrawstore\adl@draw
+           \global\let\adl@draw\adl@drawiv}
+  \cdashline{#1}
+  \noalign{\global\let\adl@draw\@dashdrawstore
+           \vskip\belowrulesep}}
+\makeatother
+
+\newcommand{\MC}[2]{%
+  \multicolumn{5}{@{}c@{}}{%
+    \begin{tabular}{#1}
+      #2
+    \end{tabular}%
+  }%
+}
+
+% 为我们的论文选用几个主色调（数字越大颜色越浅）
+\definecolor{blue1}{HTML}{104e8b}
+\definecolor{blue2}{HTML}{376b9e}
+\definecolor{blue3}{HTML}{5f89b1}
+\definecolor{blue4}{HTML}{afc3d8}
+\definecolor{mint}{HTML}{c5e9e3}
+\definecolor{grey}{HTML}{d7e1eb}
+\definecolor{red1}{HTML}{b22222}
+\definecolor{red2}{HTML}{d89090}
+\definecolor{red3}{HTML}{e5b5b5}
+\definecolor{red4}{HTML}{f2dada}
+\definecolor{lightgray}{gray}{0.9}
+
+% 设置一下 hyperref 格式
+\hypersetup{
+    colorlinks=true,   % 将链接显示为彩色文本而不是边框
+    linkcolor=blue,    % 内部链接的颜色 (表格、图表、章节等的引用)
+    citecolor=blue,    % 参考文献的颜色 (使用 \cite)
+    urlcolor=blue      % URL 链接的颜色 (使用 \url)
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{minitoc}
+\usepackage{amsmath}
+\usepackage{cleveref} 
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{multirow}
+\newcommand{\cmark}{\ding{51}} % 对勾
+\newcommand{\xmark}{\ding{55}} % 叉号
+
+\renewcommand\cellalign{tl}  % makecell对齐设置（可选）
+\renewcommand\cellgape{}     % 去掉makecell垂直间隙（可选）
+
+%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{tikz}
+\newcommand{\gradientcella}[1]{% 
+    \begin{tikzpicture}[baseline]
+        % 固定背景长度为 0.6
+        \fill[purple!10, rounded corners=1pt] (0,0) rectangle (1,0.3);
+        % 填充部分按百分比缩放（#1 是 0–100）
+        \fill[purple!40, rounded corners=1pt] (0,0) rectangle ({0.01*#1},0.3);
+        % 数值标签（居中或靠右）
+        %\node[right] at (0.6,0.1) {\scriptsize{#1}};
+    \end{tikzpicture}%
+}
+
+\usepackage{tikz}
+\newcommand{\gradientcellab}[1]{% 
+    \begin{tikzpicture}[baseline]
+        % 固定背景长度为 0.6
+        \fill[blue!10, rounded corners=1pt] (0,0) rectangle (1,0.3);
+        % 填充部分按百分比缩放（#1 是 0–100）
+        \fill[blue!40, rounded corners=1pt] (0,0) rectangle ({0.01*#1},0.3);
+        % 数值标签（居中或靠右）
+        %\node[right] at (0.6,0.1) {\scriptsize{#1}};
+    \end{tikzpicture}%
+}
+
+\usepackage{tikz}
+\newcommand{\gradientcellac}[1]{% 
+    \begin{tikzpicture}[baseline]
+        % 固定背景长度为 0.6
+        \fill[cyan!10, rounded corners=1pt] (0,0) rectangle (1,0.3);
+        % 填充部分按百分比缩放（#1 是 0–100）
+        \fill[cyan!40, rounded corners=1pt] (0,0) rectangle ({0.01*#1},0.3);
+        % 数值标签（居中或靠右）
+        %\node[right] at (0.6,0.1) {\scriptsize{#1}};
+    \end{tikzpicture}%
+}
+
+\newcommand{\yupei}[1]{\textcolor{purple}{\bf \small [#1 --yupei]}}
+\newcommand{\xinyuan}[1]{\textcolor{orange}{\bf \small [#1 --xinyuan]}}
+\newcommand{\caizc}[1]{\textcolor{blue}{\bf \small [#1 --caizc]}}
+\newcommand{\jiangtao}[1]{\textcolor{red}{\bf \small [#1 --jt]}}
+%%%%%%%%%%%%%%%%%%%%
+
+\title{Forward Learning with Experiences \\ for Autonomous Agents}%待定
+% \method Paradigm for Evolving LLM Agents
+% \method: A Self-Evolving Agent with Experience Learning
+
+\author{}
+
+\begin{document}
+\maketitle
+
+% Display the color that we use
+\textcolor{blue1}{color}
+\textcolor{blue2}{color}
+\textcolor{blue3}{color}
+\textcolor{blue4}{color}
+\textcolor{mint}{color}
+\textcolor{grey}{color}
+\textcolor{red4}{color}
+\textcolor{red3}{color}
+\textcolor{red2}{color}
+\textcolor{red1}{color}
+\yupei{Switch to GenSI Template?}
+
+% Figure: Main Results (待定，先放上来看看效果)
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figs/Results.jpg}
+    \caption{Main results on four challenging benchmarks.}
+    \label{fig:results}
+\end{figure}
+
+\begin{abstract}
+%%% Background: LLM agents
+Large Language Model (LLM) agents have exhibited extraordinary abilities in semantic understanding and reasoning, driving transformative progress across diverse domains.
+%%% Existing issues
+Yet, after extensive pre-training, supervised and reinforced fine-tuning, LLMs are typically frozen, unable to continuously evolve with experiences as intelligent beings do.
+Consequently, when confronted with highly challenging scientific tasks that demand specialized expertise and adaptive reasoning, their performance often degrades dramatically.
+%%% Our method: Forward learning without gradient back-propagation.
+To overcome the limitation, we propose \textit{\method{}}, a novel learning paradigm that empowers LLM agents to evolve without gradient backpropagation or parameter updates. 
+%%% The core of Forward Learning: A totally forward-propagation approach, learn from experience, update the experience library with semantic feedbacks, evoke the intrinsic abilities of LLMs.
+During learning, \method{} drives LLM agents to conduct extensive experience explorations forwardly, reflecting on their reasoning trajectories to distill successful strategies and failure lessons. %These insights are dynamically incorporated into an experience library guided by semantic feedback signals.
+%Instead of passively relying on offline optimization, Forward Learning drives agents to actively explore, reflect, and refine — continuously conducting extensive experience explorations, analyzing their own reasoning trajectories, and distilling semantic insights from both successes and failures.
+These distilled experiences are dynamically structured into a self-evolving experience library, guided by semantic feedback signals that replace traditional gradient flows.
+During inference, agents retrieve and apply relevant experiential knowledge, invoking learned strategies or latent cognitive patterns to confront new problems with greater adaptability and coherence.
+%During inference, the agent retrieves relevant experiences from the learned library, applying key techniques or evoking certain intrinsic abilities to tackle new problems.
+%%%Experiments: diverse realms, significant improvements
+Extensive experiments demonstrate that \method{} achieves substantial and consistent improvements over strong baselines across diverse domains, including mathematical reasoning, chemical retro-synthesis, and protein fitness prediction (up to 58\% improvement on AIME25 and 50\% on USPTO50k).
+%Summary
+These results reveal \method{} as not only an effective but also a principled and human-like paradigm for enabling LLM agents to learn from experience, illuminating a promising path toward continually evolving artificial intelligence.
+\end{abstract}
+
+
+
+
+\section{Introduction}
+%Background: Focus on current Agent works and capabilities
+The rapid advancement of autonomous agents has demonstrated remarkable capabilities across diverse domains, including coding (e.g., Claude Code \xinyuan{To be cited}), scientific discovery (e.g., Biomni \xinyuan{To be cited}, STELLA \xinyuan{To be cited}, SciMaster \xinyuan{To be cited}), and in-depth research (e.g., Tongyi \xinyuan{To be cited}, OpenAI \xinyuan{To be cited}, and Gemini \xinyuan{To be cited} DeepResearch). These agents leverage the power of state-of-the-art (SOTA) foundation models \xinyuan{To be cited}, whose abilities are a product of extensive pre-training and post-training, such as Supervised Fine-Tuning (SFT) and Reinforced Fine-Tuning (RFT), on vast, static datasets.
+
+%Issues (why need a new learning paradigm), existing works: The Core Issue: Lack of the evolving procedure from the interactions with the environment.
+However, when deployed in increasingly complex and specialized real-world settings, the performance of these agents often degrades severely. We posit that a central deficiency underlies current agentic frameworks: \textit{they lack a mechanism to evolve through interaction with their environment}. While hand-crafted agentic workflows built upon SOTA LLMs have shown promise \xinyuan{To be cited}, they are fundamentally constrained by the irremediable knowledge gaps between their static, pre-trained knowledge and the dynamic, unpredictable nature of the real world. More critically, this exposes the absence of a paradigm that can learn efficiently from experience. Traditional parameter-based learning methods like SFT and RFT require massive, high-quality curated datasets and are ill-suited for on-the-fly adaptation, rendering them insufficient for the continuous learning demanded by complex real-world challenges.
+
+%Our methods (what's new?): The Road Ahead
+%% A high-level introduction
+To address this critical gap, we argue that the field requires a paradigm shift from learning on static, curated data to learning directly from real-world interaction and experience. To this end, we propose \textbf{\method{}}, a novel, parameter-free learning paradigm. It reframes the essence of learning from altering internal model connections to building and leveraging an external, evolvable library of experiences, thereby endowing static agents with the ability to dynamically learn and self-evolve through ongoing environmental interaction.
+
+%% More details of this method
+Within the \method{} framework, learning is reformulated as a forward-looking process of exploration and distillation. The agent explores the environment through trial and error, generating rich interactional trajectories. Subsequently, leveraging the LLM's own powerful semantic understanding, \method{} distills these raw trajectories into generalizable knowledge—transferable rules, heuristics, or critical warnings. These distilled experiences are stored in an evolving library, which the agent can retrieve from in future tasks to inform its actions, achieving continuous growth and adaptation without any parameter modification.
+
+%Experimental Results
+To validate the true power of our new paradigm, we deliberately selected a suite of challenging and impactful benchmarks in novel scientific domains—in contrast to related work that often relies on settings that have a considerable gap with the complexities of real-world applications \xinyuan{To be cited}. We conducted extensive experiments on tasks requiring complex reasoning in Olympiad-level mathematics (AIME25 \xinyuan{To be cited}, GSM8k \xinyuan{To be cited}), deep chemical knowledge in single-step retrosynthesis (USPTO50k \xinyuan{To be cited}), and exploration of a vast biological space in protein fitness prediction (ProteinGym \xinyuan{To be cited}). The results are not marginal improvements but step-function gains in capability, up to 58\% improvement on AIME25 and 50\% on USPTO50k. This success on complex scientific discovery tasks provides compelling evidence that, to tackle the next generation of real-world challenges, a paradigm shift in learning is not just beneficial—it is imperative.
+
+%Contribution summary
+In summary, our contributions are threefold:
+\begin{itemize}[leftmargin=*]
+    \item We propose \textbf{\method{}}, a new learning paradigm designed for the agentic era. It redefines learning as a forward exploration process, enabling LLM agents to evolve dynamically without gradient back-propagation or parameter tuning.
+    \item We establish a unified mathematical formulation for \method{} and provide theoretical justification for its effectiveness from the perspectives of information theory and Bayesian inference.
+    \item We instantiate \method{} with concrete mechanisms for extensive exploration and experience library evolution, and demonstrate significant and consistent performance improvements across diverse challenging domains, including mathematics, chemistry, and biology.
+\end{itemize}
+
+\section{Mathematical Formulation of Paradigm}
+\method{} enables LLM agents to continually evolve through \textbf{learning from experience}. 
+%This section first provides a mathematical formulation of the \method{} paradigm, and then presents its concrete instantiation to illustrate how the framework operates in practice.
+%\subsection{Mathematical Formulation}
+In this section, we establish a unified mathematical formulation of the \method{} paradigm. 
+A learning paradigm consists of two key components, an optimization objective defining what to learn, and an optimization process determining how to learn it. 
+Specifically, we define the optimization objective as minimizing the conditional entropy, and formulate the optimization process as a Meta Markov Decision Process that enables extensive experience exploration and accumulation. 
+In addition, we further provide theoretical analyses grounded in information theory and Bayesian inference to justify the effectiveness of the paradigm.
+
+\subsection{Overview of \method{}}
+We begin by outlining the framework of \method{}.
+Its core premise is to make an LLM agent $\pi$ extensively explore the environment. The resulting interaction experiences are dynamically consolidated into an ever-evolving experience library $\mathcal{E}$ by an updater agent $\mu$. 
+At inference time, a retrieval agent $\rho$ fetches the most pertinent experiences from $\mathcal{E}$ for a given query and supplies them to $\pi$, thereby augmenting the model's reasoning and knowledge leverage to yield superior response. Through this mechanism, \method{} facilitates continuous learning from experience, without requiring parameter updates.
+%We begin by outlining the framework of \method{}. The core idea is to enable an LLM agent $\pi$ to interact extensively with the environment, generating a rich set of experiences. A dedicated updater agent $\mu$ dynamically consolidates these experiences into an ever-evolving experience library $\mathcal{E}$. During inference, for a given input query, a retrieval agent $\rho$ fetches the most beneficial experiences from $\mathcal{E}$. These experiences are then provided as context to $\pi$, guiding it to produce a more accurate and informed response. 
+%This closed-loop process of exploration, construction and retrieval allows the agent to enhance its reasoning and knowledge utilization capabilities by learning from experience, without requiring parameter updates.
+
+
+
+
+
+
+
+\subsection{Optimization Objective}
+%Training 阶段训练目标为 构建最大化training accuracy的经验库$\mathcal{E}$
+In \method{}, the LLM $f_\theta$ are frozen, and the learning process focuses on constructing an \emph{experience library} $\mathcal{E}$ that enables model to learn from these experience and enhances the performance on real-world tasks. 
+Formally, given a dataset $\mathcal{D} = \{(X_i, Y_i)\}^N_{i=1}$, where $X_i$ is the query and $Y_i$ is the corresponding ground truth, the optimization objective is to find the optimal experience library $\mathcal{E}^*$ that maximizes the expected correctness of the model's outputs when guided by retrieved experiences $R_i=R(X_i, \mathcal{E})\sim\mathcal{R}$\jiangtao{use another character. r usually refers to reward.}, which can be formulated as:
+
+\begin{equation}
+\mathcal{J}(\mathcal{E}) = \mathbb{E}_{\begin{subarray}{l}
+X_i,Y_i\sim\mathcal{D},\\
+R_i\sim\mathcal{R}
+\end{subarray}}\left[\Phi (f_{\theta}(X_i,R_i), Y_i)\right],\  \  \  \mathcal{E}^* = \arg\max_{\mathcal{E}}\mathcal{J}(\mathcal{E})
+\label{obj1}
+\end{equation}
+%\begin{equation}
+%\mathcal{E}^* = \arg\max_{\mathcal{E}} \mathbb{E}_{(X_i,Y_i)\sim\mathcal{D}}[\Phi (f_{\theta (X_i,R(X_i,\mathcal{E})), Y_i)]
+%\end{equation}
+
+\jiangtao{i think maybe the R should be excluded in loss, and use experience lib instead. conditioned on exp lib and x, predict y. It would be strange that the optimization term is not included in objective function. besides, ri seems to be not ``sampled'' but determined by an intuitive strategy e.g. $R(\cdot)$ of LLMs. It seems $R(\cdot)$ is fixed instead of a learnable function.}where $f_\theta(X_i, R_i)$ denotes the LLM output for input $X_i$ conditioned on retrieved experiences $R_i$, and $\Phi(\hat{Y_i}, Y_i)$ measures the correctness of prediction. Typically, $\Phi(\hat{Y_i},Y_i) = \mathbb{I}(\hat{Y_i}\!=\!Y_i)$, thus the objective $\mathcal{J}(\mathcal{E})$ can be equivalently written as maximization the log-likelihood:
+
+\begin{equation}
+\mathcal{J}(\mathcal{E}) = \mathbb{E}_{\begin{subarray}{l}
+X_i,Y_i\sim\mathcal{D},\\
+R_i\sim\mathcal{R}
+\end{subarray}}\left[\log p_{\theta}(Y_i|X_i,R_i)\right],\  \  \  \mathcal{E}^* = \arg\max_{\mathcal{E}}\mathcal{J}(\mathcal{E})
+\end{equation}
+
+%把最大化经验库条件下的对数似然转化为信息论形式，从而把 Forward Learning 的目标理解为 通过经验库减少预测不确定性，同时逼近真实分布
+where $p_{\theta}$ is the output distribution of LLM. \jiangtao{how the log probability helps to forward learning. it is not used in the future. it is also misunderstanding that actually we do not access the probability, right? if it is an explanin, move it to an independent paragraph or even appendix.} Further, the log-likelihood can be equivalently expressed in terms of conditional entropy and KL divergence:
+
+\begin{equation}
+\mathcal{J}(\mathcal{E}) = -\mathbb{E}_{\begin{subarray}{l}
+X_i,Y_i\sim\mathcal{D},\\
+R_i\sim\mathcal{R}
+\end{subarray}}\left[H(Y_i|X_i,R_i)\right]-\mathbb{E}_{\begin{subarray}{l}
+X_i\sim\mathcal{D},\\
+R_i\sim\mathcal{R}
+\end{subarray}}\left[KL(p^*(\cdot|X_i,R_i)||p_{\theta}(\cdot|X_i,R_i))\right]
+\end{equation}
+
+After the extensive pre- and post-training process, the LLM is assumed to possess sufficient comprehension and reasoning capabilities to effectively utilize input information. 
+Hence, the model distribution $p_{\theta}(\cdot|X_i,R_i)$ can be regarded as sufficiently close to the gold distribution $p^*(\cdot|X_i,R_i)$. \jiangtao{it's a strong hypothesis}
+Consequently, the second term becomes negligible, and the optimization objective can be approximated as minimizing the conditional entropy:
+
+\begin{equation}
+{\mathcal{E}}^*=
+\arg\max_{\mathcal{E}}\mathcal{L}(\mathcal{E}) 
+\approx 
+\arg\min_{\mathcal{E}}\mathbb{E}_{\begin{subarray}{l}
+X_i,Y_i\sim\mathcal{D};\\
+R_i\sim\mathcal{R}
+\end{subarray}}[H(Y_i|X_i,R_i)].
+\end{equation}
+
+This reformulation enables a more intuitive interpretation from an information-theoretic perspective, namely, \method{} seeks to construct an optimal experience library that reduces the model’s predictive uncertainty while simultaneously approximating the true distribution.
+\jiangtao{the discussion focuses on ``read'' operation of exp lib but no ``write'' operation, where the ``write'' operation refers to ``learning'' indeed.}
+
+\textbf{Information-Theoretic Role of Experience.}
+To further elucidate the role of retrieved experiences, we analyze their contribution from an information-theoretic perspective.
+Specifically, the expected mutual information between the target output $Y_i$ and the reasoning experience $R_i$ conditioned on the query $X_i$ is defined as:
+\begin{equation}
+\mathbb{E}_{\begin{subarray}{l}
+X_i,Y_i\sim\mathcal{D};\\
+R_i\sim\mathcal{R}
+\end{subarray}}[I(Y_i;R_i|X_i)] = \mathbb{E}_{\begin{subarray}{l}
+X_i,Y_i\sim\mathcal{D};\\
+R_i\sim\mathcal{R}
+\end{subarray}}[H(Y_i|X_i)] - \mathbb{E}_{\begin{subarray}{l}
+X_i,Y_i\sim\mathcal{D};\\
+R_i\sim\mathcal{R}
+\end{subarray}}[H(Y_i|X_i,R_i)].
+\end{equation}
+Since $H(Y|X)$ remains constant for a given dataset, minimizing $H(Y|X,R)$ is equivalent to maximizing $I(Y;R|X)$. 
+This implies that retrieved experiences $R$ provide additional information about the target $Y$ beyond what is contained in the query $X$, thereby enhancing prediction confidence and shaping the conditional output distribution $p_\theta(Y|X,R)$.
+
+To further characterize the positive effect of informative experiences, we compare the information gain brought by effective experiences and irrelevant ones. 
+Specifically, we distinguish between effective experiences $R_i^+$ and irrelevant ones $R_i^-$ by their conditional mutual information:
+\begin{equation}
+\Delta I = I(Y_i;R_i^+|X_i) - I(Y_i;R_i^-|X_i) = H(Y_i|X_i,R_i^-) - H(Y_i|X_i,R_i^+)
+\end{equation}
+The optimization objective guarantees $H(Y_i|X_i,R_i^+) < H(Y_i|X_i,R_i^-)$, thus we have $\Delta I > 0$, indicating that effective experiences yield greater information gain.
+To concluded, incorporating informative experiences reduces uncertainty more significantly, guiding the model toward more accurate and confident reasonings.
+%In essence, experience acts as a conduit for transferring knowledge across tasks, transforming retrieval into a process of uncertainty reduction and informed reasoning.
+
+\textbf{Bayesian Analysis for Inference.}
+We now analyze how retrieved experiences influence the model’s reasoning process during inference.
+From a Bayesian perspective, the output distribution of model $f_{\theta}$ on query $\tilde{X}$ conditioned on the retrieved experience $\tilde{R}$ can be formulated as:
+\begin{equation}
+\begin{aligned}
+p_{FL}(\tilde{Y}|\tilde{X}) &= p_\theta(\tilde{Y}|\tilde{X},\tilde{R}) = \frac{p_\theta(\tilde{X},\tilde{R}|\tilde{Y})p_\theta(\tilde{Y})}{p_\theta(\tilde{X},\tilde{R})}=\frac{p_\theta(\tilde{X}|\tilde{Y})p_\theta(\tilde{R}|\tilde{X},\tilde{Y})p_\theta(\tilde{Y})}{p_\theta(\tilde{X})p_\theta(\tilde{R}|\tilde{X})}\\
+&=p_\theta(\tilde{Y}|\tilde{X})\frac{p_\theta(\tilde{R}|\tilde{X},\tilde{Y})}{p_\theta(\tilde{R}|\tilde{X})}
+\end{aligned}
+\end{equation}
+Here, $p_{\theta}(\tilde{Y}|\tilde{X})$ denotes the model’s {prior belief}, $p_{\theta}(\tilde{R}|\tilde{X})$ is the {evidence normalizer}, and $p_{\theta}(\tilde{R}|\tilde{X},\tilde{Y})$ is the {empirical likelihood} reflecting the compatibility of $\tilde{R}$ with $(\tilde{X},\tilde{Y})$.
+
+Incorporating $\tilde{R}$ into inference thus performs a {Bayesian update} that refines and corrects the model’s prior. 
+Note that \method{} optimizes for experiences that best align with and facilitate optimal reasoning outcomes.  
+Consequently, if $\tilde{R}$ highly aligns with the correct reasoning $\tilde{Y}$, the likelihood $p_{\theta}(\tilde{R}|\tilde{X}, \tilde{Y})$ is large, amplifying the prior and increasing the posterior probability of the correct prediction. 
+Conversely, if $\tilde{R}$ conflicts with incorrect hypotheses, $p_{\theta}(\tilde{R}|\tilde{X}, \tilde{Y})$ becomes small, thereby suppressing less plausible alternatives. 
+In summary, \method{} can be interpreted as a posterior augmentation mechanism, 
+where external experience serves as weighted evidence that adaptively reshapes the model’s belief toward more accurate and confident reasoning.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{./figs/fig-mdp.png}
+  \caption{Meta Markov Decision Process for Optimization.}
+  \label{fig:mdp}
+\end{figure}
+
+\subsection{Optimization Process}
+%[给足和parameter learning方法的对比]
+Unlike conventional gradient-based optimization, \method{} adopts a forward, experience-driven semantic evolution paradigm. 
+We formalize this optimization as a hierarchical Meta Markov Decision Process (Meta-MDP) as shown in Fig~\ref{fig:mdp}, comprising Base-level MDPs that explores extensive experience, and a Meta-level MDP that governs the experience library evolution, enabling learning from accumulated experience instead of gradient back-propagation.
+
+\textbf{Meta-level MDP for Experience Library Evolution}
+
+We formulate the Meta-level MDP as 
+$(\mathcal{S}^{m}, \mathcal{A}^{m}, \mathcal{T}^{m}, \mathcal{R}^{m})$. 
+The meta-state $s^{m}_i$ corresponds to the current experience library $\mathcal{E}_i$. 
+The meta-action $a^{m}_i = \Psi({E^T_i}|X_i,Y_i,\mathcal{E}_i)$ invokes the Base-level MDP on sample $(X_i,Y_i)$ under $\mathcal{E}_i$, yielding explored experiences ${E^T_i}$.
+The transition function $\mathcal{T}^{m}$ describes the evolution of experience library $\mathcal{E}_{i+1}\sim\mathcal{T}^{m}(\mathcal{E}_{i+1}|\mathcal{E}_i,{E^t_i})$ under a meta-policy.
+The reward $r^{m}_i = \Phi(f_\theta(X_i|\mathcal{E}_{i+1}),Y_i)$ measures whether the model outputs the correct answer given $\mathcal{E}_i$.
+Consequently, the cumulative return $G^{m} = \sum_{i=0}^{N-1} r^{m}_i$ over one meta-episode corresponds to the overall accuracy across the $N$ training samples.
+Therefore, maximizing $G^{m}$ is essentially equivalent to optimizing the objective in Eq.~\ref{obj1}.
+
+In summary, this Meta-level formulation establishes a higher-order optimization loop that continuously refines the experience library, orchestrates Base-level exploration and realizes forward learning from experience.
+
+\textbf{Base-level MDP for Extensive Experiences Exploration}
+
+The Base-level MDP conducts extensive intra-sample exploration under an actor–critic framework. The actor iteratively generates diverse reasoning trajectories, while the critic provides semantic feedback that reflects on these trajectories, distilling them into structured experiences for Meta-level optimization.
+
+Formally, we define the Base-level MDP as $(\mathcal{S}^{b}, \mathcal{A}^{b}, \mathcal{T}^{b}, \mathcal{R}^{b})$.
+At time step $t$, the base-state $s^{b}_t$ denotes the accumulated experience ${E^t_i}$ derived from the first $t$ reasoning trajectories explored on $X_i$ given $\mathcal{E}_i$.
+The base-action $a^{b}_{t}$ corresponds to one complete reasoning trajectory proposed by the actor.
+After each trajectory is generated, the critic provides semantic feedback to evaluate the reasoning process and outcome under $Y_i$. 
+The base-reward $r^{b}_{t}=\Gamma(a^{b}_t,Y_i)$ is thus a semantic summary distilled from the critic’s feedback, capturing both success patterns and interpretative insights beyond a scalar signal.
+The transition function $\mathcal{T}^{b}$ updates the intra-sample experience accumulation state by integrating the new summarized feedback, namely, $s^{b}_{t+1} \sim \mathcal{T}^{b}(s^{b}_{t+1}|s^{b}_{t},r^{b}_{t})$, which accumulates reflective knowledge until exploration on this sample terminates.
+Upon completion, the accumulated experience $s^{b}_T$ (i.e., ${E^T_i}$) is returned to the Meta-level MDP for higher-level experience library evolution.
+
+Together, the Base-level and Meta-level MDPs form a closed-loop optimization process, the Base-level explores and reflects within samples, while the Meta-level integrates and evolves the experience library across samples, realizing a gradient-free, forward learning paradigm.
+
+\section{Concrete Instantiation for Implementation}
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{./figs/fig-fl.png}
+  \caption{Concrete Instantiation for Forward Learning. \jiangtao{the evolution process is parallel in sampling traj 1 to n within iterative refinement loop and is sequential across iterative refinements.}}
+  \label{fig:fl}
+\end{figure}
+
+Building on the mathematical formulation, we instantiate \method{} as a concrete mechanism consisting of two core components, namely, extensive experience exploration via the actor–critic forward loop and experience library evolution that consolidates and reuses experiential semantics.
+Together, these two components realize continual semantic evolution through structured experience interaction as shown in Fig~\ref{fig:fl}.
+\jiangtao{I think this section is not well-organized. maybe one for hierarchy, one for inference, and one for learning. all the subtitle and paragraph title is not straight forward and hierarchical. btw, any citation?}
+
+\subsection{Extensive Experience Exploration}
+The generation and collection of experiences are realized through per-case actor–critic interactions defined by the Base-level MDP. The key objective is to perform extensive exploration while ensuring that the collected experiences are both diverse and semantically informative.
+\jiangtao{it seems to parallel and sequential inference part. refers this to image like Fig2a and Fig2b.}
+
+\textbf{Extensive Exploration.}
+To enable extensive high-quality exploration, we design a dual-scaling mechanism that combines parallel and sequential scaling. 
+For \emph{parallel scaling}, multiple reasoning trajectories are sampled in parallel for the same input through rejection sampling, allowing diverse reasoning hypotheses to be explored and high-quality outputs to be retained.
+For \emph{sequential scaling}, the actor iteratively improves upon its previous output under the critic’s semantic feedback, where the critic provides constructive guidance and refinement cues derived from the prior round.
+This cooperative exploration strategy balances breadth and depth, ensuring both coverage of alternative reasoning paths and progressive improvement over iterations.
+
+\textbf{Iterative Refinement and Semantic Evaluation.}
+To ensure that collected experiences contribute meaningfully to learning, we design an iterative refinement mechanism driven by semantic evaluation.
+For reasoning trajectories that lead to incorrect conclusions, the critic first identifies the underlying causes of failure and summarizes them into abstract, task-agnostic improvement suggestions.
+These generalized feedback signals, denoted as new experiences $E_t$, are fed back into the actor together with its previous reasoning trace to initiate the next actor–critic iteration.
+This process continues until the actor produces a correct or sufficiently improved reasoning trajectory, or a predefined iteration limit is reached.
+In this loop, the critic’s feedback functions as a \emph{semantic update signal} that guides the actor’s reasoning refinement, analogous to the gradient signal in traditional optimization, yet expressed in natural language semantics rather than numerical differentials.
+Unlike backpropagation-based learning, which relies on scalar gradients with limited interpretive bandwidth and heavy computational budget, this forward semantic feedback mechanism provides rich interpretable guidance without costly parameter updating, aligning with the cognitive characteristics of \textit{human-like learning from experience}.
+
+Once the iterative refinement completes, validated experiences are distilled and passed to the Meta-level MDP, evolving experience library for long-term accumulation.
+
+
+\subsection{Experience Library Evolution}
+The experience library is hierarchically organized and continually evolves within the Meta-level MDP formulated above, driven by two complementary operations, update and retrieval, which together constitute the core meta-level transition dynamics.
+\jiangtao{in update and retrieval part, it would be better to formulate this. and choose some words more related to ``learning''.}
+
+\textbf{Hierarchical Experience Organization.}
+The experience library adopts an explicit textual storage mechanism, which enables explicit recording of experiential rules, externalization of internal reasoning behaviors, and visualization of the learning dynamics, thereby enhancing interpretability and transparency.
+To effectively organize learned experiences varying in granularity, abstraction, and contextual dependency, we design a hierarchical organization mechanism with three interconnected levels, namely, high-level strategic principles and guidelines, mid-level reasoning patterns and methodological templates, and low-level factual knowledge and concrete reasoning trajectories.
+This structure allows experiences to be modularly indexed and retrieved across abstraction levels, enabling both top-down guidance and bottom-up consolidation of knowledge.
+Hierarchical organization also supports dynamic restructuring as new experiences are incorporated, maintaining the coherence of the library during continual evolution.
+%In the future, we will explore more efficient yet interpretable storage mechanisms and more expressive hierarchical structures.
+
+\textbf{Experience Update Mechanism.}
+Given a newly generated experience $\epsilon$, the agent autonomously decides whether and how to incorporate it into the experience library. 
+If an identical entry already exists, $\epsilon$ is discarded to maintain compactness. 
+If semantically similar entries are found, the agent performs a selective merge, preserving the more informative or higher-quality trajectory while minimizing redundancy. 
+Otherwise, $\epsilon$ is inserted into the appropriate partition and hierarchical level according to its semantic granularity. 
+This adaptive update process ensures that the experience library incrementally evolves toward a more structured and informative representation of accumulated knowledge, rather than expanding indiscriminately or degenerating into redundant memory accumulation.
+
+\textbf{Experience Retrieval Mechanism.}
+During inference, the experience library is encapsulated as an interactive tool callable by the agent.
+Instead of static vector-based semantic-similarity search, the agent performs contextualized retrieval conditioned on the specific query and its current reasoning state. 
+This allows the agent to interpret relevance not only by semantic similarity but also by contextual consistency and goal alignment, thereby avoiding the pitfalls of retrieving semantically similar yet pragmatically contradictory entries.
+Retrieval proceeds hierarchically, the agent first identifies relevant high-level strategies, then locates corresponding procedural patterns, and finally accesses concrete case examples within each pattern. 
+At each stage, the top-$k$ (typically $k=5$) most relevant entries are selected to balance precision and efficiency. 
+The retrieved experiences support the agent’s ongoing reasoning, reflective self-evaluation, and corrective refinement.
+Moreover, retrieval is not restricted to pre-inference access, instead, the agent can dynamically query the library during reasoning, enabling adaptive integration of prior knowledge into evolving cognitive trajectories.
+
+Overall, the update–retrieval dynamics establish a self-organizing experiential system that progressively refines its hierarchical organization and semantic granularity, facilitating the agent’s continual evolution through accumulated experience.
+
+\clearpage
+
+\section{Experiments}
+\xinyuan{Add one opening sentence}
+\subsection{Experimental Setup}
+\paragraph{Evaluation Benchmarks.}
+We evaluate the proposed \method{} paradigm across four challenging benchmarks spanning three scientific domains (\textit{i.e.}, mathematics, chemistry, and biology) to assess both reasoning capability and domain adaptability. Specifically: (1) AIME25 competition dataset \xinyuan{To be cited} for complicated mathematical reasoning; (2) GSM8k dataset \xinyuan{To be cited} multi-step arithmetic reasoning; (3) USPTO50k \xinyuan{To be cited} benchmark for canonical single-step retrosynthesis; (4) ProteinGym~\cite{notin2023proteingym} benchmark for protein fitness prediction. 
+%These benchmarks collectively cover symbolic, textual, and structured reasoning tasks. 
+
+\paragraph{Compared Methods.}
+Our evaluation spans a range of base models, tested on four distinct experimental configurations for comparison: (1) Vanilla LLM, (2) LLM with In-Context Learning (ICL) \xinyuan{To be cited}, (3) LLM agent with reasoning-and-acting workflow (ReAct) \xinyuan{To be cited}, and (4) our proposed \method{}. For \method{}, each model constructs an experience library during training, which is later utilized at test-time. The library structure is adapted to the benchmark: hierarchical  for AIME25 and USPTO50k, and non-hierarchical for GSM8k and ProteinGym.
+
+\paragraph{Training Configurations.}%Implementation details [这里好像没有涉及implementation？都是在讲trianing/test set如何构建的]
+For AIME25, the training was conducted on 49 historical problems from AIME83 to AIME24. On GSM8k, we adhere to the official training and testing splits \xinyuan{To be cited the GSM8K paper}. For USPTO50k, 100 instances are randomly sampled from the original 5k test split for evaluation, and 50 instances from the training split are randomly sampled for training. For ProteinGym, 100 mutational sequences are sampled for each wild-type protein target as training set, which is on average 1.47\% of the available data. This design reflects practical constraints in protein engineering, where only a limited number of labeled mutations are known, while the vast majority of sequence space remains unexplored. Further details on the experimental protocol are provided in Appendix \xinyuan{To be filled}.
+
+
+
+%\paragraph{Setup.} The evaluation was extended to SOTA models, including Claude-Sonnet-4.5 and GPT-5. We adopted the hierarchical experience library architecture established for the math benchmark and defined three experimental arms: (1) Naive LLM, (2) ReAct, and (3) \method{}. To construct the experience library, we curated a training set of 50 reactions from the USPTO50k dataset, with performance assessed on a held-out test set of 100 reactions. For reproducibility, both sets are publicly released in our codebase \xinyuan{To be referred}, and a detailed case study is provided to demonstrate our method's efficacy. The learning process was executed for one epoch at a temperature of 0.
+
+%\paragraph{Setup.} Our primary investigation targets SOTA LLMs for which fine-tuning is computationally infeasible, such as Claude-Sonnet-4 \xinyuan{To be cited}. For this model, we implement a hierarchical experience library. The top level categorizes experiences as "golden" (successful strategies) or "warning" (identified pitfalls), with each category containing fine-grained knowledge such as methods, rules, illustrative examples, and revised solution trajectories. We establish three experimental conditions: (1) Naive LLM, representing a zero-shot baseline; (2) ReAct, the agentic framework without our experience library; and (3) \method{}, which integrates ReAct with the experience library. To populate the library, we curated a training set of 49 problems from historical AIME tests \xinyuan{To be cited}, simulating how a human might prepare for an upcoming exam. The learning process was conducted for a single epoch with a temperature of 0.
+% 和上面合并成一个 setup
+%\paragraph{GSM8k Setup.} To assess the generality of our paradigm, we extend our evaluation to a broader spectrum of models with varying capabilities, including GPT-3.5-Turbo \xinyuan{To be cited}, GPT-4 \xinyuan{To be cited}, and Llama-3.2 \xinyuan{To be cited}. For GSM8k, the experience library was initialized to store high-level strategic suggestions. A new suggestion was incorporated into the library only if it demonstrably improved performance on the 7k training set. In this context, we compare two primary configurations: (1) Naive LLM (the baseline model) and (2) \method{} (the model augmented with our experience library). The learning process was executed for one epoch at a temperature of 0.
+
+\subsection{Main Results.}
+
+% Main Table [一般要置顶]
+\begin{table}[!t]
+\centering
+\caption{Results on four benchmarks. All values are accuracies in percentage except for ProteinGym, where the values are Spearman's $\rho$. ICL stands for the performance of LLM with in context learning, and ReAct indicates the performance of LLM agent with ReAct workflow.}
+%The values in parentheses denote the absolute improvement over the corresponding naive LLM baseline for each model group.}
+\label{tab:main_table}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+\textbf{Benchmark} & \textbf{Models} & \textbf{LLM} & \textbf{ICL} & \textbf{ReAct} & \textbf{Forward Learning} \\
+\midrule
+\multicolumn{6}{c}{\textit{\textbf{Math}}} \\
+\midrule
+\midrule
+% --- Benchmark 1: AIME25
+\multirow{2}{*}{\textbf{AIME25}} & \textit{Claude-Sonnet-4} & 40.0 & 30.0 (-10.0) & 50.0 (+10.0) & \textbf{63.3 (+23.3)} \\
+& \textit{DeepSeek-V3.1-Terminus} & 56.7 & 53.3 (-3.3) & 60.0 (+3.3) & \textbf{66.6 (+10.0)} \\
+\midrule
+% --- Benchmark 2: GSM8k
+\multirow{4}{*}{\textbf{GSM8k}} & \textit{GPT-3.5} & 80.8 & 81.4 (+0.6) & 78.5 (-2.3) & \textbf{83.3 (+3.3)} \\
+& \textit{GPT-4} & 93.8 & 94.2 (+0.4) & 94.0 (+0.2) & \textbf{95.9 (+2.1)}  \\
+& \textit{Llama-3.2-1B} & 74.3 & 75.8 (+1.5) & 71.0 (-3.3) & \textbf{80.9 (+6.6)}  \\
+& \textit{Llama-3.2-3B} & 78.4 & 78.8 (+0.4) & 74.5 (-3.9) & \textbf{81.1 (+2.7)}  \\
+\midrule
+% --- Benchmark 3: USPTO50k
+\multicolumn{6}{c}{\textit{\textbf{Chemistry}}} \\
+\midrule
+\midrule
+\multirow{3}{*}{\textbf{USPTO50k}} & \textit{GPT-5} & 9.0 & 14.0 (+5.0) & 12.0 (+3.0) & \textbf{16.0 (+7.0)} \\
+& \textit{Gemini-2.5-Pro} & 9.0 & 15.0 (+6.0) & 12.0 (+3.0) & \textbf{18.0 (+9.0)}  \\
+& \textit{Claude-Sonnet-4.5} & 20.0 & 24.0 (+4.0) & 23.0 (+3.0) & \textbf{30.0 (+10.0)}  \\
+\midrule
+% --- Benchmark 4: ProteinGym
+\multicolumn{6}{c}{\textit{\textbf{Biology}}} \\
+\midrule
+\midrule
+\multirow{3}{*}{\textbf{ProteinGym}} & \textit{DeepSeek-V3.1-Terminus} & 0.479 & 0.489(+0.010) & - & \textbf{0.568(+0.089)} \\
+& \textit{GPT-OSS-120B} & 0.477 & 0.498(+0.021) & - & \textbf{0.573(+0.096)}  \\
+& \textit{Claude-Sonnet-4.5} & - & 0.498 & - & \textbf{0.597(+0.099)}  \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+% 最后一句需要修改一下，大概意思是"不止有parameter-based training的方法可以提升模型的推理能力，我们证明了parameter-free 的方法也可以大幅提升推理能力"
+\paragraph{Math.} As shown in Table~\ref{tab:main_table}, our \method{} paradigm consistently and significantly outperforms all baselines across both mathematical reasoning benchmarks. On the challenging AIME25 dataset, \method{} boosts the accuracy of Claude-Sonnet-4 from a $40.0\%$ baseline to an impressive $63.3\%$ after learning from only 49 examples. This substantial $58.7\%$ relative improvement demonstrates its powerful learning capability. Similarly, on GSM8k, \method{} consistently enhances the performance of already strong models, such as elevating GPT-4's accuracy to $95.9\%$. These results demonstrate that our parameter-free paradigm can yield substantial gains in reasoning, an advancement previously achieved primarily through parameter-based learning methods \xinyuan{To be cited}.
+
+\paragraph{Chemistry.} In the specialized domain of chemistry, \method{} proves to be highly effective at bridging the performance gap of generalist models. On the USPTO50k benchmark, baseline models exhibit limited proficiency, with GPT-5 and Gemini-2.5-Pro achieving only $9.0\%$ accuracy. By learning from a small set of 50 examples, \method{} nearly doubles these scores, increasing them to $16.0\% (+7.0\%)$ and $18.0\% (+9.0\%)$, respectively. The most notable gain is observed with Claude-Sonnet-4.5, which improves from $20.0\%$ to $30.0\%$ accuracy (+$10.0\%$). These results underscore the efficacy of \method{} as a sample-efficient, parameter-free approach for adapting models to complex scientific domains.
+
+
+\paragraph{Biology.}
+
+%\paragraph{The Value of Distilled Experience.} We conducted an ablation study to isolate the contribution of the experience library by comparing the standard ReAct agent to our full \method{} implementation. On AIME25, the ReAct framework alone achieves a 50.0\% accuracy, a 10.0\% absolute improvement over the naive LLM, highlighting the inherent benefit of the agentic workflow. However, \method{} extends this gain significantly, outperforming the ReAct baseline by a further 13.3\% in absolute terms (a 26.6\% relative improvement). More strikingly, an additional experiment detailed in Table~\ref{tab:main_table} shows that even when trained on the 49 problems without access to their ground-truth answers, our method still reaches 56.6\% accuracy. This result, which surpasses the standard ReAct agent by 5.6\%, underscores a critical finding: the distilled experience contains supervisory signals that are richer and potentially more valuable than ground-truth answers alone.
+
+
+\subsection{Analytical Experiments}
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{./figs/training_dynamics.png}
+  \caption{Training dynamics of GPT-3.5 with \method{} on GSM8k. The figure presents the evolution of training accuracy, the size of the experience library, and test accuracy across 5 epochs.}
+  \label{fig:td}
+\end{figure}
+
+\paragraph{Co-evolution of Reasoning Accuracy and Experience Library.}%Training Dynamics}
+Fig.~\ref{fig:td} illustrates the training dynamics of GPT-3.5 with \method{} over 5 training epochs on GSM8k. 
+Both training and test accuracies exhibit a steady upward trend throughout the process, indicating that the model’s reasoning capability continuously improves as it learns from accumulated experiences.
+Meanwhile, the size of the experience library expands progressively, reflecting the ongoing evolution of the model’s experiential knowledge through extensive exploration and semantic consolidation.
+This co-evolution between accuracy and library growth highlights that \method{} effectively enhances reasoning and knowledge utilization in a self-evolution manner.
+In later epochs, we observe a convergence phenomenon, the number of newly added experiences per epoch decreases, and the accuracy gains become marginal, suggesting that the library gradually approaches a stable and sufficiently informative experience set.
+%Fig.~\ref{fig:td} illustrates the training dynamics of GPT-3.5 with \method{} over 5 epochs on GSM8k. Both training and test accuracies steadily increase as the experience library expands, indicating that the agent effectively learns from accumulated experiences. The growth of the library gradually slows down, suggesting convergence toward a stable and sufficiently informative experience set.
+
+\paragraph{Transferability of Experience Library}
+\begin{table}[!t]
+\centering
+\caption{Performance comparison on cross-model memory transfer across two benchmarks (AIME25 and USPTO50k). Values in parentheses denote the absolute accuracy improvement over the ReAct baseline for each model. The models in columns represent the source of transferred experience.}
+\label{tab:memory_transfer}
+\smallskip
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\MC{lccc}{
+\multicolumn{4}{c}{\textbf{AIME25}} \\
+\midrule
+\textbf{Model} & \textbf{ReAct} & \textbf{+ Claude} & \textbf{+ DeepSeek} \\
+\midrule
+Claude-Sonnet-4 & 50.0 & 63.3 (+13.3) & 66.7 (+16.7) \\
+DeepSeek-V3.1-Terminus & 60.0 & 66.7 (+6.7) & 66.7 (+6.7) \\
+\toprule
+}
+\\
+\MC{lcccc}{
+\multicolumn{5}{c}{\textbf{USPTO50k}} \\
+\midrule
+\textbf{Model} & \textbf{ReAct} & \textbf{+ GPT} & \textbf{+ Gemini} & \textbf{+ Claude} \\
+\midrule
+GPT-5 & 12 & 16 (+4) & 18 (+6) & 15 (+3) \\
+Gemini-2.5-Pro & 12 & 14 (+2) & 18 (+6) & 23 (+11) \\
+Claude-Sonnet-4.5\ \ \ \ \ & 23 & 28 (+5) & 30 (+7) & 30 (+7) \\
+\multicolumn{4}{c}{\textbf{ProteinGym}} \\
+\midrule
+\textbf{Model} & \textbf{ReAct} & \textbf{+ Qwen} & \textbf{+ DeepSeek}  \\
+\midrule
+GPT-OSS & - & - & - & 0.589 \\
+}\\
+\toprule
+\end{tabular}
+\end{table}
+
+%transferability
+A key advantage of \method{} over parameter-based approaches is its exceptional transferability. By decoupling learned knowledge from model weights, the experience library acts as a lightweight, plug-and-play module that can be seamlessly transferred across different agents. Our experiments in Table~\ref{tab:memory_transfer} reveal two significant and economically valuable properties: the \textbf{distillation} of expertise from strong to weaker models, and the broad \textbf{generality} of strategies from weaker to stronger models.
+
+First, we observe a powerful distillation effect, where expertise from a top-performing model can significantly uplift weaker ones. For instance, on USPTO50k, the experience library generated by the strongest model, Claude-Sonnet-4.5, boosts the performance of Gemini-2.5-Pro by an impressive 11 absolute points. This highlights a cost-effective pathway: the expensive exploration of a single, powerful agent can be captured and reused to enhance a fleet of less capable models without the need for individual fine-tuning. A similar trend is evident on AIME25, where the experience from the more capable DeepSeek model provides the largest performance gain (+16.7\%) for Claude-Sonnet-4.
+
+Even more strikingly, our results demonstrate a strong generality effect, where experience from weaker models provides substantial benefits to stronger ones. Notably, on AIME25, the experience library from the weaker Claude-Sonnet-4 elevates the stronger DeepSeek-V3.1-Terminus by 6.7 points, achieving the exact same performance level as when DeepSeek uses its own meticulously generated experience. This finding is profound: it proves that the learned experience captures fundamental, high-level strategies that are model-agnostic, rather than model-specific artifacts. This is corroborated on USPTO50k, where experiences from both GPT-5 and Gemini-2.5-Pro substantially improve the already capable Claude-Sonnet-4.5.
+
+Taken together, these phenomena establish the experience library as a truly portable knowledge module. This opens a path towards a new paradigm: creating a single, universal experience library through a one-time training process, or even mixing experiences from diverse sources, to provide general performance improvements across a wide ecosystem of agents.
+
+
+\paragraph{Experience Exploration} %move the ablation study of biology here
+
+\subsection{Case Study}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=\linewidth]{figs/aime_case.png}
+    \caption{Case study on AIME25}
+    \label{fig:aime_case}
+\end{figure}
+
+\paragraph{Math.} The distinct problem-solving trajectories in Figure~\ref{fig:aime_case} highlight the transformative impact of our \method{} paradigm. The naive LLM fails by decoupling geometric constraints, leading to infeasible side lengths. The standard ReAct agent, while more structured, drifts into special-case assumptions without verifying global consistency. In stark contrast, \method{} leverages its experience library to inject structured, procedural knowledge into the reasoning cycle. By retrieving a reusable algebraic template and critical feasibility checks (e.g., $a^2 + b^2 = 1444$, $a,b \le 28$), it directly addresses the core LLM limitations of logical drift and constraint violation. This distilled experience transforms the agent's process from a heuristic-driven exploration into a deterministic, solve-verify loop, pruning invalid branches and enforcing global reconciliation. Essentially, the experience library provides the procedural scaffolds and logical guardrails that the other approaches lack, enabling the agent to systematically find the correct parameters and compute the final area of $104\sqrt{3}$. This demonstrates how our paradigm bridges the gap between an LLM's declarative knowledge and the effective procedural execution required for complex problem-solving.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/retro_case.png}
+    \caption{Case study on USPTO50k}
+    \label{fig:retro_case}
+\end{figure}
+
+\paragraph{Chemistry.} The trajectories in Figure~\ref{fig:retro_case} reveal a critical gap in the domain-specific reasoning of standard models. Both the naive LLM and the vanilla ReAct agent make the same fundamental error: despite correctly identifying the mesylate group, they misidentify the disconnection point by prioritizing a plausible but incorrect N-alkylation pathway. This demonstrates a failure to translate declarative knowledge (what a mesylate is) into correct procedural execution (how to disconnect it). In stark contrast, \method{} succeeds by leveraging its experience library to bridge this gap. It retrieves an explicit template ($\mathrm{R{-}O{-}SO_2{-}CH_3} \rightarrow \mathrm{R{-}OH} + \mathrm{CS(=O)(=O)Cl}$) that overrides the flawed heuristic and enforces the canonical $\mathrm{O{-}S}$ bond disconnection. The experience library thus functions as an external knowledge substrate, injecting proven procedural scaffolds and domain-specific constraints into the agent's workflow. This transforms the reasoning process from speculative hypothesis testing into a deterministic, domain-grounded execution, ensuring the correct retrosynthesis is identified.
+
+\paragraph{Biology.}
+
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{figs/protein_case.png}
+    \caption{Case study on ProteinGym}
+    \label{fig:protein_case}
+\end{figure}
+
+
+%\paragraph{Analysis.} The trajectories in Figure \xinyuan{To be filled} reveal the distinct behaviors of the three configurations. The naive LLM fails by decoupling geometric constraints, producing infeasible side lengths. The standard ReAct agent correctly derives key relations (e.g., $KL=14$) but drifts into special-case assumptions without verifying global consistency. In contrast, \method{} injects a reusable algebraic template and enforces early feasibility gates ($a^2 + b^2 = 1444$, $a,b \le 28$). This disciplined approach converts open-ended exploration into a structured solve-verify loop, pruning invalid branches and enforcing global reconciliation of all constraints. Consequently, the memory-guided agent systematically finds the correct parameters and computes the final area, Area(BKLC) = $104\sqrt{3}$. In essence, the experience library provides the procedural closure and logical guardrails that the other approaches lack, ensuring correctness and reproducibility.
+
+%\paragraph{The Role of the Experience Library.} Fundamentally, the experience library functions as a mechanism for injecting structured, procedural knowledge into the agent's reasoning cycle. It directly addresses a core limitation of LLMs in complex, multi-step tasks: the tendency for logical drift and constraint violation. While a standard ReAct agent navigates a vast search space, often succumbing to locally plausible but globally inconsistent paths, the experience library provides strategic overlays. These overlays, distilled from prior problem-solving episodes, impose proven procedural scaffolds and critical validation gates. This transforms the agent's process from a heuristic-driven exploration into a more deterministic, constraint-governed workflow. By equipping the agent with a repertoire of verified micro-strategies and failure-prevention policies, the library bridges the gap between an LLM's declarative knowledge and the effective procedural execution required for complex problem-solving.
+
+
+
+
+% Chemistry
+
+%\paragraph{Main Results.} The results, summarized in Table~\ref{tab:uspto_results}, reveal the profound impact of \method{} in a specialized scientific domain. The baseline performance of the naive LLMs underscores the challenge: Claude-Sonnet-4.5 achieves only 20\% accuracy, while GPT-5 secures just 9\%, highlighting the significant limitations of applying frozen, generalist models to complex chemical tasks. In stark contrast, after learning from a minimal set of 50 examples, \method{} elevates the performance of Claude-Sonnet 4.5 to 30\%. This represents a 10\% absolute improvement and a 50\% relative gain. These findings demonstrate that our paradigm provides a highly efficient pathway for domain adaptation, enabling agents to acquire critical specialized knowledge without parameter modification.
+
+%\paragraph{The Value of Distilled Experience.} To deconstruct the sources of this performance gain, we performed an ablation study comparing the naive LLM, the standard ReAct agent, and our full \method{} implementation. On USPTO50k, the ReAct framework alone provides a marginal benefit, increasing accuracy to 23\%—a 3\% absolute improvement over the naive baseline. However, the introduction of the experience library prompts a substantial leap in performance, with \method{} outperforming the ReAct-only agent by an additional 7\% absolute points (a 30.4\% relative improvement). This clearly isolates the distilled experience as the primary driver of the agent's enhanced capability.
+
+%\paragraph{Analysis.} Across the three trajectories in Figure \xinyuan{To be filled}, both the naive LLM and vanilla ReAct agent converge on the same fundamental error: misidentifying the retrosynthetic disconnection point. Despite correctly parsing the product structure and recognizing the presence of a mesylate group, they prioritize N-alkylation as the synthetic pathway, targeting the $\mathrm{C{-}N}$ bond between the piperidine nitrogen and the ethyl mesylate side chain. This reflects a critical gap in domain-specific pattern recognition—while N-alkylation is indeed a common transformation, the sulfonate ester motif ($\mathrm{-O{-}SO_2{-}CH_3}$) is a canonical signature of alcohol activation, where the diagnostic $\mathrm{O{-}S}$ bond should be the primary disconnection target. In contrast, \method{} succeeds by injecting procedural knowledge: retrieved `Golden Method 7` provides an explicit template ($\mathrm{R{-}O{-}SO_2{-}CH_3} \rightarrow \mathrm{R{-}OH} + \mathrm{CS(=O)(=O)Cl}$) that overrides the flawed heuristic, while `Warning Method 7` enforces negative constraints. This dual scaffolding transforms the agent's reasoning from exploratory hypothesis testing into a deterministic, domain-grounded workflow, ensuring the correct disconnection.
+
+%\paragraph{The Role of the Experience Library.} The experience library addresses a fundamental tension in deploying frozen LLMs for complex, real-world applications: the brittleness of emergent reasoning when confronted with domain-specific subtleties. While LLMs excel at generating plausible surface-level reasoning, they lack the mechanisms to enforce consistency between declarative knowledge (e.g., "mesylates are good leaving groups") and procedural execution (e.g., "disconnect the O-S bond"). The experience library functions as an externalized, evolvable knowledge substrate that bridges this gap. By distilling verified problem-solving episodes into reusable templates, invariants, and failure patterns, it provides the agent with structured priors that guide exploration without requiring gradient-based retraining. This approach preserves the generality of the frozen LLM while augmenting it with task-specific expertise—a form of compositional generalization where the base model supplies linguistic scaffolding and the memory supplies domain constraints. The experience library thereby acts not merely as a cache but as a procedural epistemology—a repository of "how to think" in a domain, enabling frozen LLMs to navigate the gap between their parametric knowledge and the structured reasoning required in scientific problem-solving.
+
+\subsection{Biology}
+
+% \subsubsection{Configuration}
+
+\textbf{Protein Fitness Prediction} We apply \method{} on the task of Protein Fitness Prediction. Proteins play a fundamental role in sustaining cellular functions that underpin organismal survival, growth, and reproduction. The capacity of a protein to perform its biological function—typically referred to as protein fitness—is determined by its three-dimensional structure, which is ultimately encoded by its amino acid sequence. Recent advances in machine learning have enabled zero-shot protein fitness prediction by leveraging representations derived from protein sequences, structural information, and auxiliary biological signals such as multiple sequence alignments (MSAs). Despite the progress, the task remains far from being fully solved. First, the absolute correlation between predicted and experimentally validated fitness scores remains limited (e.g., approximately 0.52 for the current state-of-the-art on ProteinGym), not confidential enough when encountering newly-found data with mysterious fitness. Second, no existing model consistently outperforms all others across diverse protein families and functional categories, including activity, expression, binding affinity, stability, and organismal fitness.
+
+
+
+
+\paragraph{Agentic Task Transformation.} Large language model (LLM) agents, without specialized pre-training on protein sequences or domain-specific fine-tuning, inherently lack detailed biochemical knowledge and cannot directly infer subtle mutational effects on protein function. However, these agents possess strong capabilities in reasoning, ranking, knowledge synthesis, and few-shot learning. This opens a new opportunity: rather than directly predicting fitness from sequence, agents can be tasked with meta-reasoning over predictions made by high-performing protein language models. Specifically, we reformulate protein fitness prediction as an agentic feature selection and fusion task, where the agent learns to identify, prioritize, and integrate salient features derived from existing regression-based models. Through this process, the agent proposes explicit, interpretable algorithms that capture the underlying relationships among predictive signals, transforming opaque model outputs into a more accurate and explainable fitness prediction framework tailored to each target protein.
+
+
+
+
+% \textbf{Experience, Memory and Verifier} Given task above, we‘d like to clerify how elements of \method{} are implied from the same paradigm.
+
+% In all, experience are extracted from 100 tiny experience set for each protein independently since there're various protein properties as protein function object. In result, we'll have structured memoies consist of 3 parts: 1) golden rules and failure cases when selecting important features i.e. score predicted by specific model such as ProSST ~\cite{li2024prosst}. 2) beneficial and deterious algorithm with agent's own decision. 3) meta-level self-concluded cognitive about how to improve selcting strategies and combinging algorithm.
+
+
+% For fair comparation, two categories of \method{} system are constructed: 1) training-free model where training parameterized models are forbiddened and agent is unavailable to use any regression tools. 2) Regression-related model where a series of regression method are provided as tools through sk-learn package. 
+
+
+
+\paragraph{Benchmark.} We conduct experiments using the ProteinGym benchmark, which serves both as the source for experience extraction and as the evaluation dataset. Protein targets included in this benchmark align with those defined in SaProt~\cite{su2023saprot}. To emulate realistic biological discovery scenarios where experimental data is scarce, we adopt an imbalanced data split for each protein: a small experience set consisting of only 100 sequences (on average 1.47\% of the available data), and a large out-of-distribution test set containing all remaining sequences. This design reflects practical constraints in protein engineering, where only a limited number of labeled mutations are known, while the vast majority of sequence space remains unexplored.
+
+
+
+
+
+\paragraph{Setup.} Prediction performance is evaluated using the Spearman rank correlation between the ground truth DMS (deep mutational scanning) scores and the proxy metrics generated by our \method{} method. Baseline models are grouped into two main categories:
+
+\textit{Zero-shot Protein Fitness Prediction Models.} These models represent the current state-of-the-art on the ProteinGym leader-board and provide diverse biological priors through different input modalities:
+\begin{itemize}
+    \item VespaG~\cite{marquet2024expert, marquet2022embeddings}: A top-performing single-sequence model leveraging PLM embeddings and evolutionary guidance from GEMME~\cite{laine2019gemme}.
+    \item PoET~\cite{truong2023poet}: A homolog-based model that encodes multiple sequence alignments using a sequence-of-sequences transformer architecture.
+    \item ProSST~\cite{li2024prosst}: A hybrid model incorporating structural quantization and disentangled attention mechanisms to jointly model sequence and structural representations.
+    \item VenusREM~\cite{tan2025high}: The current state-of-the-art on the ProteinGym scoreboard, integrating logits from single-sequence, homology, and structural tokenization signals.
+\end{itemize}
+These models provide the input features that our agent uses to reason about and construct enhanced fitness metrics.
+
+\textit{Native Large Language Models (LLMs).} To isolate the contribution of agentic reasoning, we evaluate several high-performance LLMs—such as GPT-OSS~\cite{agarwal2025gpt} and Claude-Sonnet-4.5 as direct baselines. These models are prompted to perform the same prediction task as our forward learning system but without employing experience validation, rejection sampling and refinement. This comparison highlights the added value of structured forward learning beyond raw language model capabilities.
+
+\textbf{Main Results.} As illustrated in Table \ref{tab:proteingym_results}, native LLMs fails on the task of importance selection and combination, with performance left behind of one single SOTA PLM as input. However, the incapability is levitated by forwarding learning paradigm. With experience extracted from a small validation set, learn golden rules and valuable lessons could be applied to bigger and wider test set with huge performance boost. In addition, instead of coming up with idea of formula with LLM itself, assistant of light-weight regression tools may also beneficial to this task.
+
+\textbf{Ablation Study.} From Table \ref{tab:proteingym_ablation_matrix} we can learn that, three core parts of our \method{} paradigm contributed to performance enhancement: Experience Exploration, Experience Evolution, Regression Tools. Specificlly, Experience Exploration provide success and failure cases agent used to engage to, in the ProteinGym Scenario, common features included in most successful cases suggest its effect-ness in prediction final proxy metric. Experience Evolution enables agent to summarize past experience, update lessons learned recently with new cross-validation facts. Moreover, based on accurate selection of top importance features, regression tools could help agents to further adjust limited hyper-parameters, where deciding what kinds of regression works best still important for agents compared to the fix, one for all regression cases.
+
+\begin{table}[h]
+\centering
+\caption{Ablation study results in ProteinGym benchmark of forward learning paradigm component techniques: \textbf{Experience Exploration}, \textbf{Experience Evolution}, \textbf{Assistance of Regression tools}. Where Fixed mean best one for all regression tools is used instead of each different regression tools for protein target selected by agent.}
+\label{tab:proteingym_ablation_matrix}
+
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{ccccc}
+\toprule
+\textbf{Model} & \textbf{Experience Exploration} & \textbf{Experience Evolution} & \textbf{Regression Tools} & \textbf{Spearman's $\rho$} \\
+\midrule
+\multirow{7}{*}{GPT-OSS}
+& \xmark & \xmark & \xmark & 0.472 \\
+& \xmark & \xmark & Fixed & 0.531 \\
+& \cmark & \xmark & \xmark & 0.537 \\
+& \xmark & \cmark & \xmark & 0.547 \\
+& \cmark & \cmark & \xmark & 0.566 \\
+& \cmark & \cmark & Fixed & 0.568 \\
+& \cmark & \cmark & \cmark & \textbf{0.572} \\
+\bottomrule
+\end{tabular}
+} % end of resizebox
+\end{table}
+
+
+
+
+
+
+\textbf{Case Study.} Figure \ref{fig:protein_case} provides an example of how agents learn from a deliberately designed experience library—golden rules, warnings, and core know-how. Unlike the math and retro-synthesis problems above, protein-fitness prediction rarely admits absolute right/wrong answers; instead, useful guidance must be distilled from empirical trial trajectories and cross validation signals. The library captures those trajectories as reusable micro-strategies and failure patterns, enabling the agent to adapt a generic regression objective to the idiosyncrasies of a specific protein. In practice this means shifting attention away from globally renowned, aggregate metrics toward complementary, target-specific features and modeling choices that actually improve performance on the individual proteins.
+Moreover, the distilled tips actively drive algorithmic evolution: they suggest pre-processing pipelines, feature-combination heuristics, and validation gates that make final formula more robust. By overlaying proven procedural scaffolds onto the frozen LLM’s heuristic search, the experience library encourages more valuable and diverse explorations and simultaneously enlarges meaningful solutions that better tuned to the peculiarities scenarios.
+
+
+
+\section{Related Work}
+%\subsection{Gradient-based Learning and Non-parametric Adaptation}
+\subsection{Learning Paradigms}
+Supervised fine-tuning (SFT) adapts LLMs to downstream distributions via gradient-based optimization on labeled data or human-written instuctions~\cite{howard2018universal,devlin2019bert,radford2019language,raffel2020exploring}.
+It originates from the pretrain-finetune paradigm established by ULMFiT~\cite{howard2018universal}, BERT~\cite{devlin2019bert} and GPT-2~\cite{radford2019language}, and was later formalized as the first stage of alignment training in InstructGPT~\cite{ouyang2022training} and FLAN~\cite{wei2021finetuned}.
+SFT further demonstrates remarkable progress across multiple fronts, including instruction following~\cite{ouyang2022training,sanh2021multitask,wei2021finetuned}, problem solving~\cite{toshniwal2024openmathinstruct,ahn2024large,luo2023wizardmath}, domain-specific adaptation~\cite{luo2022biogpt,zhang2024chemllm,liu2023fingpt,zhou2024lawgpt}, and so on~\cite{chen2021evaluating,roziere2023code,li2023starcoder,fried2022incoder}.
+
+Reinforcement learning (RL) further optimizes LLMs through policy gradient~\cite{schulman2017proximal,sutton1999policy,schulman2015trust}, aligning model behaviors with human preferences or task-specific rewards, as exemplified by RLHF~\cite{christiano2017deep,ziegler2019fine,stiennon2020learning,ouyang2022training,rafailov2023direct} and RLAIF~\cite{bai2022training,lee2023rlaif}
+Beyond alignment, RL has recently proven effective in enhancing model reasoning capabilities on challenging tasks, such as mathematical reasoning~\cite{shao2024deepseekmath,guo2025deepseek,yu2025dapo,yue2025vapo}, code generation~\cite{le2022coderl,shojaee2023execution,wang2024rlcoder}, as well as broader structured decision-making tasks~\cite{cui2025entropy,hu2025open,zheng2025group,zhang2025survey}.
+
+Despite the effectiveness, gradient-based learning paradigms suffer from heavy computational cost and catastrophic forgetting~\cite{goodfellow2013empirical,hadi2023large}, and the resulting models remain static after training, unable to continually evolve through interaction with the environment~\cite{abbas2023loss}.
+
+%\subsection{Non-parametric Adaptation}
+Non-parametric adaptation, including prompt engineering~\cite{sahoo2024systematic} and in-context learning~\cite{dong2022survey}, is another paradigm without gradient-based optimization.
+Prompt engineering focuses on explicitly designing task instructions or linguistic cues that steer model outputs through semantic conditioning, eliciting step-by-step reasoning without parameter updates~\cite{kojima2022large,reynolds2021prompt,wang2022self,yao2023tree,besta2024graph,sahoo2024systematic}.
+In-context learning adapts frozen LLMs by conditioning them on exemplars of input–output pairs or intermediate reasoning trajectories~\cite{brown2020language,wei2022chain,dong2022survey}.
+However, these works focus on optimizing prompt or context, failing to make model learn from the experiences through interaction with environment.
+
+\subsection{Self-Evolving Agent}
+Recent research has begun to explore the vision of self-evolving agents~\cite{gao2025survey,fang2025comprehensive}, that can autonomously improve their reasoning and decision-making through continual interaction with the environment.
+A first line of work focuses on tool evolution, where agents autonomously master, create, and utilize tools to extend their capabilities, such as Toolformer~\cite{schick2023toolformer}, ReAct~\cite{yao2022react}, Voyager~\cite{wang2023voyager}, CREATOR~\cite{qian2023creator}, and ALITA~\cite{qiu2025alita}.
+Another line emphasizes agents architecture evolution, such as CAMEL~\cite{li2023camel}, MetaGPT~\cite{hong2023metagpt}, AgentSquare~\cite{shang2024agentsquare}, MaAS~\cite{zhang2025multi}, AutoFlow~\cite{li2024autoflow}, and GPTSwarm~\cite{zhuge2024gptswarm}, which orchestra multiple agents for cooperative problem solving.
+A third line focuses on context evolution, where agents continually refine their internal reasoning via reflection and semantic feedback
+Representative studies include Reflexion~\cite{shinn2023reflexion}, Self-Refine~\cite{madaan2023self}, GEPA~\cite{agrawal2025gepa}, SE-Agent~\cite{lin2025se}, and ACE~\cite{zhang2025agentic}.
+Similarly, TextGrad~\cite{yuksekgonul2024textgrad} and REVOLVE~\cite{zhang2024revolve} interpret semantic feedback as textual gradients to guide model refinement.
+
+Recently, experience-driven evolution~\cite{tang2025agent,zhou2025memento,ouyang2025reasoningbank,cai2025training} has emerged, allowing LLM agents to accumulate and reuse past interaction trajectories.
+AgentKB~\cite{tang2025agent} emphasizes cross-domain knowledge transfer through a knowledge base. 
+Memento~\cite{zhou2025memento} stores raw reasoning trajectories for later retrieval, but lacks generalization and interpretive guidance for novel contexts.
+ReasoningBank~\cite{ouyang2025reasoningbank} scales memory retrieval at inference time without introducing an explicit learning process.
+TF-GRPO~\cite{cai2025training} simply mimics the GRPO~\cite{shao2024deepseekmath} procedure to compute group-relative semantic advantages, but its extensibility and generalization are constrained by the GRPO-style design.
+
+Overall, these approaches do not establish a principled learning paradigm that formalizes how LLM agents can \emph{learn from experience} in a continual, gradient-free manner. 
+Moreover, most are validated only on simple reasoning benchmarks, without extending to more challenging scientific domains such as chemical retrosynthesis or protein fitness prediction.
+
+\section{Conclusion}
+In this paper, we propose \method{}, a new paradigm that empowers LLM agent to continuously evolve through learning from experience.
+\method{} constructs an ever-evolving experience library by extensive explorations and semantic distillation of environmental interactions during learning process, which subsequently augments the model's capabilities of reasoning and leveraging expert knowledge without gradient back-propagation or parameter updates.
+Extensive experiments demonstrate that \method{} significantly enhances the performance of baselines across diverse challenging scientific tasks, including mathematical reasoning, chemical retrosynthesis, and biological protein fitness prediction.
+Conclusively, our work reveals the necessity of a fundamental shift in learning paradigms to address real-world challenges, thereby illuminating a promising pathway toward artificial intelligence endowed with open-ended evolution.
+
+
+
+
+
+
+% Future work may investigate additional domains, more advanced training procedures for the critic, and new ways of integrating critiques into the agent's action-planning mechanisms.
+
+% Bibliography entries for the entire Anthology, followed by custom entries
+%\bibliography{anthology,custom}
+% Custom bibliography entries only
+\bibliography{custom}
+\bibliographystyle{unsrt}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \input{sections/070appendix}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\appendix
+% \input{sections/070appendix}
+
+% \clearpage
+% \input{checklist}
+
+\end{document}
+
+% Memory Transfer Table
+%\begin{table}[H]
+%\centering
+%\caption{Performance comparison on the USPTO50k benchmark, evaluating the impact of cross-model memory transfer. The values in parentheses denote the absolute accuracy improvement over the ReAct baseline for each model. GPT, Gemini, and Claude in columns stand for experience trained from GPT-5, Gemini-2.5-Pro, Claude-Sonnet-4.5, respectively.}
+%\label{tab:uspto_memory_transfer}
+%\begin{tabular}{lcccc}
+%\toprule
+%\textbf{Model} & \textbf{ReAct} & \textbf{+ GPT} & \textbf{+ Gemini} & \textbf{+ Claude} \\
+%\midrule
+%GPT-5 & 12 & 16 (+4) & 18 (+6) & 15 (+3) \\
+%Gemini-2.5-Pro & 12 & 14 (+2) & 18 (+6) & 23 (+11) \\
+%Claude-Sonnet-4.5 & 23 & 28 (+5) & 30 (+7) & 30 (+7) \\
+%\bottomrule
+%\end{tabular}
+%\end{table}
+
+% AIME25
+%\begin{table}[H]
+%\centering
+%\caption{Performance comparison on the AIME25 benchmark, evaluating the impact of cross-model memory transfer. The values in parentheses denote the absolute accuracy improvement over the ReAct baseline for each model. Claude and DeepSeek in columns stand for experience trained from Claude-Sonnet-4 and DeepSeek-V3.1-Terminus, respectively.}
+%\label{tab:aime_memory_transfer}
+%\begin{tabular}{lccc}
+%\toprule
+%\textbf{Model} & \textbf{ReAct} & \textbf{+ Claude} & \textbf{+ DeepSeek} \\
+%\midrule
+%Claude-Sonnet-4 & 50.0 & 63.3 (+13.3) & 66.7 (+16.7) \\
+%DeepSeek-V3.1-Terminus & 60.0 & 66.7 (+6.7) & 66.7 (+6.7) \\
+%\bottomrule
+%\end{tabular}
+%\end{table}
+
+%\begin{table}[h]
+%\centering
+%\caption{Performance on ProteinGym benchmark \method{} compared to zero-shot and LLM-native methods. The values in parentheses denote the spearman correlation when \method{} equipped set of regression method as combing strategy.}
+%\label{tab:proteingym_results}
+%\begin{tabular}{cccl} 
+%\toprule
+%\textbf{Method} & \textbf{Type} & \textbf{Model} & \textbf{Spearman's $\rho$}\\
+%\midrule
+%\multirow{4}{*}{PLM}  & \multirow{4}{*}{Zero-shot} & VespaG & 0.509 \\
+% &  & PoET & 0.504 \\
+% &  & ProSST & 0.508 \\
+% &  & VenusREM & 0.516\\
+%\midrule
+%\multirow{2}{*}{LLM} & \multirow{2}{*}{Few-shot} & \textit{DeepSeek-V3.1-Terminal} & 0.489\\
+% &  & \textit{GPT-OSS} & 0.472(0.504)\\
+% &  & \textit{Claude-Sonnet-4.5} & 0.498\\
+%\midrule
+%\multirow{2}{*}{Forward Learning} & \multirow{2}{*}{Few-shot} & \textit{DeepSeek-V3.1-Terminal} & 0.551\\
+% &  & \textit{GPT-OSS} & 0.566(0.572\\
+% &  & \textit{Claude-Sonnet-4.5} & \textbf{0.597}\\
+%\bottomrule
+%\end{tabular}
+%\end{table}

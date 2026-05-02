@@ -1,0 +1,119 @@
+\documentclass{article}
+\usepackage[preprint]{colm2025_conference}
+
+\usepackage{microtype}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+
+\usepackage{lineno}
+\usepackage{adjustbox}
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{amsmath}
+\usepackage{marvosym}
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{subcaption}
+\usepackage{changes}
+\usepackage{listings}
+\usepackage{mdframed}
+\usepackage{caption}
+\usepackage[most]{tcolorbox}
+\usepackage{enumitem}
+\usepackage{geometry}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage[capitalise]{cleveref}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage[table]{xcolor}
+
+\usepackage{wrapfig}
+
+\usepackage{longtable}
+\usepackage{appendix}
+\usepackage{titletoc} 
+
+\usepackage{float} 
+\usepackage{cite}
+\usepackage{natbib}
+% \usepackage[square, numbers, sort&compress]{natbib}
+
+\setlength{\textheight}{8.3in}
+% set logo
+\renewcommand{\runninghead}{
+  % \raisebox{-0.2\height}{\includegraphics[height=0.7cm]{logo.png}}
+  % \quad%
+  \Large\textbf{Knowledge\textcolor{blue}{\raisebox{-0.2\height}{\includegraphics[height=0.7cm]{logo.png}}} Lab}
+}
+
+
+\title{\huge Learning on the Job: An Experience-Driven, Self-Evolving Agent for Long-Horizon Tasks}
+
+
+\author{%
+Cheng Yang$^{1,2,\dagger}$, Xuemeng Yang$^{2,\dagger}$, Licheng Wen$^{2,4,\dagger}$, Daocheng Fu$^{3,2}$, Jianbiao Mei$^{5,2}$, Rong Wu$^{5,2}$,\\ 
+\bf  Pinlong Cai$^{2}$, Yufan Shen$^{2}$, Nianchen Deng$^{2}$,  Botian Shi$^{2,\textrm{\Letter}}$, Yu Qiao$^{2}$, Haifeng Li$^{1,\textrm{\Letter}}$ \\ [1mm]
+\textsuperscript{\rm 1} Central South University, 
+\textsuperscript{\rm 2} Shanghai Artificial Intelligence Laboratory,\\
+\textsuperscript{\rm 3} Fudan University,
+\textsuperscript{\rm 4} Shanghai Innovation Institute, 
+\textsuperscript{\rm 5} Zhejiang University \\
+\\ [1.5mm]
+}
+
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+
+\newcommand{\method}{MUSE}
+
+\newtcolorbox{AIbox}[2][]{aibox, title=#2,#1}
+
+
+\begin{document}
+
+\maketitle
+
+{
+\renewcommand{\thefootnote}{}
+\footnotetext{$^{\dag}$ Equal contribution, $^{\textrm{\Letter}}$ Corresponding authors.}
+} 
+
+\begin{abstract}
+
+
+Large Language Models have demonstrated remarkable capabilities across diverse domains, yet significant challenges persist when deploying them as AI agents for real-world long-horizon tasks. 
+Existing LLM agents suffer from a critical limitation: they are test-time static and cannot learn from experience, lacking the ability to accumulate knowledge and continuously improve on the job.
+To address this challenge, we propose \textbf{{\method}}, a novel agent framework that introduces an experience-driven, self-evolving system centered around a hierarchical Memory Module. {\method} organizes diverse levels of experience and leverages them to plan and execute long-horizon tasks across multiple applications. After each sub-task execution, the agent autonomously reflects on its trajectory, converting the raw trajectory into structured experience and integrating it back into the Memory Module. This mechanism enables the agent to evolve beyond its static pretrained parameters, fostering continuous learning and self-evolution. We evaluate {\method} on the long-horizon productivity benchmark TAC. It achieves new SOTA performance by a significant margin using only a lightweight Gemini-2.5 Flash model. Sufficient Experiments demonstrate that as the agent autonomously accumulates experience, it exhibits increasingly superior task completion capabilities, as well as robust continuous learning and self-evolution capabilities. Moreover, the accumulated experience from {\method} exhibits strong generalization properties, enabling zero-shot improvement on new tasks. {\method} establishes a new paradigm for AI agents capable of real-world productivity task automation.
+Code will be released~at: \url{https://github.com/KnowledgeXLab/MUSE}.
+
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/related_works}
+\input{sections/methodology}
+\input{sections/experiments}
+\input{sections/conclusion}
+% \input{sections/statement}
+
+
+% \newpage
+
+
+\bibliographystyle{unsrt}
+\bibliography{preprint}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{sections/appendix}
+
+\end{document}

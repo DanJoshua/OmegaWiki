@@ -1,0 +1,19 @@
+\section{Discussions and Conclusion}
+
+\textbf{Discussions.}
+
+We employ memory modules to tackle long-horizon productivity tasks (some spanning over 100 steps), as fine-tuning methods suffer from computational intractability, while RL-based approaches are hindered by the design of rewards that are both extremely sparse and difficult to formulate.
+Thus, this research focuses on enhancing agent memory to empower test-time learning capabilities. We acknowledge that our current memory architecture is not a panacea and has limitations in handling specific tasks like high-level planning or multi-hop search. Nevertheless, the experimental results confirm its potential. We attribute this success to the agent's ability to efficiently avoid previously failed paths and reallocate exploration to more promising regions, effectively pruning the decision space and enabling a deeper, more successful search.
+
+
+The TAC benchmark represents a significant step forward in evaluating agents on complex tasks, which is a key reason we selected it to test our framework. However, during our experiments, we also observed some limitations.  Some task descriptions can be ambiguous or contain inaccuracies. Furthermore, the evaluation scripts for certain tasks are rigid and do not account for the full range of valid solutions. As a result, several unexpected yet plausible agent strategies are sometimes underestimated or incorrectly penalized. We provide two detailed case studies illustrating these issues in Appendix~\ref{app:case study}.
+
+
+
+ {\method} is currently designed as a fully autonomous framework, but architecture of its Memory Module also facilitates the incorporation of human feedback. The design allows users to directly manage and revise stored experiences (e.g., add, delete, modify, and query), thereby paving the way for human-agent collaborative iteration. This could enable the seamless integration of human demonstrations and abstract guidance, further amplifying the agent's overall performance.
+Looking ahead, we envision an ideal agent accumulating extensive experience through long-term practice and learn by contrasting successful and failed trajectories. This continuous learning paradigm will let it evolve in routine use, ultimately realizing enduring growth in competence.
+
+\textbf{Conclusion.}
+
+In this study, we propose an experience-driven self-evolving framework, {\method}. Centered around a hierarchical Memory Module, {\method} systematically extracts reusable knowledge from interaction trajectories to tackle complex, long-horizon productivity tasks.
+Comprehensive evaluation on the TAC benchmark confirms {\method}'s effectiveness: it achieves continuous performance improvement and self-evolution with autonomous experience accumulation, and shows remarkable experience generalization to novel tasks. Consequently, {\method} achieves a new SOTA performance on TAC by a large margin.

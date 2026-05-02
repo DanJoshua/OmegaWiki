@@ -1,0 +1,34 @@
+\section{Related Work}
+%\subsection{Gradient-based Learning and Non-parametric Adaptation}
+\subsection{Learning Paradigms}
+Supervised fine-tuning (SFT) adapts LLMs to downstream distributions via gradient-based optimization on labeled data or human-written instuctions~\cite{howard2018universal,devlin2019bert,radford2019language,raffel2020exploring}.
+It originates from the pretrain-finetune paradigm established by ULMFiT~\cite{howard2018universal}, BERT~\cite{devlin2019bert} and GPT-2~\cite{radford2019language}, and was later formalized as the first stage of alignment training in InstructGPT~\cite{ouyang2022training} and FLAN~\cite{wei2021finetuned}.
+SFT further demonstrates remarkable progress across multiple fronts, including instruction following~\cite{ouyang2022training,sanh2021multitask,wei2021finetuned}, problem solving~\cite{toshniwal2024openmathinstruct,ahn2024large,luo2023wizardmath}, domain-specific adaptation~\cite{luo2022biogpt,zhang2024chemllm,liu2023fingpt,zhou2024lawgpt}, and so on~\cite{chen2021evaluating,roziere2023code,li2023starcoder,fried2022incoder}.
+
+Reinforcement learning (RL) further optimizes LLMs through policy gradient~\cite{schulman2017proximal,sutton1999policy,schulman2015trust}, aligning model behaviors with human preferences or task-specific rewards, as exemplified by RLHF~\cite{christiano2017deep,ziegler2019fine,stiennon2020learning,ouyang2022training,rafailov2023direct} and RLAIF~\cite{bai2022training,lee2023rlaif}
+Beyond alignment, RL has recently proven effective in enhancing model reasoning capabilities on challenging tasks, such as mathematical reasoning~\cite{shao2024deepseekmath,guo2025deepseek,yu2025dapo,yue2025vapo}, code generation~\cite{le2022coderl,shojaee2023execution,wang2024rlcoder}, as well as broader structured decision-making tasks~\cite{cui2025entropy,hu2025open,zheng2025group,zhang2025survey}.
+
+Despite the effectiveness, gradient-based learning paradigms suffer from heavy computational cost and catastrophic forgetting~\cite{goodfellow2013empirical,hadi2023large}, and the resulting models remain static after training, unable to continually evolve through interaction with the environment~\cite{abbas2023loss}.
+
+%\subsection{Non-parametric Adaptation}
+Non-parametric adaptation, including prompt engineering~\cite{sahoo2024systematic} and in-context learning~\cite{dong2022survey}, is another paradigm without gradient-based optimization.
+Prompt engineering focuses on explicitly designing task instructions or linguistic cues that steer model outputs through semantic conditioning, eliciting step-by-step reasoning without parameter updates~\cite{kojima2022large,reynolds2021prompt,wang2022self,yao2023tree,besta2024graph,sahoo2024systematic}.
+In-context learning adapts frozen LLMs by conditioning them on exemplars of input–output pairs or intermediate reasoning trajectories~\cite{brown2020language,wei2022chain,dong2022survey}.
+However, these works focus on optimizing prompt or context, failing to make model learn from the experiences through interaction with environment.
+
+\subsection{Self-Evolving Agent}
+Recent research has begun to explore the vision of self-evolving agents~\cite{gao2025survey,fang2025comprehensive}, that can autonomously improve their reasoning and decision-making through continual interaction with the environment.
+A first line of work focuses on tool evolution, where agents autonomously master, create, and utilize tools to extend their capabilities, such as Toolformer~\cite{schick2023toolformer}, ReAct~\cite{yao2022react}, Voyager~\cite{wang2023voyager}, CREATOR~\cite{qian2023creator}, and ALITA~\cite{qiu2025alita}.
+Another line emphasizes agents architecture evolution, such as CAMEL~\cite{li2023camel}, MetaGPT~\cite{hong2023metagpt}, AgentSquare~\cite{shang2024agentsquare}, MaAS~\cite{zhang2025multi}, AutoFlow~\cite{li2024autoflow}, and GPTSwarm~\cite{zhuge2024gptswarm}, which orchestra multiple agents for cooperative problem solving.
+A third line focuses on context evolution, where agents continually refine their internal reasoning via reflection and semantic feedback
+Representative studies include Reflexion~\cite{shinn2023reflexion}, Self-Refine~\cite{madaan2023self}, GEPA~\cite{agrawal2025gepa}, SE-Agent~\cite{lin2025se}, and ACE~\cite{zhang2025agentic}.
+Similarly, TextGrad~\cite{yuksekgonul2024textgrad} and REVOLVE~\cite{zhang2024revolve} interpret semantic feedback as textual gradients to guide model refinement.
+
+Recently, experience-driven evolution~\cite{tang2025agent,zhou2025memento,ouyang2025reasoningbank,cai2025training} has emerged, allowing LLM agents to accumulate and reuse past interaction trajectories.
+AgentKB~\cite{tang2025agent} emphasizes cross-domain knowledge transfer through a knowledge base. 
+Memento~\cite{zhou2025memento} stores raw reasoning trajectories for later retrieval, but lacks generalization and interpretive guidance for novel contexts.
+ReasoningBank~\cite{ouyang2025reasoningbank} scales memory retrieval at inference time without introducing an explicit learning process.
+TF-GRPO~\cite{cai2025training} simply mimics the GRPO~\cite{shao2024deepseekmath} procedure to compute group-relative semantic advantages, but its extensibility and generalization are constrained by the GRPO-style design.
+
+Overall, these approaches do not establish a principled learning paradigm that formalizes how LLM agents can \emph{learn from experience} in a continual, gradient-free manner. 
+Moreover, most are validated only on simple reasoning benchmarks, without extending to more challenging scientific domains such as chemical retrosynthesis or protein fitness prediction.

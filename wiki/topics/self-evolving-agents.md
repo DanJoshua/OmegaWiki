@@ -1,0 +1,52 @@
+---
+title: "Self-evolving Agents"
+tags:
+  - agents
+  - self-evolution
+  - continual-learning
+  - tool-use
+my_involvement: reading
+sota_updated: 2026-05-02
+key_venues:
+  - arXiv
+  - ICLR
+  - COLM
+  - TMLR
+  - ACL
+related_topics: []
+key_people: []
+---
+
+## Overview
+
+Self-evolving agents are LLM-based agents that improve themselves at deployment time — through evolving memory, learned skills, refined tool-use policies, or experience-driven lifecycles. Provisional topic page seeded by `/init` on 2026-05-02; SOTA, seminal works, and key people will be filled in by `/ingest` and subsequent `/check` and `/refine` passes.
+
+## Timeline
+
+To be filled in.
+
+## Seminal works
+
+To be filled in. The two recent surveys provide structural framing:
+- [[survey-self-evolving-agents-what-when]]
+- [[comprehensive-survey-self-evolving-ai-agents]]
+
+## SOTA tracker
+
+To be filled in.
+
+## Open problems
+
+To be derived from `wiki/graph/open_questions.md` after ingest.
+
+## My position
+
+To be filled in.
+
+## Research gaps
+
+To be filled in.
+
+## Key people
+
+To be populated by `/ingest`.

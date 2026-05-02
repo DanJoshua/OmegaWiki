@@ -1,0 +1,88 @@
+\section{Introduction}
+Autonomous agents have achieved remarkable advances across diverse domains, including code generation (e.g., Claude Code~\cite{anthropic2025claude}), scientific discovery (e.g., Biomni~\cite{huang2025biomni}, STELLA~\cite{jin2025stellaselfevolvingllmagent}, and SciMaster~\cite{chai2025scimastergeneralpurposescientificai}), and in-depth research (e.g., Tongyi, OpenAI, and Gemini DeepResearch~\cite{tongyidr,openai2025deepresearch,google2025gemini}), showcasing their immense potential to solve complex, open-ended real-world tasks end to end. 
+%[这里具体的工作名字可以考虑删，放cite就行；有其他更好的应用吗]
+
+%然而，在特定任务上预训练完的agent不能和环境交互积累经验，持续进化，从而在困难、未训练的任务上表现很差。现有的基于梯度的训练方法存在训练开销大和灾难性遗忘的问题。并且，很多SOTA的LLM模型都是闭源的，让更新参数的梯度优化不可能实现。
+However, pretrained agents remain static with frozen parameters, fundamentally precludes learning from on-the-fly experience concluded during trial-and-error, causing substantial performance degradation on challenging or untrained tasks~\cite{wu2023autogen,liu2023agentbench}.
+% However, the static nature of pretrained agents fundamentally precludes learning from ongoing experience, causing substantial performance degradation on challenging or untrained tasks~\cite{wu2023autogen,liu2023agentbench}.
+Conventional gradient-based learning paradigms~\cite{rumelhart1986learning,ruder2016overview,hu2022lora} incur prohibitive computational costs and suffer from catastrophic forgetting~\cite{abbas2023loss,hadi2023large,goodfellow2013empirical}, failing to effectively retain and leverage accumulated knowledge over times. 
+Moreover, the closed-source nature of most state-of-the-art LLMs~\cite{google2025gemini2_5_pro,openai2025gpt5,anthropic2025sonnet4.5,anthropic2025claude4,xai2025grok4} renders gradient-based optimization infeasible, leaving no path for continual improvement.
+
+%现有self-evolving agent的工作通过环境交互，进化prompt，workflow，tools，提升agent表现。
+Recent self-evolving paradigms attempt to overcome this limitation by evolving \textit{non-parametric} components (\textit{i.e.,} prompts~\cite{yuksekgonul2024textgrad,zhang2025agentic}, workflows~\cite{lin2025se,zhang2025multi,shang2024agentsquare}, and tools~\cite{qian2023creator,qiu2025alita}) through environmental feedback and textual gradient~\cite{yuksekgonul2024textgrad,shinn2023reflexion,zhang2024revolve}. 
+%然而，只能针对特定任务优化，不具备continuous evolution
+Nevertheless, these approaches encounter three vital bottlenecks: 
+% 进化对象的结构性问题，进化对象是不能跨进程保留的
+%我大概改了一下解决C，
+%OK,我删点东西，让内容不超过一页（大拇指）（笑）（张大嘴笑，黑脸往右看）
+(i) Their evolving components can't be maintained across different tasks, limiting the evolution tailored to a certain task.
+% Nevertheless, these approaches are often tailored to specific models and tasks, optimizing the external configurations rather than enabling agents to internalize and reuse semantic knowledge accumulated from past experiences.
+% (a) 和 (b) 这里有一个递进和因果关系【good】，a说的是这些工作有一个结构性的问题，他们的进化对象无法跨进程维护，b这里要强调因此用于进化的experience量很少，无法随着experience不断scaling，能力也不断scaling，即缺乏持续进化的能力
+%【序号i要不要斜体？】感觉现在这样就还可以？OK，感觉不是很突出。不知道标准写法是啥哈哈（好像一般数学里面就直接在\text里面写(i)这种）ok（大拇指）缩不完（感觉一页多一点也可以接受，主要是咱们这个文章有点复杂，涉及的点有点vague？没有amix-1和dapo那么明确）
+(ii) Consequently, experiences for evolving are extremely restrained in these approaches, lacking the capability to scale performance with accumulated experience, hindering continuous evolution.
+% Consequently, they fail to continuously scale their reasoning capacity with growing experience, hindering continuous evolution.
+%此外，当使用新的LLM agents时，都必须重新交互而无法持续的从其他agent的经验中off-policy的学习，造成极大的计算浪费。
+(iii) Furthermore, new agents are required to conduct interactions from scratch when deploying, unable to continuously evolve from agents' previous experiences in an off-policy manner, resulting in substantial computational waste.
+
+% Our methods
+To address these limitations, we propose \textbf{F}orward \textbf{L}earning from \textbf{Ex}perience~(\textbf{\method{}}), a novel learning paradigm that shifts learning from modifying model parameters to constructing and leveraging an evolvable experience library (Fig.\ref{fig:main_method_overview}).
+%显式对比 + 三个要点 (explore, update, guide future)
+In contrast to traditional gradient-based learning paradigms, which optimize through both forward- and backward-propagation, \method{} involves mere forward passes in three stages: 
+(i) exploring forwardly to acquire extensive problem-solving experiences; %within the environment合适吗，前面没有提过environment这个事情吧（嗯嗯认同，这里其实突出explore就可以）explore to acquire experiences?（我感觉可以的）
+(ii) evolving the experience library via the updater;
+(iii) guiding forward reasoning by utilizing pertinent experiences from the library.
+%我读了一下全文，我感觉逻辑上还挺清晰的。
+%什么全文？introduction？（YES）
+%OK，还有个解决C没改（这个还用改吗？是需要语言再精炼点吗？）下一段的C，我们不是说通过语义信号更新experience library，所以有了迁移性？（哦哦对的对的，这个可以改一下）
+%[突出了两个forward，不然forward passes不太清楚]（strongly approved!）
+% By continuously expanding and refining this library, agents can progressively acquire deeper insights and knowledge, enhancing their cognitive capabilities with accumulated experiences, avoiding the costly gradient backpropagation and enabling the continuous evolution.
+%[呼应上文] 通过不断扩张积累experience library，agent能学到更多。。。。；从而持续进化agent能力。
+
+%% More details of this method
+%[感觉这段关于具体方法细节能删掉？只要分点说明和gradient-based方法和evolving方法的不同，优点即可，正常叙述方法，很难有递进感]
+% 感觉是不是这一段和上一段可以合一下？（是不是可以在介绍方法特点的时候就带出来优点或者说解释了为什么我们没有上述缺点）
+%我觉得可以这样：上一段就介绍方法（一句话定义）+ 简单带过三个实施要点；下一段具体分析为什么没有上述缺点。这样重新组织成两段 (agree >_<) 【我去check一下前面的】OK，我先重构一下这里 ʕ ᵔᴥᵔ ʔ
+%简单写一下explore、update、guide future reasoning三个要点吧
+%需要层层递进地解释为什么我们没有上面的问题（exp-lib是跨session持久化的，除此之外我们还发现了两大特性）
+Hence, \method{} overcomes the prevailing bottlenecks with three profound properties: 
+(i) The evolving object is the persistent experience library, which can continuously collect cross-task experience, guaranteeing the experience accumulation and preservation for future utilization.
+(ii) The library can continuously expand and refine, enabling agents progressively acquire deeper insights and knowledge, scaling their cognitive capabilities with accumulated experiences, achieving continuous evolution.
+%(b) The scaling law of experience. Based on the foundation provided by (a), we further discovered that agent performance scales predictably with the size of the experience library, demonstrating a genuinely continuous evolution.
+%我感觉之所以会有ab重复的感觉是因为组件可扩展和性能随着组件扩展而不断提升，二者之间不是必然关系也没有因果关系（但是大家很容易混淆这两点）我觉得是不是可以明确加这么一句（类似于 the scaling of performance are not inheritantly, or whatever, guaranteed by the extensible feature of the optimizing object?）感觉不需要诶，总觉得这种话不太应该出现在论文里？特别是现在分点陈述。（或者可不可以在说问题的时候第二点现在说的是没有scaling law，最后加一个非限定性定语从句， ... scaling law, which is not guaranteed by merely extensible optimizing objective?）(其实现在这种超级多分点写我感觉就“挺不论文了”，看起来如果想让周老师满意还是逻辑清晰优先？)【你是说改上文中的2？YES】不需要吧，那里提scaling law很奇怪。【问题1导致了什么后果是不是没讲？2好像就是1的后果？】那我觉得现在a,b和前面对应的挺好了，先这样吧（OK）【你来改改C】
+%我感觉可以这么理解，a说明explib是跨任务的，能够一直留存，不会阅后即焚；b说明explib中的内容能不断accumulate，explib的质量不断提升，所以导致agent performance能不断提升，即scaling law（对的对的，我感觉我们的想法应该是align的，不过我觉得上面那句话对于逻辑清晰的帮助还挺大的，我觉得扫读的话很容易感觉ab一样，没有注意到这个subtlety）
+%【a,b有点点重复呢】（可能问题在于前面的三个问题前两个有点重复？我现在总结为第一点在讨论结构，第二点在讨论特性）
+%什么结构？（就是这个优化对象本身是不是可以跨进程进化的？在此之上，是否可以不断进化丰富是否能带来持续的性能提升？换言之，第一点问的是有没有持续进化的条件，第二点问的是有没有持续进化的特性，这两个其实不是必然关系，比如AIME上面就出现了反常现象TT  GET）感觉点出条件和特性这两个层次会不会更清楚一些？比如从前面指出问题的时候就说出来
+%第一个应该通过优化对象突出条件？（嗯嗯我感觉是的，就是我们设计的这个优化对象就有持续进化的条件，同时我们也观察到了这个特性）
+%主要问题是现在b，c并没有说明我们如何解决前面的问题。直接claim我们解决了前面的问题。因果关系有点颠倒？（我感觉非常同意这一点，我觉得是不是这里叙述的时候应该用特性+tricks来说明）
+%对特性导致了features，inheritance属于结果，什么特性能获得inheritance这个结果？（texual+abstraction/induction？正好就把我们方法最核心的点给点出来了）（scaling我感觉是不是通过retriver来实现的？强大的检索能力使得experience扩充过程中仍然能检索到有用信息）
+%c可以说，通过语义信号更新experience library（大概这个意思，对的我感觉这里可以强调和gradient-based的不同，正是我们选择了textual这个更新信号的载体，使得我们可以轻松迁移），使得library存储的内容都是任意agent可理解的内容（而不是参数），从而具有inheritance（这里我感觉还需要点出来abstraction和induction，蛮多工作都是把naive trajs直接保存下来了，但是我们有归纳和抽象的过程，这个是智能涌现的前提）
+%可以强调一下distill吧，abstraction和induction有点多余了（distill的话可能要给个解释，我看周老师问为啥是distill）
+%we distill the xxxx，他的疑问可能是在当时那句话的语境，出现在那个地方distill就很突兀。但是distill the insights from the experiences，就很好理解？或者换成一个词，不要两个词（induction?归纳，我感觉可能更贴切真实过程，也更有智能味一点？）distill的一个小问题可能是本身是AI的一个术语，这里会不会让周老师联想到知识蒸馏了？（小模型蒸大模型）那就归纳吧，反正一个词就OK （+1）
+%现在a不用改，c定了，b怎么说（感觉问题和这里是不是可以说的再清晰一点？我感觉abc核心的三个点就是：优化对象是否可持续扩展，性能/能力是否可以持续进化，进化的能力是否可以迁移。感觉在叙述的时候咱们可以写的再清晰明白一点？）
+%我喜欢这句话：现有工作optimizing the external configurations rather than enabling agents to internalize and reuse semantic knowledge accumulated from past experiences（不过周老师好像问了这句是为什么？）
+(iii) The inheritance of the experience library, where learned experience libraries can be seamlessly inherited across agents. \method{} overcomes this bottleneck by leveraging the great transferability and interpretability of inducted textual signals.
+%这里莫名其妙出来个overcomes this bottleneck，没人想到对应的是上面的第三个bottleneck吧（改成拥有（这个动词还得想想）这个feature也可以）
+%FLEX怎么怎么样，所以具有inheritance，能够learned experience libraries can be seamlessly inherited across agents.（感觉一开始先点出来Inheritance还是更好的，最直观，后面补充一下FLEX是如何实现的）
+%那就是说inheritance是特性（YES）
+%This plug-and-play capability allows a new agent to instantly assimilate the distilled wisdom of another, bypassing redundant and costly re-learning.
+% Specifically, \method{} formulates learning as a forward process of experiential exploration and distillation.
+% \method{} drives agents to conduct extensive explorations forwardly, reflecting on their reasoning trajectories to distill both successful strategies and failure lessons. These distilled experiences are dynamically integrated into the evolving experience library, guided by semantic signals that replace traditional gradient flows. 
+% At inference, agents utilize the pertinent experiences from the library, invoking learned strategies or latent cognitive patterns, thus enhancing their ability to tackle new problems with superior reasoning and knowledge utilization.
+
+% Experimental Results
+To validate the general effectiveness of \method{} paradigm, we conduct extensive experiments across diverse challenging scientific domains, including Olympiad-level mathematics (AIME25~\cite{aime2025problems}), chemical retrosynthesis (USPTO50k~\cite{schneider2016s}), and protein fitness prediction (ProteinGym~\cite{notin2023proteingym}). \method{} demonstrates substantial and consistent improvements on these tasks, from 40\% to 63\% on AIME25 and 20\% to 30\% on USPTO50k, exhibiting great enhancement in the capacity of reasoning and knowledge leverage. 
+% 感觉这两个 features 就放在前面讲了，这里就不重复提了
+% Beyond these quantitative achievements, \method{} unveils two profound properties, namely, the \textit{scaling law} linking performance to experience library size, and the \textit{experience inheritance} of learned experience library across agents.
+
+%Beyond these quantitative achievements, \method{} unveils two profound properties. First, we identify a precise \textbf{scaling law}, where agent performance scales predictably with the size of the experience library. Furthermore, we demonstrate the principle of \textbf{intelligence inheritance}, where learned experience libraries can be seamlessly inherited across agents. This plug-and-play capability allows a new agent to instantly assimilate the distilled wisdom of another, bypassing redundant and costly re-learning.
+%[caizc: 可删，和contribution严重重复]
+% This finding suggests a clear path from self-evolving individual agents to a powerful, collaborative \textbf{experience ecosystem}, where multiple agents contribute to and benefit from a shared knowledge pool, driving collective and continuous improvement.
+
+% Contribution summary
+In summary, our contributions are as follows:
+\begin{itemize}
+\item We propose \textbf{\method{}}, a new learning paradigm for the agentic era. It redefines learning as a forward exploration and experience distillation process, enabling LLM agents to continuously evolve through accumulated experience without gradient-based tuning.
+\item We provide a comprehensive framework for \method{}, including a unified mathematical formulation with theoretical justifications, a practical instantiation with concrete mechanisms, and an empirical demonstration of its effectiveness on diverse scientific benchmarks.
+\item We identify and empirically validate a \textit{scaling law} of the experience library, showing that agent performance scales predictably with accumulated experience. %and revealing a path towards a collaborative experience ecosystem.
+We also introduce and demonstrate the principle of \textit{experience inheritance}, where distilled experience can be transferred between agents in a plug-and-play manner, enabling instant knowledge assimilation and bypassing redundant learning.
+\end{itemize}

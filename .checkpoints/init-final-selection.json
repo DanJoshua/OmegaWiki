@@ -1,0 +1,23 @@
+{
+  "topic": "Self-evolving Agents",
+  "mode": "bootstrap",
+  "shortlist_count": 12,
+  "final_count": 10,
+  "trim_rationale": "Kept all 7 self-evolving-cluster papers (the topic core) plus the top 3 agents-cluster papers by score. Dropped the two lowest-score agents-cluster items (arxiv:2511.09586 'Environment Scaling' survey and arxiv:2412.14161 'TheAgentCompany' benchmark) as tangential to the self-evolving evolution mechanism focus.",
+  "final_ids_in_shortlist_order": [
+    "arxiv:2511.20857",
+    "arxiv:2510.16079",
+    "arxiv:2602.20867",
+    "arxiv:2603.04900",
+    "arxiv:2510.08002",
+    "arxiv:2508.07407",
+    "arxiv:2507.21046",
+    "arxiv:2604.22436",
+    "arxiv:2511.06449",
+    "arxiv:2510.20168"
+  ],
+  "dropped_ids": [
+    "arxiv:2511.09586",
+    "arxiv:2412.14161"
+  ]
+}

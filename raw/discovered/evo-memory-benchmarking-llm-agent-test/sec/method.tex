@@ -1,0 +1,127 @@
+\section{\protect\method: Evaluating Self-Evolving Memory in LLM Agents}
+\label{sec:method}
+
+Existing evaluations of LLMs often treat memory as static recall, overlooking its role in continual adaptation. 
+\method provides a unified benchmark to study \emph{self-evolving memory}, where agents retrieve, integrate, and update knowledge over time. 
+As illustrated in Figure~\ref{fig:main}, the left side shows the test-time evolution process, and the right side outlines the \textsc{ReMem} agent with three modules—\emph{Think}, \emph{Act}, and \emph{Refine Memory}. 
+We first formalize the problem setting, then describe two representative implementations, \textsc{ExpRAG} and \textsc{ReMem}, used to instantiate the benchmark.
+
+
+
+\subsection{Problem Formulation}
+
+% We formalize a general memory-augmented agent as a pair $(F, U)$, where $F$ is the base LLM and $U$ is the memory update pipeline. At time $t$, the agent observes input $x_t$, maintains memory $M_t$, and produces an output $\hat{y}_t$. This abstraction unifies a wide spectrum of existing memory mechanisms, from retrieval-augmented generation to dynamic, hierarchical, and workflow-based memories, under a single iterative formulation.
+
+We formalize a general memory-augmented agent as a tuple
+(\text{F}, \text{U}, \text{R}, \text{C}), 
+where \(\text{F}\) is the base LLM, \(\text{U}\) is the memory update pipeline, \(\text{R}\) is the retrieval module, and \(\text{C}\) is the contextual construction mechanism that transforms retrieved content into the final working context. In our setting, the agent processes a sequence of inputs \(\{x_1, x_2, \ldots, x_T\}\), and the memory state \(M_t\) evolves with the history. At time \(t\), the agent receives an input \(x_t\), maintains an evolving memory \(M_t\), retrieves relevant elements \(\text{R}(M_t, x_t)\), constructs a contextualized prompt 
+\[
+C_t = \text{C}(x_t, \text{R}(M_t, x_t)),
+\]
+and produces an output 
+\[
+\hat{y}_t = \text{F}(C_t).
+\]
+This abstraction unifies a wide spectrum of existing memory mechanisms, from retrieval-augmented generation to dynamic, hierarchical, and workflow-based memories, under a single iterative formulation.
+
+
+
+\paragraph{Search.}  
+Given the current input $x_t$, the agent first retrieves relevant memory entries:  
+\[
+R_t = \text{R}(M_t, x_t),
+\]
+where $\text{R}$ can represent similarity search, index-based lookup, or attention over stored embeddings. This step captures memory access policies across different algorithms.
+
+\paragraph{Synthesis.}  
+The agent interprets and restructures the retrieved information $R_t$ into a concise working context aligned with the current input $x_t$.  
+This synthesis yields a coherent text $\tilde{C}_t$, from which the final output is derived:
+\[
+\hat{y}_t = \text{F}(\tilde{C}_t).
+\]
+
+\paragraph{Synthesis.}
+The agent restructures the retrieved information \(R_t\) into a working context tailored to the current input \(x_t\).  
+This step may involve forming a structured prompt \citep{Wang2024AgentWM}, selecting key memory items \citep{mem0,xu2025mem}, or merging retrieved content \citep{suzgun2025dynamic} into a short summary.  
+We denote the resulting context as \(\tilde{C}_t = \text{C}(x_t, R_t)\), and the final output is
+\[
+\hat{y}_t = \text{F}(\tilde{C}_t).
+\]
+
+
+
+\paragraph{Evolve.}  
+
+After obtaining \(\hat{y}_t\), the agent constructs a new memory entry
+\(m_t = h(x_t, \hat{y}_t, f_t)\) that captures the current step’s experience together with the feedback \(f_t\), such as whether the task was completed. The memory is then updated via:
+\[
+M_{t+1} = \text{U}(M_t, m_t).
+\]
+Different algorithms instantiate $U$ differently, for example, direct append for retrieval-based memories, summarization or compression for long-term storage, or replacement for bounded-capacity stores.  
+This unified formulation abstracts the essential cycle of \emph{retrieval}, \emph{synthesis}, and \emph{evolution} underlying all memory-based agents.
+
+\paragraph{Dataset Preparation.}  
+\method restructures conventional static datasets into \emph{streaming task sequences}, enabling evaluation of how LLMs reuse and evolve memory over time.  
+Each dataset can thus be transformed into a sequence $\tau = \{(x_1, y_1), \dots, (x_T, y_T)\}$, forming a ground-truth trajectory in which earlier tasks provide essential information or strategies for later ones.  
+At each step $t$, the agent processes input $x_t$, retrieves and synthesizes memory, produces prediction $\hat{y}_t$, and updates the memory state $M_t$, yielding the predicted trajectory:
+\[
+\scalebox{0.9}{$
+(x_1, \hat{y}_1, M_1) \rightarrow (x_2, \hat{y}_2, M_2) \rightarrow \cdots \rightarrow (x_T, \hat{y}_T, M_T).
+$}
+\]
+This design transforms static benchmarks into interactive evaluation streams that explicitly probe an LLM’s ability to accumulate, adapt, and refine knowledge during deployment.
+
+
+
+\subsection{\protect\textbf{ExpRAG}: Experience Retrieval and Aggregation}
+
+As a simple baseline and extension, we define \textbf{ExpRAG}, a task-level retrieval-augmented agent. Each memory entry $m_i = S(x_i, \hat{y}_i, f_i)$ encodes a structured experience text with template $S$.
+At step $t$, the agent retrieves $k$ similar experiences from memory according to a retrieval score $\phi$:
+\[
+R_t = \text{Top-}k_{m_i \in M_t}~\phi(x_t, m_i).
+\]
+The model conditions on these retrieved examples following the in-context learning principle:
+\[
+\hat{y}_t = \text{F}(x_t, R_t),
+\]
+and appends the new experience to memory:
+\[
+M_{t+1} = M_t \cup \{(x_t, \hat{y}_t, f_t)\}.
+\]
+ExpRAG thus performs one-shot experience reuse through retrieval and aggregation. It captures how simple memory-based extensions of in-context learning behave but lacks iterative reasoning or adaptive refinement during inference.
+
+\subsection{\protect\alg: Synergizing Reasoning, Acting, and Memory}
+
+We propose \textbf{\alg}, a simple yet effective framework that unifies reasoning, action, and memory refinement within a single decision loop.
+Unlike conventional retrieval-augmented or ReAct-style methods that treat memory as static context, \alg introduces a third dimension of \emph{memory reasoning}, allowing the agent to actively evaluate, reorganize, and evolve its own memory during problem solving.
+
+At each step $t$, given the current input $x_t$, memory state $M_t$, and previous reasoning traces $o^{1:n-1}_t$ at this step,  the agent selects one of three operations:
+\[
+a_t^n \in \{\text{Think},~\text{Act},~\text{Refine}\}.
+\]
+It then performs the operation and transitions according to:
+\[
+o_t^n = \text{Agent}(x_t, M_t, a_t^n),
+\]
+where $o_t^n$ denotes the output generated at step $t$ after $n$ operations, such as an intermediate reasoning trace, an external action, and memory refine thoughts.
+
+
+Specifically,  
+\emph{Think} produces internal reasoning traces that help decompose the task and guide subsequent actions;  
+\emph{Act} executes an operation in the environment or outputs a response observable to the user;  
+\emph{Refine} performs meta-reasoning over memory, which exploiting useful experiences, pruning noise, and reorganizing $M_t$, to better support future reasoning and action. Within each step, the agent may perform multiple rounds of \emph{Think} and \emph{Refine}, and the step terminates once an \emph{Act} operation is selected.  
+This induces a Markov decision process where the state at step \(t\) after $n$ operations is \(s_t^n = (x_t, M_t, o^{1:n-1}_t)\), the action space is \(\{\text{Think}, \text{Act}, \text{Refine}\}\), and the transition dynamics are given by the \(\text{Agent}\) operator together with the environment response.  
+Depending on the task, the \textit{Act}-output of step \(t\) may serve as the final answer for single-step tasks or as an intermediate result in multi-step settings, where the process continues until the overall task is completed.
+
+
+This unified formulation expands the action space of ReAct-style \citep{yao2022react} agents by introducing an explicit memory reasoning mechanism. 
+Through this extension, memory becomes an adaptive component that interacts with reasoning in real time rather than remaining a passive context. Under this view, the entire decision loop can also be interpreted as a Markov process, where the state encapsulates the current input, memory state, and ongoing reasoning traces.
+Such integration yields a lightweight yet powerful paradigm for continual adaptation, where the agent learns to reason about both the task and its own knowledge state. 
+By coupling reflection with memory evolution, \alg establishes a new standard for adaptive, self-improving LLM agents.
+
+
+
+
+
+
+

@@ -1,0 +1,56 @@
+\section{Experiments}
+In this section, we evaluate leading LLMs on the \method benchmark under our unified test-time learning pipeline, focusing on five key research questions (RQs):
+\begin{itemize}[itemsep=0pt,topsep=2pt,leftmargin=*]
+    \item \textbf{RQ1:} How do LLM agents perform on \method across diverse domains and task types, and does \textsc{ReMem} enhance their test-time learning ability?
+    \item \textbf{RQ2:} What factors influence the effectiveness of memory in different tasks, and how does experience reuse improve task efficiency?
+    \item \textbf{RQ3:} How does task sequence difficulty (e.g., easy vs.\ hard trajectories) affect memory adaptation and generalization?
+    \item \textbf{RQ4:} How do varying feedback types impact learning dynamics and memory refinement across tasks?
+    \item \textbf{RQ5:} How does cumulative performance evolve over task sequences and time steps, reflecting continual adaptation during deployment?
+\end{itemize}
+
+
+
+
+
+\subsection{Experimental Setup}
+
+\method evaluates memory mechanisms under realistic streaming multi-task conditions. In what follows, we describe the benchmark datasets, metrics, and the methods compared.
+
+
+\subsubsection{Datasets}
+\method is evaluated on a diverse suite of datasets spanning factual knowledge, reasoning, mathematics, programming, and goal-oriented interaction.  
+For factual and reasoning ability, we include \textbf{MMLU-Pro}~\citep{zheng2024mmlu} and \textbf{GPQA-Diamond}~\citep{rein2023gpqa}, which test multi-disciplinary and graduate-level reasoning.  
+For mathematical problem solving, we use \textbf{AIME-24} and \textbf{AIME-25}~\citep{aime2024}, containing Olympiad-style challenges requiring symbolic reasoning and exact-match evaluation.  
+For tool-use and API grounding, we include \textbf{ToolBench}~\citep{patil2023gorilla}.  
+For multi-turn and goal-oriented interaction, we adopt the \textbf{AgentBoard}~\citep{zhuang2024agentboard} suite, covering \textbf{AlfWorld}~\citep{shridhar2021alfworld}, \textbf{BabyAI}~\citep{chevalier2018babyai}, \textbf{ScienceWorld}~\citep{wang2022scienceworld}, \textbf{Jericho}~\citep{hausknecht2019interactive}, and \textbf{PDDL} tasks~\citep{yang2023pddlbench}.  
+Together, these datasets span both single-turn and interactive settings, enabling a unified evaluation of factual recall, procedural reasoning, and long-horizon adaptation. All methods are evaluated under the same \emph{search–predict–evolve} loop
+\[
+(x_t, M_t) \xrightarrow{\text{search}} R_t \xrightarrow{\text{synthesis}} \hat{y}_t \xrightarrow{\text{evolve}} M_{t+1},
+\]
+with identical prompting templates, configurations, and memory budgets if applicable. Feedback $f_t$ is considered as the correctness signal. 
+
+\subsubsection{Evaluation}
+\method evaluates both task performance and memory quality along four dimensions.
+First, \textbf{answer accuracy} measures whether the model produces correct outputs in single-turn tasks.
+Second, \textbf{success rate} and \textbf{progress rate} evaluate goal completion in multi-turn tasks.
+Third, \textbf{step efficiency} tracks how many steps are needed to reach a goal, reflecting reasoning conciseness.
+Finally, \textbf{sequence robustness} tests whether performance stays stable under different task orders.
+Together, these metrics assess how well the agent learns, adapts, and reuses knowledge over time.
+
+\subsubsection{Methods}
+We benchmark a broad range of agents and memory architectures instantiated on two strong \textbf{LLM backbones}: the Gemini-2.5 series~\citep{comanici2025gemini} (\textsc{Flash}, \textsc{Flash-Lite}, and \textsc{Pro}) and the Claude family~\citep{anthropic_claude4_2025} (\textsc{3.5-Haiku} and \textsc{3.7-Sonnet}).
+The evaluated methods are grouped into four categories:  
+(1) \textbf{Agent pipelines without persistent memory}, including ReAct~\citep{yao2022react} and Amem \citep{xu2025mem}, which rely on short-term context or lightweight caches;  
+(2) \textbf{Adaptive agentic memory methods}, such as SelfRAG~\citep{asai2024self}, MemOS~\citep{Li2025MemOSAO}, Mem0~\citep{mem0}, and LangMem~\citep{langchain}, which support dynamic retrieval and continual updates;  
+(3) \textbf{Memory-based agents for procedural knowledge}, including Dynamic Cheatsheet (DC)~\citep{suzgun2025dynamic} with two variants Cumulative (Cu) and Synthesis (RS) and Agent Workflow Memory (AWM)~\citep{Wang2024AgentWM}, which emphasize reusable workflows and task strategies; and  
+(4) \textbf{Proposed evolving-memory framework}, comprising \textbf{ExpRecent}, \textbf{ExpRAG}, and \textbf{ReMem}, which unify reasoning, action, and memory refinement in a self-evolving loop.  
+All methods are evaluated under a unified \emph{search–predict–evolve} protocol to isolate the effects of memory design. Implementation and prompting details are provided in Appendix~\ref{appendix:setup}. We exclude systems such as MemoryGpt \citep{Zhong2023MemoryBankEL} and MemoryBank \citep{Zhong2023MemoryBankEL} that target factual recall only, since \method is designed to test evolving and procedural memory.  Our goal is not to improve or modify the underlying LLMs themselves. Certain methods, such as MemOS and LangMem, are not fully compatible with embodied environments, and thus we exclude them from multi-turn datasets. \method isolates the effect of search and evolution in \emph{memory mechanisms}, so that observed differences reflect solely memory design rather than raw LLM capability.
+
+\input{tables/single_step_table_part}
+
+\input{tables/multi_step_table_part}
+
+
+
+
+

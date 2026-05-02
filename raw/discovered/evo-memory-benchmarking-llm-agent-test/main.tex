@@ -1,0 +1,162 @@
+
+\documentclass[11pt, a4paper, logo, copyright]{googledeepmind}
+
+\usepackage[authoryear, sort&compress, round]{natbib}
+\bibliographystyle{abbrvnat}
+
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{lineno}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage[table,dvipsnames]{xcolor}         % colors
+\usepackage{xspace}
+\usepackage{pifont}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{makecell}
+\usepackage{xspace}
+\usepackage{comment}
+% \usepackage[prependcaption,textsize=scriptsize,color=pink]{todonotes}
+\usepackage[disable]{todonotes}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{titlesec}
+\usepackage[most]{tcolorbox}
+
+\usepackage{tcolorbox}
+\newtcolorbox{prompt}[1]{colback=gray!20,colframe=gray!50!black,fonttitle=\bfseries,title=#1}
+
+
+% 在导言区加上
+\newcommand{\method}{Evo-Memory\xspace}
+\newcommand{\alg}{ReMem\xspace}
+
+
+\title{Evo-Memory: Benchmarking LLM Agent Test-time Learning with Self-Evolving Memory}
+
+\correspondingauthor{twei10@illinois.edu}
+
+% Remove these if they are not needed
+\keywords{LLMs, Agentic Memory, Test-time Learning, Self-evolving Agents, Lifelong Intelligence}
+% \paperurl{arxiv.org/abs/123}
+
+% Use the internally issued paper ID, if there is one
+\reportnumber{} % Leave blank if n/a
+
+\author[$\dagger$,1]{Tianxin Wei}
+\author[2]{Noveen Sachdeva}
+\author[2]{Benjamin Coleman}
+\author[2]{Zhankui He}
+\author[1]{Yuanchen Bei}
+\author[1]{Xuying Ning}
+\author[1]{Mengting Ai}
+\author[$\dagger$,1]{Yunzhe Li}
+\author[1]{Jingrui He}
+\author[2]{Ed H. Chi}
+\author[2]{Chi Wang}
+\author[2]{Shuo Chen}
+\author[2]{Fernando Pereira}
+\author[2]{Wang-Cheng Kang}
+\author[2]{Derek Zhiyuan Cheng}
+
+% Affiliations *must* come after the declaration of \author[]
+\affil[$\dagger$]{Work done while at Google DeepMind}
+\affil[1]{University of Illinois Urbana-Champaign}
+\affil[2]{Google DeepMind}
+
+
+% Authors must not appear in the submitted version. They should be hidden
+% as long as the \iclrfinalcopy macro remains commented out below.
+% Non-anonymous submissions will be rejected without review.
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\newcommand{\ma}[1]{{\small\color{teal}{\bf [Mengting: #1]}}}
+
+%\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+
+\begin{abstract}
+Statefulness is essential for large language model (LLM) agents to perform long-term planning and problem-solving. This makes \emph{memory} a critical component, yet its management and evolution remain largely underexplored. Existing evaluations mostly focus on static conversational settings, where memory is passively retrieved from dialogue to answer queries, overlooking the dynamic ability to accumulate and reuse \emph{experience} across evolving task streams. In real-world environments such as interactive problem assistants or embodied agents, LLMs are required to handle continuous task streams, yet often fail to learn from accumulated interactions, losing valuable contextual insights, a limitation that calls for \emph{test-time evolution}, where LLMs retrieve, integrate, and update memory continuously during deployment. To bridge this gap, we introduce \textbf{\method}, a comprehensive streaming benchmark and framework for evaluating \emph{self-evolving memory} in LLM agents. \method structures datasets into sequential task streams, requiring LLMs to search, adapt, and evolve memory after each interaction. We unify and implement over ten representative memory modules and evaluate them across 10 diverse multi-turn goal-oriented and single-turn reasoning and QA datasets. To better benchmark experience reuse, we provide a baseline method, \textbf{ExpRAG}, for retrieving and utilizing prior experience, and further propose \textbf{\alg}, an \emph{action–think–memory refine} pipeline that tightly integrates reasoning, task actions, and memory updates to achieve continual improvement.
+
+\end{abstract}
+
+\begin{document}
+
+
+\maketitle
+
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
+
+
+
+
+\input{sec/intro}
+\input{sec/related_work}
+
+
+
+% \section{Introduction}
+
+% Large Language Model (LLM) LLMs have rapidly evolved from simple chatbots to systems capable of software synthesis, web navigation and multi-modal inference.  These capabilities, however, are limited by the lack of persistent memory mechanisms.  A recent survey organizes LLM memories into three paradigms—\emph{implicit}, \emph{explicit} and \emph{LLMic} memory—corresponding to knowledge embedded in model parameters, external storage such as text or vector databases, and persistent temporal structures within LLMs.  Existing systems focus on factual recall in single-dialogue settings and rarely generalize to diverse tasks or long-term interactions.  To enable continual learning, an LLM should accumulate experience over time, update its memory and reuse strategies across heterogeneous tasks.
+
+% In this work we propose \method, a streaming benchmark and framework for evaluating test-time learning with self-evolving memory.  Self-evolving memory allows an LLM to accumulate, refine and reuse information without labelled data.
+
+% It draws inspiration from dynamic cheat sheets that maintain persistent memories of code and problem-solving strategies, LLM workflow memory that induces reusable task workflows, and hierarchical memory operating systems that manage short-, mid- and long-term storage.  By unifying these ideas, we design a simple memory mechanism that supports a wide range of domains and input modalities.
+
+
+% Our contributions are fourfold: \textbf{(i)} We introduce a streaming benchmark with diverse tasks beyond factual QA, forcing LLMs to update and exploit memory across sessions. \textbf{(ii)} We propose a self-evolving memory framework that organizes knowledge as structured workflows, updates memory self-supervisedly and unifies procedural and factual knowledge. \textbf{(iii)} We define evaluation metrics for memory efficiency and task performance, including update ability, token efficiency, accuracy and robustness. \textbf{(iv)} We conduct experiments showing consistent improvements over full-context, retrieval-augmented generation (RAG), commercial pipelines and existing memory-oriented methods.
+
+
+
+
+
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=\linewidth]{figures/main_figure.pdf}
+    \caption{Overview of the ReMem agent framework. Left: Test-time evolution process where the agent iteratively searches, synthesizes, and evolves its memory across multiple tasks. Right: Agent architecture with three core modules—Think (reasoning and decomposition), Refine Memory (retrieve, prune, organize), and Act (execution)—that interact with the environment and learned memory.}
+    \label{fig:main}
+\end{figure*}
+
+
+
+\input{sec/method}
+\input{sec/experimental_setup}
+\input{sec/experiments}
+
+
+\section{Conclusion}
+Self-evolving memory is a fundamental yet underexplored aspect of LLM capability. While prior work centers on static conversational recall, it overlooks how models accumulate and reuse experience across evolving task streams. \method fills this gap by transforming static datasets into streaming trajectories, systematically evaluating how LLMs retrieve, adapt, and refine memory through interaction. Our results show that memory can substantially enhance performance but remains fragile in stability and procedural reuse. To foster progress, we introduce ExpRAG for experience retrieval and \alg for interleaving reasoning, action, and memory updates. We hope \method serves as a unified platform for building LLMs with reliable and continually improving memory.
+
+
+
+\bibliography{main}
+
+
+\input{sec/appendix}
+
+% You may include other additional sections here.
+
+
+\end{document}
