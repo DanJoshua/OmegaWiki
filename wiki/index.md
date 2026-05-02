@@ -46,6 +46,10 @@ concepts:
   - slug: diversity-aware-population-selection
     title: "Diversity-Aware Population Selection"
     tags: [evolutionary-search, prompt-optimization, llm-agents, population-methods]
+  - slug: learning-job-experience-driven-self-evolving
+
+concepts:
+  - slug: hierarchical-experience-memory
 
 topics:
   - slug: self-evolving-agents
@@ -88,6 +92,7 @@ claims:
     title: "Module-level blame attribution enables stable, targeted improvement of modular tool-use policies under sparse end-of-trajectory supervision"
   - slug: diversity-aware-population-selection-prevents-premature
     title: "Instance-wins (diversity-aware) selection outperforms greedy and top-k selection in evolutionary prompt search for heterogeneous tool-use tasks"
+  - slug: claim-experience-memory-enables-self-evolution
 
 Summary:
   - slug: self-evolving-agents
