@@ -33,6 +33,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 concurrency:
   group: daily-arxiv-${{ github.ref }}
