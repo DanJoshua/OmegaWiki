@@ -29,5 +29,8 @@ Thumbs.db
 # Virtual environment
 .venv/
 
+# Local and CI scratch files for /daily-arxiv runs
+.daily-arxiv/
+
 # Raw data (large files managed separately)
 raw/papers/*.pdf

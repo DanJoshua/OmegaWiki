@@ -36,7 +36,7 @@ Keep this mental map in immediate context:
 - `raw/papers/`, `raw/notes/`, and `raw/web/` are user-owned inputs
 - `raw/discovered/` stores externally fetched papers from `/init` and `/daily-arxiv`
 - `raw/tmp/` stores generated prepared local sidecars for `/init` and direct local `/ingest`
-- `config/` holds environment and remote-server templates
+- `config/` holds environment, daily-arxiv, and remote-server templates
 
 ---
 
@@ -143,7 +143,7 @@ Standard log line:
 | `/ask` | `skills/ask/SKILL.md` | manual |
 | `/edit` | `skills/edit/SKILL.md` | manual |
 | `/check` | `skills/check/SKILL.md` | biweekly/manual |
-| `/daily-arxiv` | `skills/daily-arxiv/SKILL.md` | cron 08:00 / manual |
+| `/daily-arxiv` | `skills/daily-arxiv/SKILL.md` | manual / scheduled |
 | `/novelty` | `skills/novelty/SKILL.md` | manual |
 | `/review` | `skills/review/SKILL.md` | manual |
 | `/ideate` | `skills/ideate/SKILL.md` | manual |

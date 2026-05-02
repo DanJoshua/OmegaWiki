@@ -1,99 +1,65 @@
 ---
-description: 每日 arXiv 收集、wiki 去重、digest 生成与邮件通知；推荐和可选 auto-ingest 留作后续阶段
-argument-hint: "[--hours 24] [--categories <cat...>] [--max-items 20] [--send-email true|false]"
+description: 运行或管理每日 arXiv 推荐 feed。用于手动获取新论文推荐、配置/检查/停用 GitHub Actions 定时任务、邮件 digest，以及显式高置信 auto-ingest。
+argument-hint: "[setup|status|disable] [--mode inform|auto-ingest] [--hours 24] [--categories <cat...>] [--max-recommendations 10] [--max-auto-ingest 1] [--send-email true|false]"
 ---
 
 # /daily-arxiv
 
-> 监听每日 arXiv 时间窗口，按 wiki 已有论文去重，生成简洁 digest，并通过邮件通知用户。当前自动化 scaffold 只负责 inform：不打分、不下载、不 ingest、不修改 wiki。
+> 运行或管理每日论文推荐 feed。裸 `/daily-arxiv` 表示“现在跑一次今天的推荐”；GitHub Actions 只是同一条 pipeline 的无人值守调度器。
 
-按需读取这些本地 reference：
+按需读取 reference：
 
-- `references/automation-scaffold.md` — GitHub Actions scaffold、SMTP secrets、artifacts 与失败行为
-- `references/recommendation-and-ingest-policy.md` — 后续推荐信号、决策模式与 auto-ingest 约束
+- `references/recommendation-and-ingest-policy.md` — evidence、LLM 决策 schema、置信度门控和 auto-ingest 约束
+- `references/automation-scaffold.md` — GitHub Actions setup/status、secrets、artifacts 与失败行为
+
+## Commands
+
+- `/daily-arxiv`：现在跑一次推荐。如果缺少 `config/daily-arxiv.yml`，从 wiki 推断默认值后继续。
+- `/daily-arxiv setup`：从 `config/daily-arxiv.yml.example` 创建或修复配置，检查 `.github/workflows/daily-arxiv.yml`，并说明需要的 secrets。
+- `/daily-arxiv status`：检查 config、workflow、schedule、mode、API/e-mail secrets 可用性，以及最近 artifacts。
+- `/daily-arxiv disable`：把 config 中的 `schedule.enabled` 设为 `false`，或告诉用户需要怎样修改；手动 `/daily-arxiv` 仍可使用。
 
 ## Inputs
 
-- `--hours N`：拉取最近 N 小时的论文（默认 24）
-- `--categories <cat...>`：覆盖默认 arXiv 分类（`cs.LG cs.CV cs.CL cs.AI stat.ML`）
-- `--max-items N`：digest 中最多展示的新候选论文数（默认 20）
-- `--send-email true|false`：workflow 专用的 SMTP 发送开关；手动 dry run 可设为 `false`
+- `--mode inform|auto-ingest`：默认 `inform`。不要从 repo 状态推断 `auto-ingest`。
+- `--hours N`：拉取最近 N 小时论文；config/default 为 24。
+- `--categories <cat...>`：覆盖配置中的 arXiv 分类。
+- `--max-recommendations N`：digest 中最多展示的论文数；config/default 为 10。
+- `--max-auto-ingest N`：高置信 auto-ingest 上限；config/default 为 1。
+- `--send-email true|false`：workflow/setup 用的 SMTP 发送偏好。
 
-## Outputs
+## Run Workflow
 
-- GitHub Actions artifacts：`feed.json`、`digest.md`、`digest.json`
-- 包含 Markdown digest 的 GitHub Actions job summary
-- 可选的 SMTP 邮件，正文与 `digest.md` 相同
+1. 解析 Python 解释器并准备 deterministic context：
 
-当前 scaffold 不写 `wiki/`、不写 `raw/`、不提交 commit。后续 auto-ingest 必须显式 opt-in，并且所有论文纳入都要交给 `/ingest`。
+   ```bash
+   python3 tools/daily_arxiv.py prepare --wiki-root wiki --out .daily-arxiv/run/recommendation-context.json --out-feed .daily-arxiv/run/feed.json
+   ```
+
+2. 读取 `.daily-arxiv/run/recommendation-context.json`。基于 arXiv、wiki、Semantic Scholar、DeepXiv evidence，用 LLM 判断推荐质量。写出 `.daily-arxiv/run/llm-decisions.json`，字段包括 `decision`、`confidence`、`score`、`rationale`、`wiki_connections`、`signals_used`。在 CI 的 inform mode 中，可用 OpenAI-compatible review LLM 执行：
+
+   ```bash
+   python3 tools/daily_arxiv.py recommend-llm --context .daily-arxiv/run/recommendation-context.json --out .daily-arxiv/run/llm-decisions.json
+   ```
+
+3. 如果 mode 是 `auto-ingest`，只能使用 Claude Code runtime：选择 `decision: ingest` 且 `confidence: high` 的论文，遵守 `max_auto_ingest`，并按顺序调用 `/ingest <arxiv-url>`。不要手写 wiki 或 graph 文件。第三方 LLM 只用于推荐，不能 auto-ingest。
+
+4. 生成 digest：
+
+   ```bash
+   python3 tools/daily_arxiv.py finalize --context .daily-arxiv/run/recommendation-context.json --decisions .daily-arxiv/run/llm-decisions.json --out-md .daily-arxiv/run/digest.md --out-json .daily-arxiv/run/digest.json
+   ```
+
+5. 汇报 strong recommendations、maybe interesting、重复跳过项、degraded signals、auto-ingest 结果，以及 setup/status 提示。
 
 ## Wiki Interaction
 
-### Reads
+读取 `wiki/index.md`、`wiki/papers/`、`wiki/topics/`、`wiki/concepts/`、`wiki/claims/`、`wiki/ideas/`、`wiki/log.md` 来构建兴趣 profile 和去重。
 
-- `wiki/index.md` 与 `wiki/papers/*.md` — 用 arXiv URL / ID 做去重
+inform 运行只写 `.daily-arxiv/` 下的 scratch 文件。`auto-ingest` 中所有持久 wiki/raw 变更都必须来自 `/ingest`。
 
-### Writes
+## Relationships
 
-- 当前 scaffold 不写任何 wiki 文件
-
-### Graph edges created
-
-- 无。图谱和实体变更属于 `/ingest`。
-
-## Workflow
-
-1. 拉取 feed：
-
-   ```bash
-   python3 tools/fetch_arxiv.py --hours <hours> [-o <feed.json>] [--categories <cat...>]
-   ```
-
-2. 生成 digest：
-
-   ```bash
-   python3 tools/daily_arxiv.py digest --feed <feed.json> --wiki-root wiki --out-md <digest.md> --out-json <digest.json> --max-items <N>
-   ```
-
-3. 启用邮件时发送：
-
-   ```bash
-   python3 tools/send_email.py --subject "<subject>" --body-file <digest.md>
-   ```
-
-4. 查看 artifact 或邮件。不要从当前 scaffold 调用 `/ingest`。
-
-## Relationship to Neighboring Skills
-
-- `/discover` 是基于用户给定 anchor、topic 或当前 wiki 状态的主动推荐。它只给 next-read 建议，永不自动 ingest。
-- `/daily-arxiv` 是时间窗口流处理器，从新 arXiv 论文出发，目标是每日通知。
-- `/ingest` 仍然是唯一负责把选定论文纳入 `wiki/`、`raw/discovered/` 和图谱文件的 skill。
-
-## Constraints
-
-- CI 保持 deterministic：scaffold workflow 不调用 Claude Code，也不需要 `ANTHROPIC_API_KEY`。
-- 推荐策略不要写进 workflow YAML；确定性逻辑放在 `tools/`，编排策略放在 references。
-- 在 selection 已实现、显式 opt-in、并受 workflow mode 保护之前，不要 auto-ingest。
-- scaffold 只支持 SMTP 作为通知方式。
-- 当前运行历史来自 GitHub Actions artifacts，而不是每日 commits。
-
-## Error Handling
-
-- **RSS 拉取失败**：在生成 digest 前让 workflow 失败。
-- **SMTP secrets 缺失**：当 `--send-email true` 时给出清晰配置错误；手动 `send_email=false` 仍应生成 artifacts。
-- **RSS 为空或全部已去重**：生成合法的空 digest 和 artifact，运行成功。
-- **后续外部 API 不可用**：在 digest 中保留 degraded-mode 说明，不要把缺失 enrichment 当作 ingest 依据。
-
-## Dependencies
-
-### Tools
-
-- `tools/fetch_arxiv.py` — arXiv RSS 收集
-- `tools/daily_arxiv.py digest` — 确定性的 inform-only digest
-- `tools/send_email.py` — SMTP 发送
-
-### Future tools / APIs
-
-- `tools/fetch_s2.py` — Semantic Scholar 元数据与推荐信号
-- `tools/fetch_deepxiv.py` — DeepXiv trending、TLDR 与 social-impact 信号
-- `/ingest` — 仅用于后续 opt-in 的论文纳入
+- `/discover` 回答用户主动提出的 next-read 请求，可来自 anchors、topic 或 wiki 状态；它永不 ingest。
+- `/daily-arxiv` 监听 fresh arXiv stream，可手动或每日通知。
+- `/ingest` 是唯一论文纳入路径。`/daily-arxiv` 只能在显式 `auto-ingest` mode 下调用它。

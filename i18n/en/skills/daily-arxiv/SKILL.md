@@ -1,99 +1,65 @@
 ---
-description: Daily arXiv collection, wiki deduplication, digest generation, and e-mail notification; recommendation and optional auto-ingest are staged for later
-argument-hint: "[--hours 24] [--categories <cat...>] [--max-items 20] [--send-email true|false]"
+description: Run or manage the daily arXiv recommendation feed. Use for one-off fresh-paper recommendations, scheduled GitHub Actions setup/status/disable, email digests, and explicit high-confidence auto-ingest through /ingest.
+argument-hint: "[setup|status|disable] [--mode inform|auto-ingest] [--hours 24] [--categories <cat...>] [--max-recommendations 10] [--max-auto-ingest 1] [--send-email true|false]"
 ---
 
 # /daily-arxiv
 
-> Monitor a daily arXiv time window, deduplicate against the wiki, produce a concise digest, and notify the user by e-mail. The current automation scaffold is inform-only: it does not score, download, ingest, or mutate the wiki.
+> Run or manage the daily paper recommendation feed. Bare `/daily-arxiv` means "run today's recommendation pass now"; GitHub Actions is only the unattended scheduler for the same pipeline.
 
-Use these local references on demand:
+Load references only when needed:
 
-- `references/automation-scaffold.md` — GitHub Actions scaffold, SMTP secrets, artifacts, and failure behavior
-- `references/recommendation-and-ingest-policy.md` — future recommendation signals, decision modes, and auto-ingest guardrails
+- `references/recommendation-and-ingest-policy.md` — evidence, LLM decision schema, confidence gate, and auto-ingest guardrails
+- `references/automation-scaffold.md` — GitHub Actions setup/status behavior, secrets, artifacts, and failure modes
+
+## Commands
+
+- `/daily-arxiv`: run a one-off recommendation pass now. If `config/daily-arxiv.yml` is missing, infer defaults from the wiki and continue.
+- `/daily-arxiv setup`: create or repair `config/daily-arxiv.yml` from `config/daily-arxiv.yml.example`, check `.github/workflows/daily-arxiv.yml`, and explain required secrets.
+- `/daily-arxiv status`: inspect config, workflow presence, schedule, mode, API/e-mail secret availability, and recent artifacts when available.
+- `/daily-arxiv disable`: set `schedule.enabled: false` in config or tell the user what to change; manual `/daily-arxiv` must still work.
 
 ## Inputs
 
-- `--hours N`: pull papers from the last N hours (default 24)
-- `--categories <cat...>`: override default arXiv categories (`cs.LG cs.CV cs.CL cs.AI stat.ML`)
-- `--max-items N`: maximum new candidates shown in the digest (default 20)
-- `--send-email true|false`: workflow-only switch for SMTP delivery; manual dry runs can set `false`
+- `--mode inform|auto-ingest`: default `inform`. Never infer `auto-ingest` from repo state.
+- `--hours N`: pull papers from the last N hours; config/default is 24.
+- `--categories <cat...>`: override configured arXiv categories.
+- `--max-recommendations N`: maximum papers shown in the digest; config/default is 10.
+- `--max-auto-ingest N`: cap for high-confidence auto-ingest; config/default is 1.
+- `--send-email true|false`: workflow/setup preference for SMTP delivery.
 
-## Outputs
+## Run Workflow
 
-- GitHub Actions artifacts: `feed.json`, `digest.md`, `digest.json`
-- GitHub Actions job summary containing the Markdown digest
-- Optional SMTP e-mail with the same Markdown digest
+1. Resolve the Python interpreter and run the deterministic preparation:
 
-The scaffold writes no `wiki/` pages, no `raw/` files, and no commits. Future auto-ingest must be explicit opt-in and route all paper incorporation through `/ingest`.
+   ```bash
+   python3 tools/daily_arxiv.py prepare --wiki-root wiki --out .daily-arxiv/run/recommendation-context.json --out-feed .daily-arxiv/run/feed.json
+   ```
+
+2. Read `.daily-arxiv/run/recommendation-context.json`. Judge candidates with an LLM using the provided arXiv, wiki, Semantic Scholar, and DeepXiv evidence. Write `.daily-arxiv/run/llm-decisions.json` with `decision`, `confidence`, `score`, `rationale`, `wiki_connections`, and `signals_used`. In CI inform mode, an OpenAI-compatible review LLM may do this via:
+
+   ```bash
+   python3 tools/daily_arxiv.py recommend-llm --context .daily-arxiv/run/recommendation-context.json --out .daily-arxiv/run/llm-decisions.json
+   ```
+
+3. If mode is `auto-ingest`, use Claude Code runtime only: choose `decision: ingest` + `confidence: high`, obey `max_auto_ingest`, and invoke `/ingest <arxiv-url>` sequentially. Do not hand-write wiki or graph files. Third-party LLMs are recommendation-only and must not auto-ingest.
+
+4. Finalize the digest:
+
+   ```bash
+   python3 tools/daily_arxiv.py finalize --context .daily-arxiv/run/recommendation-context.json --decisions .daily-arxiv/run/llm-decisions.json --out-md .daily-arxiv/run/digest.md --out-json .daily-arxiv/run/digest.json
+   ```
+
+5. Report strong recommendations, maybe-interesting papers, skipped duplicates, degraded signals, auto-ingest outcomes, and setup/status hints.
 
 ## Wiki Interaction
 
-### Reads
+Reads `wiki/index.md`, `wiki/papers/`, `wiki/topics/`, `wiki/concepts/`, `wiki/claims/`, `wiki/ideas/`, and `wiki/log.md` to build the interest profile and dedupe candidates.
 
-- `wiki/index.md` and `wiki/papers/*.md` — arXiv URL / ID deduplication
+Writes only scratch files under `.daily-arxiv/` during inform runs. In `auto-ingest`, all durable wiki/raw mutations must come from `/ingest`.
 
-### Writes
+## Relationships
 
-- none in the current scaffold
-
-### Graph edges created
-
-- none. Graph and entity mutations belong to `/ingest`.
-
-## Workflow
-
-1. Fetch the feed:
-
-   ```bash
-   python3 tools/fetch_arxiv.py --hours <hours> [-o <feed.json>] [--categories <cat...>]
-   ```
-
-2. Build the digest:
-
-   ```bash
-   python3 tools/daily_arxiv.py digest --feed <feed.json> --wiki-root wiki --out-md <digest.md> --out-json <digest.json> --max-items <N>
-   ```
-
-3. Send e-mail when enabled:
-
-   ```bash
-   python3 tools/send_email.py --subject "<subject>" --body-file <digest.md>
-   ```
-
-4. Review the artifact or e-mail. Do not run `/ingest` from this scaffold.
-
-## Relationship to Neighboring Skills
-
-- `/discover` is deliberate recommendation from user-provided anchors, a topic, or current wiki state. It proposes next reads and never ingests.
-- `/daily-arxiv` is a time-window stream processor. It starts from new arXiv papers and is designed to notify daily.
-- `/ingest` remains the only skill that incorporates a selected paper into `wiki/`, `raw/discovered/`, and graph files.
-
-## Constraints
-
-- Keep CI deterministic: do not call Claude Code or require `ANTHROPIC_API_KEY` in the scaffold workflow.
-- Keep recommendation policy out of the workflow YAML; put deterministic pieces in `tools/` and orchestration policy in references.
-- Do not auto-ingest until selection is implemented, opt-in, and guarded by a workflow mode.
-- SMTP is the only supported notification transport in the scaffold.
-- GitHub Actions artifacts, not commits, are the run history for now.
-
-## Error Handling
-
-- **RSS fetch fails**: fail the workflow before digest generation.
-- **SMTP secrets missing**: fail with a clear configuration error when `--send-email true`; manual `send_email=false` runs should still produce artifacts.
-- **Empty RSS or no new candidates**: produce a valid empty digest and artifact.
-- **Future external APIs unavailable**: preserve degraded-mode notes in the digest instead of treating missing enrichment as ingest authority.
-
-## Dependencies
-
-### Tools
-
-- `tools/fetch_arxiv.py` — arXiv RSS collection
-- `tools/daily_arxiv.py digest` — deterministic inform-only digest
-- `tools/send_email.py` — SMTP delivery
-
-### Future tools / APIs
-
-- `tools/fetch_s2.py` — Semantic Scholar metadata and recommendation signals
-- `tools/fetch_deepxiv.py` — DeepXiv trending, TLDR, and social-impact signals
-- `/ingest` — future opt-in paper incorporation only
+- `/discover` answers deliberate next-read requests from anchors, topics, or wiki state; it never ingests.
+- `/daily-arxiv` watches the fresh arXiv stream and can notify daily or manually.
+- `/ingest` is the only paper incorporation path. `/daily-arxiv` may call it only in explicit `auto-ingest` mode.

@@ -1,19 +1,48 @@
-# Daily arXiv Automation Scaffold
+# Daily arXiv Automation
 
-The GitHub Actions workflow is the current production path for `/daily-arxiv`.
-It proves the daily collection, deduplication, artifact, and SMTP notification
-loop without letting CI mutate the wiki.
+GitHub Actions is the unattended scheduler for `/daily-arxiv`. It should run
+the same pipeline as a manual slash skill pass; it should not define the
+feature's user-facing purpose.
 
-## Schedule and dispatch
+## Source of Truth
 
-- Scheduled run: `17 0 * * *` UTC, which is 08:17 Beijing time.
-- Manual run: `workflow_dispatch` with `hours`, `categories`, `max_items`, and `send_email`.
-- Use a non-zero minute to avoid GitHub's top-of-hour scheduled-workflow congestion.
-- Keep `permissions: contents: read` while the workflow is inform-only.
+- `config/daily-arxiv.yml`: durable non-secret preferences.
+- `tools/daily_arxiv.py`: deterministic config, feed, evidence, and digest
+  helpers.
+- `/daily-arxiv`: LLM judgment, setup/status UX, and optional `/ingest`
+  orchestration.
+- `.github/workflows/daily-arxiv.yml`: scheduled executor.
+
+If `config/daily-arxiv.yml` is absent, manual runs continue with inferred
+defaults. `/daily-arxiv setup` may copy `config/daily-arxiv.yml.example`.
+
+## Workflow Behavior
+
+- Scheduled run: `17 0 * * *` UTC by default.
+- Manual dispatch may override mode, hours, categories, caps, and e-mail.
+- Inform mode prepares context, then uses the first available recommender:
+  Claude Code Action with `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN`;
+  otherwise an OpenAI-compatible LLM via `LLM_API_KEY` / `LLM_BASE_URL` /
+  `LLM_MODEL`; otherwise a tool-ranked fallback digest.
+- Auto-ingest mode fails closed unless Claude Code Action auth is present.
+- Auto-ingest commits only staged `wiki/` and `raw/discovered/` changes
+  produced by `/ingest`.
 
 ## Secrets
 
-SMTP delivery reads these repository secrets:
+Recommendation/ingest:
+
+- `ANTHROPIC_API_KEY` — direct Anthropic API auth for Claude Code Action.
+- `CLAUDE_CODE_OAUTH_TOKEN` — Claude Code OAuth auth for Pro/Max users; generate
+  locally with `claude setup-token`. This is an alternative to
+  `ANTHROPIC_API_KEY` for Claude Code Action.
+- `LLM_API_KEY`, `LLM_BASE_URL`, `LLM_MODEL` — optional OpenAI-compatible LLM
+  for `inform` recommendation when Claude Code is not available.
+- `LLM_FALLBACK_MODEL` — optional fallback for the OpenAI-compatible LLM.
+- `SEMANTIC_SCHOLAR_API_KEY` — optional, improves S2 rate limits.
+- `DEEPXIV_TOKEN` — optional, enables DeepXiv enrichment when available.
+
+SMTP delivery:
 
 - `SMTP_HOST`
 - `SMTP_PORT`
@@ -22,26 +51,35 @@ SMTP delivery reads these repository secrets:
 - `SMTP_FROM`
 - `DAILY_ARXIV_EMAIL_TO`
 
-`ANTHROPIC_API_KEY` is not needed for the scaffold because the workflow does not
-run Claude Code. If recommendation later uses an LLM, add that as a separate
-optional recommender dependency.
+Do not store secrets in `config/daily-arxiv.yml`.
 
 ## Artifacts
 
-Each run uploads:
+Each workflow run uploads:
 
-- `feed.json` — raw arXiv RSS result after `tools/fetch_arxiv.py`
-- `digest.md` — human-readable e-mail body
-- `digest.json` — machine-readable scaffold payload
+- `resolved-config.json`
+- `feed.json`
+- `recommendation-context.json`
+- `llm-decisions.json` when Claude ran
+- `digest.md`
+- `digest.json`
 
-The workflow also writes `digest.md` to the GitHub Actions job summary. Do not
-commit daily artifacts until auto-ingest exists and repository writes are
-explicitly enabled.
+The Markdown digest is also appended to the GitHub Actions job summary.
 
-## Failure behavior
+## Status Checks
 
-- Missing SMTP secrets fail only when `send_email=true`.
-- `send_email=false` manual runs are valid dry runs and still upload artifacts.
-- Empty feeds and fully deduplicated feeds are successful runs with empty digest
-sections.
-- Fetch failures should fail the run before e-mail is attempted.
+`/daily-arxiv status` should inspect:
+
+- config presence and resolved mode/caps/categories
+- workflow file presence and schedule
+- whether `schedule.enabled` is false
+- availability of local env vars or CI secrets when visible
+- last local `.daily-arxiv/` digest if present
+
+## Failure Behavior
+
+- arXiv fetch failure: fail before recommendation/finalization.
+- Missing SMTP secrets: fail only when e-mail is enabled.
+- Empty feed or all duplicates: produce valid empty artifacts.
+- External API failures: continue with degraded notes.
+- Auto-ingest failures: preserve per-paper error and continue to final digest.

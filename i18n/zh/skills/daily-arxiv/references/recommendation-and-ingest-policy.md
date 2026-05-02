@@ -1,46 +1,75 @@
 # Daily arXiv Recommendation and Ingest Policy
 
-本 reference 面向后续 `/daily-arxiv` 推荐层。当前 inform-only scaffold 尚未实现这些能力。
+`/daily-arxiv` 是 LLM-first：确定性工具先构建 evidence packet，
+再由 skill 判断相关性和动作。工具分数只用于排序，不是最终决策。
 
-## Phase boundary
+## Pipeline
 
-保持 pipeline 阶段清晰：
+1. 解析 `config/daily-arxiv.yml`；缺失时使用推断默认值。
+2. 拉取最近 arXiv 论文，并按 wiki 已知 arXiv ID 去重。
+3. 从 papers、topics、concepts、claims、ideas、open questions、recent log
+   和可选 profile 偏好构建 wiki profile。
+4. 用可用的 Semantic Scholar 和 DeepXiv evidence 增强候选。
+5. 由 LLM 给出最终 decisions 和 rationales。
+6. 通过 digest 通知；只有显式允许时才调用 `/ingest`。
 
-1. 收集新的 arXiv 论文。
-2. 按 wiki 已有论文去重。
-3. 用可选外部信号增强候选。
-4. 打分并选择候选。
-5. 通过 digest 通知。
-6. 只有 mode 允许时，才可选地 ingest 选中论文。
-
-workflow 与邮件层不应关心具体由哪个 recommender 填充 `digest.json` 中的 `score`、`signals`、`rationale` 或 `decision`。
-
-## Recommendation signals
+## Evidence
 
 新增逻辑前先使用已有集成：
 
-- Semantic Scholar：recommendations、citations、references、citation counts、influential citation counts、fields of study、作者元数据。
-- DeepXiv：trending papers、TLDR、keywords、social impact、论文结构。
-- Wiki context：已有 topics、concepts、open questions、recent ingests。
+- arXiv：title、authors、category、date、URL、abstract。
+- Wiki：anchors、topics、concepts、claims、ideas、open questions、recent ingests。
+- Semantic Scholar：paper metadata、citation counts、influential counts、
+  fields of study、TLDR，以及来自 wiki anchors 的 recommendations。
+- DeepXiv：trending rank、social impact、brief/TLDR、keywords，以及可用时的论文结构。
 
-优先批量打分。除非有明确质量收益和 rate-limit 预算，不要逐篇调用 LLM。
+如果 S2 或 DeepXiv 失败，保持运行，并把 degraded signal 写入 digest。
+缺失 enrichment 永远不能作为 ingest 依据。
 
-## Decision modes
+## Decision Schema
 
-- `inform`：默认。只发送推荐，不下载、不 ingest。
-- `auto-ingest`：后续 opt-in 模式。把选中论文下载到 `raw/discovered/`，将 canonical path 交给 `/ingest`，并提交生成的 wiki 变更。
+LLM 为每个候选写一条 decision：
 
-不要从 repository 状态推断 `auto-ingest`。必须由用户或 workflow input 显式选择。
+```json
+{
+  "arxiv_id": "2501.01234",
+  "decision": "strong_recommend",
+  "confidence": "high",
+  "score": 0.82,
+  "rationale": "Connects to the wiki's open question about ...",
+  "wiki_connections": ["efficient adaptation", "retrieval"],
+  "signals_used": ["arxiv", "wiki_profile", "semantic_scholar", "deepxiv"]
+}
+```
 
-## Auto-ingest guardrails
+允许的 decisions 是 `strong_recommend`、`maybe`、`skip`、`ingest`。
+允许的 confidence 是 `high`、`medium`、`low`。
 
-- `/ingest` 负责所有论文纳入。`/daily-arxiv` 不得手写 paper pages、concepts、claims、people、graph files 或 index entries。
-- 外部论文 artifact 只能下载到 `raw/discovered/`。
-- 不要触碰 `raw/papers/`、`raw/notes/`、`raw/web/`、`raw/tmp/`。
-- 只有 auto-ingest 实现后，workflow 才能添加 `contents: write`。
-- 真正发生 ingest 时，应同时提交 `wiki/` 和 `raw/discovered/` 的变更。
-- 每次 auto-ingest 数量必须有上限，并在 digest 中保留失败项，不要静默隐藏。
+OpenAI-compatible 第三方 LLM 只支持 `inform` mode，通过
+`tools/daily_arxiv.py recommend-llm` 使用。在这条路径中，`ingest` 不是
+允许输出；如果模型尝试输出 `ingest`，会降级为 `strong_recommend`。
+
+## Modes
+
+- `inform`：默认。生成 digest，按配置发送邮件，然后停止。
+- `auto-ingest`：显式 opt-in。只有 `decision: ingest` 且
+  `confidence: high` 的论文可继续，并且受 `max_auto_ingest` 限制。
+
+不要从 repository 状态、branch、已有 workflow 或 credentials 推断
+`auto-ingest`。必须由用户/config/workflow input 显式选择。
+
+## Auto-Ingest Guardrails
+
+- `/ingest` 负责所有论文纳入。`/daily-arxiv` 不得手写 paper pages、
+  concepts、claims、people、graph files 或 index entries。
+- 顺序调用 `/ingest`；parallel ingest 不在 scope 内。
+- 通过 `ingest_status` 或 `ingest_error` 在 `llm-decisions.json` 和最终
+  digest 中保留失败信息。
+- 只提交 `/ingest` 产生的变更，通常位于 `wiki/` 和 `raw/discovered/`。
+- 边界候选保留为 `maybe`；不要 ingest medium/low confidence 项。
 
 ## Relationship to `/discover`
 
-`/discover` 回答用户主动提出的 “what should I read next?”，来源可以是 anchors、topic 或 wiki。`/daily-arxiv` 监听 fresh-paper stream。后续两者可以共享确定性 scoring helpers，但入口和用户意图不同。
+`/discover` 回答用户主动提出的 “what should I read next?”，来源可以是
+anchors、topic 或 wiki 状态，并且永不 ingest。`/daily-arxiv` 从一个新的
+arXiv 时间窗口出发，可通知，也可在显式配置下 ingest。

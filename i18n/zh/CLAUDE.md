@@ -34,7 +34,7 @@
 - `raw/papers/`、`raw/notes/`、`raw/web/` 是用户自有输入
 - `raw/discovered/` 存放 `/init` 与 `/daily-arxiv` 抓取的外部论文
 - `raw/tmp/` 存放 `/init` 与直接本地 `/ingest` 使用的生成型 prepared sidecar
-- `config/` 存放环境与远程服务器模板
+- `config/` 存放环境、daily-arxiv 与远程服务器模板
 
 ---
 
@@ -139,7 +139,7 @@
 | `/ask` | `skills/ask/SKILL.md` | 手动 |
 | `/edit` | `skills/edit/SKILL.md` | 手动 |
 | `/check` | `skills/check/SKILL.md` | 每两周/手动 |
-| `/daily-arxiv` | `skills/daily-arxiv/SKILL.md` | cron 08:00 / 手动 |
+| `/daily-arxiv` | `skills/daily-arxiv/SKILL.md` | 手动 / 定时 |
 | `/novelty` | `skills/novelty/SKILL.md` | 手动 |
 | `/review` | `skills/review/SKILL.md` | 手动 |
 | `/ideate` | `skills/ideate/SKILL.md` | 手动 |
