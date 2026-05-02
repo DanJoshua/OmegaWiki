@@ -1,3 +1,134 @@
 # Gap Map
 
 _Auto-generated open questions. Do not edit._
+
+- [paper/agentsearchbench-benchmark-ai-agent-search-wild] Can execution-aware probing be made cheap enough (e.g. shared probe banks, cached responses) to deploy as a standard pre-rank layer in production agent stores?
+- [paper/agentsearchbench-benchmark-ai-agent-search-wild] How should ranking handle *capability composition*: when no single agent covers a multi-step task, should retrievers surface complementary teams rather than top-1 individuals?
+- [paper/agentsearchbench-benchmark-ai-agent-search-wild] What is the right unit of evaluation for self-evolving agents whose capabilities change between probing and deployment?
+- [paper/agentsearchbench-benchmark-ai-agent-search-wild] Can the documentation-performance gap be closed at the *source* by inducing agent providers to publish execution traces or behavioural fingerprints?
+- [paper/comprehensive-survey-self-evolving-ai-agents] How do we evaluate self-evolving agents whose target distribution itself is non-stationary? Static benchmarks under-represent the lifelong setting.
+- [paper/comprehensive-survey-self-evolving-ai-agents] Can the search space `S` be co-optimised across components (LLM + prompts + memory + topology) without combinatorial blow-up? Existing "unified" methods (MASS, EvoFlow, MaAS, ANN) only scratch this surface.
+- [paper/comprehensive-survey-self-evolving-ai-agents] How should regulators (EU AI Act, GDPR) treat agents whose decision logic mutates after deployment? Current legal frameworks assume static models.
+- [paper/comprehensive-survey-self-evolving-ai-agents] When ground truth is absent (medicine, law, scientific discovery), what feedback signal can drive safe optimisation without rewarding hallucinated successes?
+- [paper/comprehensive-survey-self-evolving-ai-agents] What are the convergence guarantees of LLM-based optimisers, and how do we detect divergence before it harms users?
+- [paper/deepwidesearch-benchmarking-depth-width-agentic-information] Can a *reflection*-enabled controller (explicit replan after dead-end trajectories) close the gap on the four failure modes without ballooning cost?
+- [paper/deepwidesearch-benchmarking-depth-width-agentic-information] How should an agent decide when to trust internal knowledge vs trigger a search? The "internal-then-verify" hybrid is sketched but not tested.
+- [paper/deepwidesearch-benchmarking-depth-width-agentic-information] What context-management strategy (hierarchical memory, retrieval-augmented working memory, learned summarization) keeps deep+wide trajectories under context-window limits while preserving critical evidence?
+- [paper/deepwidesearch-benchmarking-depth-width-agentic-information] Can a reference-free evaluator be built so the benchmark scales beyond hand-curated tables?
+- [paper/deepwidesearch-benchmarking-depth-width-agentic-information] Will improvements on DeepWideSearch transfer to genuinely real-world BD / market-analysis workflows, or is the curated table format itself the bottleneck?
+- [paper/evo-memory-benchmarking-llm-agent-test] How should memory evolve when feedback $f_t$ is unavailable, delayed, or noisy — i.e., genuinely unsupervised lifelong deployment?
+- [paper/evo-memory-benchmarking-llm-agent-test] Is the Think/Act/Refine action augmentation specific to ReAct-style agents, or can it be folded into other agentic scaffolds (planner-executor, MCTS-guided agents) without losing the refinement gains?
+- [paper/evo-memory-benchmarking-llm-agent-test] What is the right formal complexity class of "experience reuse" — does it admit transfer guarantees beyond same-dataset cluster similarity?
+- [paper/evo-memory-benchmarking-llm-agent-test] How should memory updates trade off against context window growth? ReMem's Refine is the only baseline that prunes; can pruning policies themselves be learned?
+- [paper/evo-memory-benchmarking-llm-agent-test] Can self-evolving memory be combined with parameter-level test-time learning (LoRA-style adapters, in-context fine-tuning) without catastrophic interference?
+- [paper/evolver-self-evolving-llm-agents-through] Does the cognitive-alignment crossover replicate at 7B+ or on instruction-tuned bases of comparable size? The trend line suggests yes, but the paper stops at 3B.
+- [paper/evolver-self-evolving-llm-agents-through] Can the experience base be *shared* across agents at different scales, or is it fundamentally policy-specific?
+- [paper/evolver-self-evolving-llm-agents-through] What happens under distribution shift — does pruning by $s(p)$ silently discard principles that were optimal for an earlier task family?
+- [paper/evolver-self-evolving-llm-agents-through] How does EvolveR compose with retrieval-augmented external knowledge when both sources can answer; the paper trains them together but never disentangles their contributions.
+- [paper/evotool-self-evolving-tool-use-policy] How accurate is Blamer-LLM module attribution against human annotation, and how does noise in blame scores propagate into population dynamics?
+- [paper/evotool-self-evolving-tool-use-policy] Does the method scale beyond four-module decomposition (e.g., adding memory, verifier, or critic modules)?
+- [paper/evotool-self-evolving-tool-use-policy] Can blame and mutation be jointly trained rather than supplied as zero-shot prompts to a separate LLM?
+- [paper/evotool-self-evolving-tool-use-policy] How does the diversity-aware selection rule degrade when $|S_{\text{sel}}|$ is small (few-shot deployment)?
+- [paper/flex-continuous-agent-evolution-forward-learning] Can the experience library scale to open-ended deployment (millions of entries) without pathological retrieval drift?
+- [paper/flex-continuous-agent-evolution-forward-learning] Does the scaling law hold across base-model sizes, or is it conditional on a sufficiently capable frozen LLM?
+- [paper/flex-continuous-agent-evolution-forward-learning] What governs negative transfer when libraries from differently-aligned models are merged?
+- [paper/flex-continuous-agent-evolution-forward-learning] How does FLEX compare against well-tuned RL fine-tuning (DAPO, GRPO) on equivalent compute?
+- [paper/flex-continuous-agent-evolution-forward-learning] Is the "semantic gradient" formalism a useful theoretical bridge or a metaphor — i.e., are convergence guarantees attainable?
+- [paper/learning-job-experience-driven-self-evolving] How does procedural memory scale (retrieval quality, context cost) under thousands of accumulated SOPs?
+- [paper/learning-job-experience-driven-self-evolving] Can the agent learn from *failed* trajectories as effectively as from successful ones, beyond replanning hints?
+- [paper/learning-job-experience-driven-self-evolving] How robust is the cross-LLM memory transfer when target and source models differ in tool-use conventions or tokenizer assumptions?
+- [paper/learning-job-experience-driven-self-evolving] Can human-in-the-loop edits to the memory module accelerate evolution without destabilizing learned behaviors?
+- [paper/sok-agentic-skills-beyond-tool-use] **Verified autonomous skill generation**: how to gate self-generated skills with regression-style evaluation analogous to CI before admission to a library?
+- [paper/sok-agentic-skills-beyond-tool-use] **Unsupervised skill discovery**: can RL-style unsupervised skill-discovery techniques transfer to LLM agents, identifying skill boundaries from interaction traces alone?
+- [paper/sok-agentic-skills-beyond-tool-use] **Formal verification across heterogeneous representations**: NL/policy skills resist static analysis; combining rule-based, semantic-LLM, and runtime-behavioral verification.
+- [paper/sok-agentic-skills-beyond-tool-use] **Robustness under environmental drift**: detecting when API/UI/data-format changes silently invalidate a skill's assumptions.
+- [paper/sok-agentic-skills-beyond-tool-use] **Governance economics and liability**: assigning responsibility among skill authors, platform operators, and users in marketplace ecosystems, and aligning incentives with reliability via certification.
+- [paper/survey-self-evolving-agents-what-when] How to evaluate self-evolving agents over long horizons in a fair, reproducible way that disentangles base-model improvements from genuine self-evolution gains?
+- [paper/survey-self-evolving-agents-what-when] What guarantees can be given against misevolution (safety/alignment drift induced by the evolution process itself)?
+- [paper/survey-self-evolving-agents-what-when] How to enable knowledge transfer across self-evolving agents without collapsing into shallow pattern matching?
+- [paper/survey-self-evolving-agents-what-when] What is the right interface between self-evolution and human oversight (approval gates, rollback, audit trails) that scales to autonomous operation?
+- [paper/survey-self-evolving-agents-what-when] How do co-evolutionary dynamics between agents and their environments converge or diverge?
+- [concept/agent-optimisation-feedback-loop] Co-optimisation across components without combinatorial blow-up.
+- [concept/agent-optimisation-feedback-loop] Convergence diagnostics for LLM-based optimisers.
+- [concept/agent-optimisation-feedback-loop] Feedback design when ground truth is absent (proxy metrics, LLM-as-judge calibration).
+- [concept/agent-search] Cheap, transferable behavioural fingerprints for agents.
+- [concept/agent-search] Composition-aware retrieval that returns *teams* rather than top-1 individuals.
+- [concept/agent-search] Handling capability drift in self-evolving agents.
+- [concept/agentic-skill] Verified autonomous skill generation (CI-style admission gates).
+- [concept/agentic-skill] Unsupervised skill discovery from interaction traces alone.
+- [concept/agentic-skill] Formal verification across heterogeneous representations.
+- [concept/agentic-skill] Robustness under environmental drift.
+- [concept/deep-and-wide-information-seeking] Reflection-driven replanning when a trajectory fails on either axis.
+- [concept/deep-and-wide-information-seeking] Internal-knowledge-vs-search arbitration for column filling.
+- [concept/deep-and-wide-information-seeking] Context management strategies for trajectories that span dozens of search and visit calls.
+- [concept/deep-and-wide-information-seeking] Reference-free evaluation so benchmarks can scale beyond hand-curated tables.
+- [concept/deep-and-wide-information-seeking] Architectures that explicitly decompose row-discovery from column-filling pipelines.
+- [concept/diversity-aware-population-selection] How does the rule scale as $|S_{\text{sel}}|$ grows or as the task distribution shifts during evolution?
+- [concept/diversity-aware-population-selection] Margin-aware variants (e.g., expected-improvement-weighted winner frequency) are not explored.
+- [concept/diversity-aware-population-selection] Interaction with mutation operators that do *not* respect module boundaries (e.g., monolithic edits) is not characterized.
+- [concept/experience-driven-self-evolution-lifecycle] Cross-policy transfer of an experience base (does $\mathcal{E}$ trained on agent A help agent B?).
+- [concept/experience-driven-self-evolution-lifecycle] Drift handling: how should $\mathcal{E}$ be re-scored when the policy itself shifts during RL?
+- [concept/experience-driven-self-evolution-lifecycle] Principal-agent issues during self-distillation: the same model both produces principles and is graded by a reward derived from following them, which can reinforce systematic blind spots.
+- [concept/experience-inheritance] Detecting and quarantining incompatible entries when merging libraries.
+- [concept/experience-inheritance] Formal characterization of when weak-to-strong inheritance succeeds vs. fails.
+- [concept/experience-inheritance] Distillation efficiency: how compact can an inherited library be while preserving most of the gain?
+- [concept/experience-library] Negative transfer when mixing libraries from differently-aligned source agents.
+- [concept/experience-library] Convergence guarantees for forward probabilistic library updates.
+- [concept/experience-library] Schemas that auto-adapt to a new domain rather than being pre-specified.
+- [concept/forward-learning-from-experience] Formalizing the "semantic gradient" enough to produce convergence theorems.
+- [concept/forward-learning-from-experience] Robustness to adversarial or low-quality trajectories during exploration.
+- [concept/forward-learning-from-experience] Curriculum design — how should the order of training samples shape library quality?
+- [concept/hierarchical-experience-memory] How to scale procedural memory to thousands of SOPs without degrading retrieval precision or context cost.
+- [concept/hierarchical-experience-memory] How to learn structurally from failures, not just successes.
+- [concept/hierarchical-experience-memory] How to formalize when two SOPs should be merged versus kept distinct.
+- [concept/mase-paradigm] Joint optimisation across components (LLM + prompts + memory + tools + topology) without combinatorial blow-up.
+- [concept/mase-paradigm] Online safety guarantees during evolution (the [[three-laws-self-evolving-ai-agents]] are aspirational rather than enforceable).
+- [concept/mase-paradigm] Regulatory treatment of agents whose decision logic mutates after deployment.
+- [concept/misevolution] Continuous safety monitoring that scales to autonomous evolution loops.
+- [concept/misevolution] Pre-update validation against "golden" safety datasets to gate self-modification.
+- [concept/misevolution] Audit trails and rollback mechanisms with low operational overhead.
+- [concept/misevolution] Detecting alignment tipping early enough to intervene.
+- [concept/modular-tool-use-policy] Are there principled criteria (information-theoretic or empirical) for choosing the right number / boundaries of modules per task family?
+- [concept/modular-tool-use-policy] Can module boundaries be *learned* rather than hand-specified?
+- [concept/modular-tool-use-policy] How does the modular structure interact with longer agent loops that include verification, self-correction, or memory updates?
+- [concept/self-evolving-agent] Standardized benchmarks that disentangle base-model gains from genuine self-evolution gains.
+- [concept/self-evolving-agent] Long-horizon lifelong evaluation protocols that survive model swaps.
+- [concept/self-evolving-agent] Provable bounds on alignment drift during evolution.
+- [concept/self-evolving-agent] Mechanisms for cross-agent knowledge propagation.
+- [concept/self-evolving-memory] Unsupervised self-evolution: how to refine memory without explicit feedback signals.
+- [concept/self-evolving-memory] Catastrophic interference between self-evolving memory and parameter-level test-time learning (LoRA adapters, in-context fine-tuning).
+- [concept/self-evolving-memory] Theoretical complexity / transfer guarantees for experience reuse beyond cluster-similarity heuristics.
+- [concept/skill-lifecycle] Unsupervised discovery without human curricula or task definitions.
+- [concept/skill-lifecycle] CI-style admission gates between distillation and storage.
+- [concept/skill-lifecycle] Drift detection between execution and evaluation/update.
+- [concept/skill-lifecycle] Governance integration in storage (provenance, signing) and retrieval (trust-tier filtering).
+- [concept/skill-marketplace-supply-chain-risk] Detecting `C`-poisoning (overbroad applicability) automatically.
+- [concept/skill-marketplace-supply-chain-risk] Anti-injection guarantees for NL policies that cannot be statically analyzed.
+- [concept/skill-marketplace-supply-chain-risk] Liability allocation among skill authors, platform operators, and users.
+- [concept/skill-marketplace-supply-chain-risk] Certification mechanisms that align market incentives with reliability.
+- [concept/test-time-learning] Unsupervised TTL with no feedback at all.
+- [concept/test-time-learning] Combining parameter-level and memory-level TTL without interference.
+- [concept/test-time-learning] Characterizing which deployment streams admit transferable test-time updates and which do not.
+- [concept/three-laws-self-evolving-ai-agents] Formal safety predicates that an optimiser can check without running the new agent in deployment.
+- [concept/three-laws-self-evolving-ai-agents] Audit mechanisms compatible with regulations such as the EU AI Act and GDPR for agents whose decision logic mutates after deployment.
+- [concept/three-laws-self-evolving-ai-agents] Reconciling the Three Laws with empirical findings that strong safety constraints often reduce capability.
+- [concept/trajectory-grounded-blame-attribution] Calibration: do Blamer scores match human module-attribution?
+- [concept/trajectory-grounded-blame-attribution] Joint training: can blame and mutation be co-optimized rather than independent zero-shot calls?
+- [concept/trajectory-grounded-blame-attribution] Scaling: does the mechanism extend cleanly to richer module decompositions (e.g., memory, verifier, critic)?
+- [concept/what-when-how-evolution-taxonomy] Which cells of the (what × when × how × where) grid are systematically underexplored?
+- [concept/what-when-how-evolution-taxonomy] Are there evolution mechanisms outside the current axes (e.g., evolving the reward function itself)?
+- [concept/what-when-how-evolution-taxonomy] Can the taxonomy be extended to embodied / multimodal agents without forcing them into LLM-shaped boxes?
+- [claim/claim-experience-library-scaling-law] LLM-agent performance follows a scaling law in experience-library size (status: weakly_supported)
+- [claim/claim-experience-memory-enables-self-evolution] Hierarchical experience memory enables LLM agents to self-evolve at test time on long-horizon tasks (status: weakly_supported)
+- [claim/claim-gradient-free-agents-can-match-parameter-tuning] Gradient-free experience-library learning can match or exceed gradient-based parameter tuning on agentic reasoning benchmarks (status: weakly_supported)
+- [claim/claim-self-evolution-introduces-emergent-safety-risks] Self-evolution introduces emergent safety risks (misevolution, reward hacking, alignment drift) not present in static agents (status: weakly_supported)
+- [claim/claim-static-llm-agents-need-evolution] Static LLM-based agents are a critical bottleneck in open-ended deployments and require self-evolution (status: weakly_supported)
+- [claim/curated-skills-outperform-self-generated] Curated agentic skills outperform self-generated skills (status: weakly_supported)
+- [claim/diversity-aware-population-selection-prevents-premature] Instance-wins (diversity-aware) selection outperforms greedy and top-k selection in evolutionary prompt search for heterogeneous tool-use tasks (status: weakly_supported)
+- [claim/execution-grounded-relevance-vs-semantic-similarity] Description-based retrieval underperforms execution-grounded relevance for selecting AI agents (status: weakly_supported)
+- [claim/memory-evolution-gain-correlates-with-task-similarity] Self-evolving memory's gain correlates with within-dataset task similarity (status: weakly_supported)
+- [claim/module-level-blame-attribution-enables-stable] Module-level blame attribution enables stable, targeted improvement of modular tool-use policies under sparse end-of-trajectory supervision (status: weakly_supported)
+- [claim/self-distillation-vs-external-teacher-crossover] Self-distilled experience principles outperform external-teacher distillation once the agent's base model crosses a capacity threshold (status: weakly_supported)
+- [claim/single-llm-matches-multi-agent-debate] A single LLM with well-crafted prompts can match complex multi-agent debate frameworks on reasoning benchmarks (status: weakly_supported)
+- [claim/sota-agents-fail-deep-wide-information-seeking] State-of-the-art LLM agents fail at combined deep + wide information seeking (status: weakly_supported)
+- [claim/task-level-experience-reuse-beats-fine-grained-memory-architectures] Task-level experience reuse beats fine-grained memory architectures for streaming LLM agents (status: weakly_supported)

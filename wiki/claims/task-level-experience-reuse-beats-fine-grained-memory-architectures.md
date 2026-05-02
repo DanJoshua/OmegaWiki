@@ -35,7 +35,7 @@ For streaming LLM agents on the Evo-Memory benchmark, **task-level experience re
 ## Conditions and scope
 
 - Requires per-task feedback $f_t$ (correctness signal). Without it, the simplest retrieval becomes unreliable because there is no quality filter on stored experiences.
-- Requires non-trivial within-dataset task similarity — see [[claim-memory-evolution-gain-correlates-with-task-similarity]]. On low-similarity streams (AIME-25, GPQA), the advantage of task-level reuse over fine-grained baselines shrinks.
+- Requires non-trivial within-dataset task similarity — see [[memory-evolution-gain-correlates-with-task-similarity]]. On low-similarity streams (AIME-25, GPQA), the advantage of task-level reuse over fine-grained baselines shrinks.
 - Holds at the granularity of *tasks*, not turns. Conversational-recall settings (LongMemEval, MemoryBank-style benchmarks) are explicitly out of scope and may favor different architectures.
 - Currently single-paper evidence; classified `weakly_supported` until independent replication outside the Evo-Memory protocol.
 

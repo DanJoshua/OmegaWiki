@@ -80,6 +80,6 @@ The paper is most useful as a **standardized harness**: it pulls a fragmented la
 
 - [[self-evolving-memory]] (introduced concept)
 - [[test-time-learning]] (uses concept)
-- [[claim-task-level-experience-reuse-beats-fine-grained-memory-architectures]] (supports)
-- [[claim-memory-evolution-gain-correlates-with-task-similarity]] (supports)
+- [[task-level-experience-reuse-beats-fine-grained-memory-architectures]] (supports)
+- [[memory-evolution-gain-correlates-with-task-similarity]] (supports)
 - Topic: [[self-evolving-agents]]
