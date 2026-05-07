@@ -33,7 +33,7 @@ To be filled in. The two recent surveys provide structural framing:
 
 ## SOTA tracker
 
-To be filled in.
+- [[learning-supervision-semantic-episodic-memory-reflective]] (2026, CAIS) — critique-grounded episodic+semantic memory adaptation without parameter updates; +8.1pp over zero-shot across 6 datasets.
 
 ## Open problems
 

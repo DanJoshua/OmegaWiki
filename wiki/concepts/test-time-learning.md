@@ -13,6 +13,7 @@ tags:
 maturity: active
 key_papers:
   - evo-memory-benchmarking-llm-agent-test
+  - learning-supervision-semantic-episodic-memory-reflective
 first_introduced: "2020"
 date_updated: 2026-05-02
 related_concepts:
@@ -73,6 +74,7 @@ without revisiting $\mathcal{D}_{\text{train}}$. TTL methods differ in (i) what 
 ## Key papers
 
 - [[evo-memory-benchmarking-llm-agent-test]] — operationalizes test-time learning for LLM agents as memory-level *test-time evolution*, providing the first unified streaming benchmark for it.
+- [[learning-supervision-semantic-episodic-memory-reflective]] — demonstrates critique-grounded episodic+semantic memory as a supervised test-time adaptation strategy; introduces suggestibility as a predictor of when TTL works.
 
 ## My understanding
 

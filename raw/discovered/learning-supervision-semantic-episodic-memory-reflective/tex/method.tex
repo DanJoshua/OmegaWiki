@@ -1,0 +1,60 @@
+
+
+\section{Learning from Supervised Signals}
+For large language model (LLM)-based agents, the availability of supervised signals, in the form of labeled datasets or continuously incoming feedback from users or the environment, presents a wide range of opportunities for building agents that can learn and improve continuously.
+
+As illustrated in \Cref{fig:diagram}, we refer to our task-solving agent as the \textit{performance agent} (PA). The PA consists of an LLM model (the prediction model), which is queried to perform tasks, and a memory module, which it can read from and write to. Given a new task to which we want to adapt the agent, we begin with an initial labeled dataset:
+
+$\mathcal{D}_{\text{train}}^{\text{init}} = \{(x_i, y_i)\}_{i=1}^{N}$,
+where each \(x_i\) represents a task-related question or request, and \(y_i\) denotes the corresponding correct label or answer. The performance agent processes inputs \(x_i\) from a test set \(\mathcal{D}_{\text{test}}\) and produces initial predictions denoted by \(\text{PA}(x_i)\).
+
+To enhance the capabilities of the PA, we introduce a second component: the \textit{critic agent} (CA) making use of a LLM critic model. The CA takes as input one tuple \((x_i, y_i)\) along with the PA's prediction \(\text{PA}(x_i)\), and outputs a text critique aimed at improving the PA's performance. For all experiments, the CA uses the same underlying model as the PA.
+
+
+\subsection{What to Remember?}
+
+Critique is a widely used approach for improving model performance and guiding iterative refinement by identifying errors, uncovering blind spots, and providing actionable feedback for enhancement~\cite{NEURIPS2023_1b44b878,gou2024critic,chen2024teaching, burleigh-etal-2025-beyond}.
+In our setup, we employ a label-driven critique generation process, where the critic agent uses provided ground-truth answers as part of its input to generate critiques. For each question in the dataset, the performance agent first produces an initial prediction. The critic agent is then given the correct answer and asked to critique the performance agent’s output. Each critique is structured into the following fields:
+
+\begin{itemize}[leftmargin=1.5em,topsep=0.8em]
+% \setlength{\itemsep}{-0.3em}
+    \item \textbf{Assertion:} A reiteration of the correct answer to the question, and a judgment regarding the correctness of the performance agent’s response.
+    \item \textbf{Rationale:} An instance-specific explanation detailing why the correct answer is valid and why the performance agent’s response was correct or incorrect.
+    \item \textbf{Reflection:} A broader, generalizable insight that may be applicable to similar questions in the future.
+\end{itemize}
+
+This design addresses a key challenge observed in our empirical studies: critic agents sometimes persist in their own incorrect understanding from their underlying model when generating critiques, even after being shown the correct answer. Because the critic agent draws on the model’s parametric knowledge, it can inherit pretraining biases that reinforce such biases. To mitigate this, we require the critic agent to explicitly restate the correct answer and make a clear assertion about the correctness of the initial prediction before offering a rationale or reflection. This explicit structure significantly reduces confirmation bias.
+
+We further decompose critiques into two conceptual layers - \textit{rationale} (local) and \textit{reflection} (global) - to balance specificity and generalizability. An ideal rationale should provide a detailed explanation tailored to the specific instance, while a reflection should capture broader insights that can be applied to unseen examples in the future. Upon inspection, this structured format resulted in noticeably higher-quality critiques. See \Cref{tab:critique_parts_ablation} for an ablation study of performance with different components of the critique.
+
+\begin{promptbox}{Example Critique}
+\textbf{Question:} Does short-term treatment with proton pump inhibitors cause rebound aggravation of symptoms? \newline
+\textbf{PA Response:} Yes \newline
+\textbf{Critique:}
+\begin{itemize}[leftmargin=.5em,topsep=0.3em]
+\setlength{\itemsep}{-0.3em}
+\item \textit{Assertion:} No
+  \item \textit{Rationale:} Short-term treatment with proton pump inhibitors (PPIs) generally does not cause rebound aggravation of symptoms upon discontinuation. Studies have shown that any perceived increase in symptoms after stopping PPIs may be temporary...
+  \item \textit{Reflection:} In the broader context, medical treatments may sometimes be misattributed with rebound phenomena, but each class of medication has its own pharmacological profiles.  In the case...
+\end{itemize}
+\end{promptbox}
+
+\section{Incorporating Critiques into Memory}
+
+Next, we investigate how learned critiques can be effectively incorporated into the performance agent’s memory. We adopt two primary forms of PA memory: \textit{semantic memory} and \textit{episodic memory}, both of which are well-established in agentic learning literature~\cite{sumers2024cognitive}. For examples of both kinds of memory, see \cref{appendix_examples}.
+
+\subsection{Semantic Memory}
+
+Semantic memory encodes generalizable knowledge across the entire dataset. In this work, we construct semantic memory by \textit{summarizing all of the critiques} across a dataset into a unified knowledge representation. This allows the performance agent to draw on abstract insights during inference in future tasks.
+Semantic memory aims to capture insights that are broadly applicable across the entire task domain. To utilize it at inference time, we augment the performance agent’s prompt with these insights in the form of additional instructions. This strategy is referred to as \SEMCRIT{}.
+Semantic memory typically takes the form of a bulleted list of task-specific advice and cautions, though its format is intentionally left vague to give the critic agent flexibility in capturing patterns from previously generated critiques.
+
+\subsection{Episodic Memory}
+
+While semantic memory offers concise and broadly applicable knowledge, it often fails to capture nuanced patterns or context-specific behaviors, particularly in diverse datasets. Episodic memory addresses this by enabling the agent to recall specific past instances, effectively allowing it to "revisit" similar scenarios where successes or failures occurred, along with accompanying context and critical reasoning.
+
+The key to effective use of episodic memory lies in the retrieval of relevant examples. The agent retrieves relevant memories from similar prior cases and conditions on both the original examples and their critiques, learning to weigh and incorporate only the most pertinent critiques rather than attending to all examples equally. This strategy is referred to as (\EPCRIT{}). Following the retrieval-augmented generation (RAG) paradigm, we identify the top $K=5$ most similar data points to a test input $x_i$ using semantic embeddings. The corresponding memory entries, containing critical thinking artifacts are then used as additional demonstrations for the performance agent. See \Cref{varying_k} for detailed results and discussion on why we chose $K=5$.
+
+\subsection{Combining Semantic and Episodic Memory}
+
+To harness the complementary strengths of both memory types, we introduce \EPSEMCRIT{}. This hybrid strategy presents the performance agent with both high-level semantic instructions and context-specific episodic examples. By unifying generalizable semantic memory with detailed situational context, these approaches aim to support more robust and adaptive reasoning during inference. These are unified by simply concatenating the semantic memory to the end of the episodic memory.

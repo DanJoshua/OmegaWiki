@@ -12,6 +12,7 @@ tags:
 maturity: emerging
 key_papers:
   - flex-continuous-agent-evolution-forward-learning
+  - learning-supervision-semantic-episodic-memory-reflective
 first_introduced: "FLEX (Cai et al., 2025)"
 date_updated: 2026-05-02
 related_concepts:
@@ -68,6 +69,7 @@ Closed-source LLM deployments; settings where catastrophic forgetting from param
 ## Key papers
 
 - [[flex-continuous-agent-evolution-forward-learning]]
+- [[learning-supervision-semantic-episodic-memory-reflective]] — implements forward learning via critique-grounded episodic/semantic memory in a supervised setting; no gradients, no retraining.
 
 ## My understanding
 

@@ -36,6 +36,11 @@ papers:
     tags: [self-evolving-agents, llm-agents, gradient-free-learning, experience-replay, continual-learning, reasoning]
     importance: 4
     domain: NLP
+  - slug: learning-supervision-semantic-episodic-memory-reflective
+    title: "Learning from Supervision with Semantic and Episodic Memory: A Reflective Approach to Agent Adaptation"
+    tags: [agent-memory, episodic-memory, semantic-memory, test-time-learning, in-context-learning, agent-adaptation, reflective-learning]
+    importance: 3
+    domain: NLP
   - slug: learning-job-experience-driven-self-evolving
     title: "Learning on the Job: An Experience-Driven Self-Evolving Agent for Long-Horizon Tasks"
     tags: [agents, self-evolution, memory, long-horizon, continual-learning, tool-use]
@@ -104,6 +109,10 @@ concepts:
   - slug: modular-tool-use-policy
     title: "Modular Tool-Use Policy"
     tags: [llm-agents, tool-use, agent-architecture, policy-decomposition]
+    maturity: emerging
+  - slug: suggestibility-metric-model-receptivity-external-reasoning
+    title: "Suggestibility Metric"
+    tags: [agent-memory, in-context-learning, agent-adaptation, model-behavior]
     maturity: emerging
   - slug: self-evolving-agent
     title: "Self-evolving Agent"
@@ -177,6 +186,12 @@ ideas:
 experiments:
 
 claims:
+  - slug: critique-grounded-memory-improves-agent-adaptation
+    title: "Critique-grounded episodic+semantic memory improves agent task accuracy without parameter updates"
+    tags: [agent-memory, episodic-memory, semantic-memory, test-time-learning, parameter-free-adaptation]
+    status: weakly_supported
+    confidence: 0.65
+    domain: NLP
   - slug: claim-experience-library-scaling-law
     title: "LLM-agent performance follows a scaling law in experience-library size"
     tags: [self-evolving-agents, llm-agents, scaling-laws, continual-learning]

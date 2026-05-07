@@ -1,0 +1,285 @@
+\section{Empirical Evaluation}
+
+
+\begin{table*}[ht]
+\centering
+\begin{subtable}[t]{0.48\textwidth}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+\makecell{Model and \\ Experiment} & \makecell{Multi-\\Cond.\\Ranking} & \makecell{NFCorpus} & \makecell{PubMed} & \makecell{Steam\\Pref} & \makecell{Book\\Pref} & \makecell{Anime\\Pref} & \makecell{Movie\\Pref} \\
+\midrule
+\multicolumn{8}{l}{\textbf{gpt-4o-mini-2024-07-18}} \\
+\quad \ZEROSHOT{} & \underline{35.2} & 87.2 & \underline{64.0} & 58.4 & 55.6 & 56.4 & 51.6 \\
+\quad \EPLABEL & 32.0 & 83.6 & 62.8 & 61.2 & 58.0 & 57.6 & 45.6 \\
+\quad \EPCRIT{} & 34.8 & \underline{89.2} & 63.2 & \underline{71.2} & \underline{64.8} & \textbf{62.0} & \textbf{58.4} \\
+\quad \SEMCRIT{} & 32.8 & 85.2 & 61.6 & 60.4 & 58.8 & 52.8 & 55.2 \\
+\quad \EPSEMCRIT{} & \textbf{36.8} & \textbf{90.0} & \textbf{64.8} & \textbf{73.6} & \textbf{66.8} & \underline{61.6} & \underline{58.4} \\
+\hline
+\multicolumn{8}{l}{\textbf{llama-4-scout}} \\
+\quad \ZEROSHOT{} & \textbf{38.8} & 85.6 & \textbf{72.4} & 56.4 & 56.8 & 54.0 & 49.6 \\
+\quad \EPLABEL & 37.2 & 90.4 & \underline{71.2} & \textbf{66.8} & 54.4 & \textbf{60.4} & 54.8 \\
+\quad \EPCRIT{} & 36.8 & \textbf{93.6} & 70.0 & 62.4 & \underline{60.8} & \underline{58.0} & \textbf{57.6} \\
+\quad \SEMCRIT{} & \underline{38.8} & 83.6 & 69.2 & 63.2 & 59.2 & 56.8 & 50.4 \\
+\quad \EPSEMCRIT{} & 34.8 & \underline{91.2} & 70.8 & \underline{63.6} & \textbf{61.6} & 57.6 & \underline{56.4} \\
+\hline
+\multicolumn{8}{l}{\textbf{qwen3-235b-a22b-instruct-2507}} \\
+\quad \ZEROSHOT{} & 42.0 & 86.4 & 66.8 & 54.8 & 54.8 & 52.8 & 51.6 \\
+\quad \EPLABEL & 44.0 & 94.8 & \underline{67.2} & 55.6 & 58.8 & 64.8 & 52.0 \\
+\quad \EPCRIT{} & \textbf{56.8} & \textbf{95.2} & 64.8 & \textbf{68.4} & \underline{63.6} & \textbf{69.6} & 58.4 \\
+\quad \SEMCRIT{} & 42.4 & 85.2 & \textbf{68.4} & 64.0 & 60.4 & 61.6 & \underline{62.8} \\
+\quad \EPSEMCRIT{} & \underline{54.0} & \underline{95.2} & 64.8 & \underline{68.4} & \textbf{66.4} & \underline{65.2} & \textbf{64.0} \\
+\bottomrule
+\end{tabular}
+}
+\caption{Non-Reasoning models}
+\label{tab:model_performance}
+\end{subtable}
+\hfill
+\begin{subtable}[t]{0.48\textwidth}
+\centering
+\scriptsize
+\setlength{\tabcolsep}{2pt}
+\resizebox{\linewidth}{!}{
+\begin{tabular}{lccccccc}
+\toprule
+\makecell{Model and \\ Experiment} & \makecell{Multi-\\Cond.\\Ranking} & \makecell{NFCorpus} & \makecell{PubMed} & \makecell{Steam\\Pref} & \makecell{Book\\Pref} & \makecell{Anime\\Pref} & \makecell{Movie\\Pref} \\
+\midrule
+\multicolumn{8}{l}{\textbf{gpt-5-2025-08-07}} \\
+\quad \ZEROSHOT{} & 81.6 & 90.0 & 70.0 & 53.6 & 52.0 & 55.6 & 48.8 \\
+\quad \EPLABEL & 95.2 & 96.4 & \underline{71.2} & 64.4 & \underline{71.2} & \underline{72.0} & \textbf{69.2} \\
+\quad \EPCRIT{} & 96.8 & \textbf{97.6} & 69.2 & \textbf{69.2} & 70.0 & \textbf{73.2} & 65.6 \\
+\quad \SEMCRIT{} & \underline{98.0} & 91.6 & 69.2 & 64.4 & 65.6 & 58.0 & 63.6 \\
+\quad \EPSEMCRIT{} & \textbf{99.2} & \underline{96.8} & \textbf{73.6} & \underline{68.8} & \textbf{73.2} & 68.8 & \underline{67.6} \\
+\hline
+\multicolumn{8}{l}{\textbf{gpt-oss-20b}} \\
+\quad \ZEROSHOT{} & 58.0 & 90.4 & \underline{66.8} & 52.4 & 56.4 & 52.8 & 52.0 \\
+\quad \EPLABEL & 34.0 & 88.0 & 64.8 & 57.2 & 55.6 & 53.6 & 54.0 \\
+\quad \EPCRIT{} & 57.6 & \underline{94.8} & 66.0 & \textbf{63.2} & 58.4 & \underline{60.8} & \textbf{64.0} \\
+\quad \SEMCRIT{} & \textbf{72.0} & 89.6 & 60.4 & 57.2 & \textbf{60.0} & 60.4 & 52.4 \\
+\quad \EPSEMCRIT{} & \underline{58.8} & \textbf{95.6} & \textbf{68.0} & \underline{62.8} & \underline{59.6} & \textbf{61.2} & \underline{63.6} \\
+\hline
+\multicolumn{8}{l}{\textbf{qwen3-vl-235b-a22b-thinking}} \\
+\quad \ZEROSHOT{} & 46.2 & 87.6 & \textbf{64.8} & 58.8 & 53.6 & 55.6 & 49.2 \\
+\quad \EPLABEL & 50.4 & 94.8 & 62.4 & 56.6 & \underline{62.0} & \textbf{64.8} & 61.6 \\
+\quad \EPCRIT{} & 64.5 & \textbf{98.8} & \underline{62.8} & \textbf{64.4} & 57.6 & \underline{63.6} & \textbf{67.2} \\
+\quad \SEMCRIT{} & \underline{65.6} & 88.4 & 60.0 & 57.2 & 58.8 & 54.4 & 62.0 \\
+\quad \EPSEMCRIT{} & \textbf{72.8} & \underline{97.6} & 62.0 & \underline{62.0} & \textbf{62.0} & 63.6 & \underline{64.0} \\
+\bottomrule
+
+\end{tabular}
+}
+\caption{Reasoning models}
+\label{tab:model_performance_reasoning}
+\end{subtable}
+\caption{Performance agent accuracy across datasets. We use \texttt{EP}, \texttt{SEM}, and \texttt{EP+SEM} to denote episodic, semantic, and combined memory. Results on preference datasets are averaged across all users. For each model and dataset, the highest score is \textbf{bolded} and the second-highest is \underline{underlined}.}
+\end{table*}
+
+\subsection{Datasets}
+
+To evaluate the effectiveness of various memory-augmented learning strategies under diverse conditions, we conduct empirical studies across multiple datasets.
+The tasks cover a range of settings, including fact-oriented question answering, ranking, and retrieval-based QA. The following datasets were selected based on several criteria: domain diversity, easily verifiable answers, and low enough baseline accuracy to allow room for improvement.
+
+\paragraph{Multi-Condition Ranking~\cite{multi_condition_ranking}} Given a list of 5 items, sort them in order along 3 logical conditions. Converted into a 4-choice multiple-choice task.
+
+\paragraph{NFCorpus~\cite{NFCorpus}} Given a medical article and two medical papers, determine which paper is cited directly by the article's bibliography.
+
+\paragraph{PubMed~\cite{pubmed}} Determine if a highly technical medical statement is true or false, across many different medical domains. \newline
+
+To complement these more knowledge-intensive tasks above, we also evaluated our strategies on four personal preference datasets, where models would have no prior knowledge or biases to rely on. In these tasks, the goal is to predict whether a given item belongs to a user's history. Even if the model had encountered these datasets during training, it would be unlikely to memorize preferences associated with individual user IDs, making these tasks a controlled testbed for assessing whether self-critique strategies can improve performance purely through learning from experience rather than simply leveraging preexisting knowledge.
+
+The preference datasets were collected for four media types: \textbf{Steam Pref~\cite{SteamPref}} for video games, \textbf{Book Pref~\cite{book_preference}}, \textbf{Anime Pref~\cite{AnimePref}}, and \textbf{Movie Pref~\cite{MoviePref}}. For these datasets, we randomly selected ten users per dataset. For each user, 50 items were sampled from their history and paired with an item of equivalent popularity that was not present in their history, to prevent the model from simply guessing the more popular item for each pair. These were then formulated into 50 questions, split equally into train and test sets, of the format "Is user $user\_id$ more likely to prefer $item1$ or $item2$?"
+
+For all other datasets, 500 questions were randomly sampled and evenly split into training and testing sets. Additional dataset-specific preprocessing details are provided in \Cref{app:data}.
+
+We separate these datasets into two distinct groups: fact-oriented datasets, which includes Multi-Condition Ranking, NFCorpus, and PubMed, and preference-based datasets, which include the other four.
+
+\subsection{Experimental Setup}
+
+We compared different learning strategies against two baseline setups: \ZEROSHOT{} and \EPLABEL{}. The \ZEROSHOT{} baseline reflects the agent's performance without memory or demonstrations. The \EPLABEL{} baseline is a retrieval-based few-shot strategy that includes $K=5$ example question–answer pairs $(x_i, y_i)$ retrieved from the training set using embedding similarity, consistent with all other EP strategies, where $x_i$ is the input and $y_i$ the corresponding answer. \EPLABEL{} is a strong baseline—combining RAG and few-shot demonstration—as it has full access to the same supervised signals. While \EPLABEL{} can be categorized as a RAG solution, we adopt the EP naming convention to highlight both its similarities to and differences from other strategies.
+
+We experiment with six different models. In \Cref{tab:model_performance}, we examine the performance of non-reasoning models, and in \Cref{tab:model_performance_reasoning} we examine the performance of specialized reasoning models.
+These models span a range of sizes and include both dense and mixture-of-experts (MoE) architectures. Hyperparameters used were \texttt{token\_limit=8192}, \texttt{reasoning\_effort=medium}, \texttt{temperature=0}, for each model that supported that hyperparameter. If a model ran out of tokens before giving an answer, that answer was considered incorrect.
+
+
+
+\subsection{Main Results}
+\label{sec:main_results}
+
+\Cref{tab:model_performance} and \Cref{tab:model_performance_reasoning} compare various learning strategies across all seven datasets. We observe that critique-based memory augmentation improves performance in the majority of model-dataset combinations, though the degree of improvement varies substantially depending on model, dataset, and method. All reported improvements and gains are in absolute percentage points.
+
+\paragraph{Critique-based methods outperform baselines across most configurations.}
+Five of our six models show improvements over the best baseline on the majority of datasets. The hybrid \EPSEMCRIT{} strategy emerges as the most consistently effective approach, averaging 8.10\% improvement over \ZEROSHOT{} averaged across all models and datasets, while \EPCRIT{} saw an average gain of 7.56\% and \SEMCRIT{} saw an average gain of 3.67\%.
+
+The \EPLABEL{} baseline reinforces existing trends in literature, very often showing substantial improvements over \ZEROSHOT{} and averaging an improvement of 3.46\%. Even without critiques, RAG few-shot in-context learning remains a potent tool for augmenting agents with memory. However, the consistent gains of critique-based methods over \EPLABEL{} demonstrate that the structured reasoning in the critiques provides valuable signal beyond raw input-output examples.
+
+\paragraph{Episodic memory methods often outperform \SEMCRIT{}, but semantic memory still has value.} Semantic memory typically outperforms \ZEROSHOT{}, indicating that high-level task insights help the performance agent make better decisions. In addition, while \SEMCRIT{} does not consistently beat the \EPLABEL{} baseline, \EPSEMCRIT{} is often better than pure \EPCRIT{}. 
+This suggests that combining the generalization of semantic memory with the specificity of episodic memory yields more robust performance than either approach alone.
+
+\paragraph{Performance improvement is uneven across datasets.} PubMed was the dataset that saw the least improvement for all six models, and in some cases \ZEROSHOT{} did better on PubMed than \EPLABEL{}. On the other hand, the preference datasets saw some of the largest performance improvements over baselines across models. This implies that some types of tasks see more benefit with memory augmentation than others. PubMed requires the agent to know very specific facts which are often not shared across questions, making it harder for the model to pull relevant insights from the retrieved examples. When making predictions on Book Pref, on the other hand, the model can make several deductions about a user's preferences from just a few provided examples, and these deductions can be further enhanced through structured reasoning by using the critique methods.
+
+\paragraph{Not all models benefit equally from critique-based augmentation.} Llama 4 Scout shows the most limited improvements, outperforming baselines on only 3 of 7 datasets. In contrast, GPT-oss-20B exhibits the largest  improvement of \EPSEMCRIT{} over \EPLABEL{}, with an average gain of 8.9\% across all datasets. Reasoning models generally achieve higher baseline performance than non-reasoning models of comparable size, yet they still show substantial gains from memory augmentation.
+
+Interestingly, while GPT-5 shows relatively modest improvements with critique-based method relative to \EPLABEL{} - averaging only 1.2\% gain - it is the model with the strongest improvement compared to \ZEROSHOT{} with an average gain of 13.8\%. 
+One possible explanation is that this highly capable model already extracts substantial insight from raw examples during its thinking process, partially replicating the benefits of explicit critiques—though we cannot directly verify this without access to GPT-5's internal reasoning traces. However, if this explanation holds, we would expect explicit critiques to reduce the reasoning burden for models that would otherwise derive similar insights themselves. 
+We explore the relationship between critique-based methods and inference-time computation in \Cref{sec:token_analysis}.
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{llrrrrr}
+\toprule
+Critique & Baseline & Mean \% & SD \% & 95\% CI & +/$-$/0 & $p$ (sign) \\
+\midrule
+\EPCRIT{} & \ZEROSHOT{} & +7.6 & 6.6 & [+5.6, +9.7] & 33/9/0 & 0.000272 \\
+\SEMCRIT{} & \ZEROSHOT{} & +3.7 & 6.3 & [+1.7, +5.7] & 28/13/1 & 0.0275 \\
+\EPSEMCRIT{} & \ZEROSHOT{} & +8.1 & 6.6 & [+6.0, +10.1] & 38/4/0 & 5.65e-08 \\
+\EPCRIT{} & \EPLABEL & +4.1 & 5.8 & [+2.3, +6.0] & 32/10/0 & 0.000941 \\
+\SEMCRIT{} & \EPLABEL & +0.2 & 8.2 & [-2.3, +2.8] & 18/22/2 & 0.636 \\
+\EPSEMCRIT{} & \EPLABEL & +4.6 & 6.1 & [+2.7, +6.5] & 32/9/1 & 0.000431 \\
+\bottomrule
+\end{tabular}
+\caption{Aggregate gain of each critique method over each baseline, pooled across (model, dataset) points. Each point contributes its per-question mean accuracy difference in percentage points. The 95\% CI is $t$-based; the sign test reports the two-sided $p$-value for $H_0$ that positive and negative gains are equally likely (ties excluded).}
+\label{tab:aggregate_gain}
+\end{table}
+
+To complement the per-dataset patterns above, \Cref{tab:aggregate_gain} reports aggregate gains pooled across all 42 (model, dataset) points. \EPCRIT{} and \EPSEMCRIT{} both significantly outperform \EPLABEL{}, with identical win rates of 32/42 and sign-test $p$-values of 0.000941 and 0.000431 respectively. Against the weaker \ZEROSHOT{} baseline, all three critique methods show significant gains, with \EPSEMCRIT{} positive on 38 of 42 points ($p < 10^{-7}$). These results demonstrate the overall utility of critique-based methods over both baselines.
+
+Notably, \SEMCRIT{} alone does not reliably improve over \EPLABEL{} ($p=0.636$), confirming that semantic memory's value is primarily as a complement to episodic retrieval rather than as a standalone strategy. This is consistent with the roles we propose: episodic memory provides instance-specific reasoning, while semantic memory provides task-level guardrails that are most effective when combined with concrete examples.
+
+\subsection{Critique-based Memory for Reasoning Models}
+\label{sec:token_analysis}
+
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccccccc}
+\toprule
+\makecell{Model and \\ Experiment} & \makecell{Multi-\\Cond.\\Ranking} & \makecell{NFCorpus} & \makecell{PubMed} & \makecell{Steam\\Pref} & \makecell{Book\\Pref} & \makecell{Anime\\Pref} & \makecell{Movie\\Pref} \\
+\midrule
+\multicolumn{8}{l}{\textbf{gpt-5-2025-08-07}} \\
+\quad \EPLABEL & 3152 & 398 & \textbf{445} & 985 & 1127 & 1074 & 962 \\
+\quad \EPCRIT{} & \underline{1683} & \underline{294} & \underline{502} & 784 & 632 & 792 & 758 \\
+\quad \SEMCRIT{} & 1759 & 574 & 510 & \textbf{576} & \underline{579} & \textbf{638} & \textbf{581} \\
+\quad \EPSEMCRIT{} & \textbf{1354} & \textbf{290} & 508 & \underline{694} & \textbf{568} & \underline{728} & \underline{734} \\
+\hline
+\multicolumn{8}{l}{\textbf{gpt-oss-20b}} \\
+\quad \EPLABEL & 6357 & 504 & 260 & 1922 & 2328 & 2765 & 2718 \\
+\quad \EPCRIT{} & 4790 & \underline{350} & \textbf{222} & \underline{836} & \underline{1079} & \underline{905} & \underline{781} \\
+\quad \SEMCRIT{} & \textbf{3194} & 546 & 276 & \textbf{419} & \textbf{524} & \textbf{403} & \textbf{406} \\
+\quad \EPSEMCRIT{} & \underline{4512} & \textbf{249} & \underline{232} & 864 & 1349 & 1147 & 862 \\
+\hline
+\multicolumn{8}{l}{\textbf{qwen3-vl-235b-a22b-thinking}} \\
+\quad \EPLABEL & 6154 & 1345 & 868 & 1966 & 2099 & 2424 & 2466 \\
+\quad \EPCRIT{} & \underline{4990} & \textbf{851} & \underline{813} & \underline{1691} & \underline{1574} & 1927 & \underline{1928} \\
+\quad \SEMCRIT{} & 5151 & 1246 & \textbf{626} & \textbf{1170} & \textbf{1393} & \textbf{1331} & \textbf{1330} \\
+\quad \EPSEMCRIT{} & \textbf{4741} & \underline{873} & 865 & 1814 & 1694 & \underline{1914} & 1984 \\
+\bottomrule
+\end{tabular}
+\caption{Output token usage per question for thinking models across datasets and experiments. For each model and dataset, the lowest inference token count is \textbf{bolded} and the second-lowest is \underline{underlined}.}
+\label{tab:token_usage_thinking}
+\end{table}
+
+
+Beyond accuracy improvements, we observe a surprising secondary benefit of critique-based memory for reasoning models: substantial reductions in inference-time computation. \Cref{tab:token_usage_thinking} reports the average number of output tokens (including thinking tokens) per question for our three reasoning models.
+
+\paragraph{The presence of critiques reduces thinking tokens substantially compared to \EPLABEL{}}
+Providing pre-computed critiques dramatically reduces the number of tokens reasoning models generate during inference. For example, compared to \EPLABEL{}, \EPCRIT{} reduces token usage by 67.3\% for GPT-oss-20B on Anime Pref. 
+We hypothesize that these efficiency gains are caused by explicit critiques effectively substituting for reasoning the model would otherwise perform at inference time. The critiques provide conclusions the model can leverage immediately rather than derive independently. 
+
+The critiques also appear to ground the thinking trajectories and help prevent them from getting derailed by spurious connections. For example, Qwen3-Thinking on preference datasets for \EPLABEL{} would frequently try to find connections between a user's numerical ID and the media the user preferred, despite there obviously being no connection. When augmented with critiques, we observed Qwen3-Thinking doing this much less frequently.
+
+\paragraph{Critiques can prevent overthinking, improving performance.}
+In some cases, this token reduction directly enables better performance in \Cref{tab:model_performance_reasoning}. On Multi-Condition Ranking, GPT-oss-20B achieves its best accuracy with \SEMCRIT{} - not because semantic memory provides superior signal, but because it prevents the model from exhausting its token budget through excessive deliberation. The percentage of answers that ran out of tokens dropped from 60\% with \EPLABEL{} to just 12\% with \SEMCRIT{}. This pattern repeats across other datasets and models: for example, on Movie Pref, GPT-oss-20B ran out of tokens 13.6\% of the time with \EPLABEL{} but only 0.4\% with \EPSEMCRIT{}. Likewise, for Qwen3-thinking on Multi-Condition Ranking, token-limited answers decreased from 40.5\% with \EPLABEL{} to 22.2\% with \EPSEMCRIT{}. 
+
+GPT-5 almost never ran out of tokens, and as such did not experience this effect. It is possible GPT-5 would experience stronger gains with our CRIT methods compared to the \EPLABEL{} baseline if a stricter token budget was used, or if the reasoning effort parameter was set to high. See \Cref{tab:timeout_rate_thinking} for the full breakdown of token timeout rates across all models and experiments.
+
+\paragraph{Semantic memory is particularly efficient.}
+\SEMCRIT{} consistently produces the lowest token counts across most configurations. This aligns with its nature as a compressed, high-level summary rather than detailed per-example reasoning. While \SEMCRIT{} alone does not usually achieve the best accuracy, its efficiency makes it valuable in some circumstances.
+
+\paragraph{Combination costs are not additive.}
+The token cost of \EPSEMCRIT{} is substantially less than the sum of \EPCRIT{} and \SEMCRIT{} costs, and often only slightly higher than \EPCRIT{} alone. This indicates that the model does not naively process both memory types independently but rather integrates them efficiently. This means that there is little marginal cost to using the higher-performing \EPSEMCRIT{} strategy over \EPCRIT{}.
+
+These efficiency gains have significant practical value. While generating memory incurs a one-time training cost (for example, averaging 5577 tokens per question for GPT-5 across datasets), this cost is amortized across all subsequent inference queries. In production scenarios where inference volume dominates total computation, pre-generating critiques not only improves accuracy but substantially reduces per-query costs and latency.  For a more detailed cost breakdown with break-even calculations, refer to \Cref{tab:usage}.
+
+\subsection{Suggestibility}
+
+\begin{table}[t]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lccccccc}
+\toprule
+\makecell{Model and \\ Metric} & \makecell{Multi-\\Cond.\\Ranking} & \makecell{NFCorpus} & \makecell{PubMed} & \makecell{Steam\\Pref} & \makecell{Book\\Pref} & \makecell{Anime\\Pref} & \makecell{Movie\\Pref} \\
+\midrule
+\multicolumn{8}{l}{\textbf{gpt-4o-mini-2024-07-18}} \\
+\quad Acc. (truth) & 94.8 & 93.6 & 100.0 & 100.0 & 100.0 & 100.0 & 100.0 \\
+\quad Acc. (lying) & 9.2 & 74.4 & 1.6 & 0.0 & 0.0 & 0.0 & 0.0 \\
+\quad Suggestibility & 85.6 & 19.2 & 98.4 & 100.0 & 100.0 & 100.0 & 100.0 \\
+\hline
+\multicolumn{8}{l}{\textbf{llama-4-scout}} \\
+\quad Acc. (truth) & 64.0 & 90.0 & 95.2 & 92.4 & 82.0 & 81.6 & 87.2 \\
+\quad Acc. (lying) & 36.0 & 71.6 & 27.2 & 11.6 & 16.4 & 20.8 & 15.2 \\
+\quad Suggestibility & 28.0 & 18.4 & 68.0 & 80.8 & 65.6 & 60.8 & 72.0 \\
+\hline
+\multicolumn{8}{l}{\textbf{qwen3-235b-a22b-instruct-2507}} \\
+\quad Acc. (truth) & 94.8 & 91.6 & 98.8 & 100.0 & 100.0 & 100.0 & 100.0 \\
+\quad Acc. (lying) & 18.4 & 75.6 & 3.2 & 0.0 & 0.0 & 0.0 & 0.0 \\
+\quad Suggestibility & 76.4 & 16.0 & 95.6 & 100.0 & 100.0 & 100.0 & 100.0 \\
+\hline
+\multicolumn{8}{l}{\textbf{gpt-5-2025-08-07}} \\
+\quad Acc. (truth) & 100.0 & 98.4 & 100.0 & 99.2 & 100.0 & 100.0 & 100.0 \\
+\quad Acc. (lying) & 26.0 & 61.6 & 0.4 & 1.2 & 0.0 & 0.0 & 0.0 \\
+\quad Suggestibility & 74.0 & 36.8 & 99.6 & 98.0 & 100.0 & 100.0 & 100.0 \\
+\hline
+\multicolumn{8}{l}{\textbf{gpt-oss-20b}} \\
+\quad Acc. (truth) & 90.4 & 95.6 & 98.8 & 99.6 & 100.0 & 99.6 & 100.0 \\
+\quad Acc. (lying) & 49.2 & 73.2 & 2.0 & 0.0 & 0.4 & 0.4 & 0.0 \\
+\quad Suggestibility & 41.2 & 22.4 & 96.8 & 99.6 & 99.6 & 99.2 & 100.0 \\
+\hline
+\multicolumn{8}{l}{\textbf{qwen3-vl-235b-a22b-thinking}} \\
+\quad Acc. (truth) & 90.0 & 98.8 & 100.0 & 99.6 & 100.0 & 100.0 & 100.0 \\
+\quad Acc. (lying) & 42.8 & 46.8 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 \\
+\quad Suggestibility & 47.2 & 52.0 & 100.0 & 99.6 & 100.0 & 100.0 & 100.0 \\
+\bottomrule
+\end{tabular}
+\caption{Suggestibility analysis across datasets. Acc. (truth) is accuracy when the agent provides truthful feedback, Acc. (lying) is accuracy when the agent provides deceptive feedback, and Suggestibility is the difference (truth - lying). Results on preference datasets are averaged across all users.}
+\label{tab:suggestibility}
+\end{table}
+
+The variance in improvement across models raises a natural question: why do some models benefit more from critique-based memory augmentation than others? We hypothesize that a key factor is \textit{suggestibility}—the degree to which a model's predictions can be influenced by external reasoning provided in context. In memory-augmented agentic learning, it is crucial not only to generate high-quality critiques but also to ensure that the model is receptive to them. A model that rigidly adheres to its parametric knowledge, regardless of contextual information, will not benefit from memory augmentation.
+
+To better quantify this phenomenon, we define a \textit{suggestibility} metric $S$, which captures the difference in an agent’s performance when given a best-effort critique versus when given an intentionally misleading one (generated by flipping the ground-truth label). Formally,
+\begin{align*}
+    S =\;& 
+    \frac{1}{|D|} \sum_{x_i \in D} 
+    \mathbb{1} \left[ \text{PA}(x_i \mid \text{CA}(x_i, y_i)) = y_i \right] - \\
+    & 
+    \frac{1}{|D|} \sum_{x_i \in D} 
+    \mathbb{1} \left[ \text{PA}(x_i \mid \text{CA}(x_i, \neg y_i)) = y_i \right]
+\end{align*}
+where $\text{PA}$ denotes the performance agent, $\text{CA}$ refers to the critic agent, and $D$ is the evaluation dataset. Note that in real-world settings, the true label $y_i$ is not available to either $\text{PA}$ or $\text{CA}$; thus, this metric represents an idealized or “cheating” scenario, using artificially constructed best and adversarial insights for controlled experimentation.
+
+
+\Cref{tab:suggestibility} reports suggestibility scores across all models and datasets.
+
+
+\paragraph{Models are generally more suggestible on preference data than on fact-oriented data.} We hypothesize that this reflects a tension between knowledge encoded in a pretrained LLM’s parameters and the information provided by labeled examples. In fact-based domains, LLMs are likely more competent due to prior exposure to relevant facts during pretraining. A notable exception is the PubMed dataset, where the complexity of medical queries introduces enough ambiguity for critiques to meaningfully influence model outputs. In contrast, in preference-based domains, models cannot have learned individual user preferences—especially with anonymized users—so they lack parametric knowledge.
+
+\paragraph{Suggestibility positively correlates with the benefit the model sees with memory augmentation.}
+To assess whether suggestibility explains performance gains, we computed correlations between suggestibility and improvement across all 42 model-dataset combinations. When measuring improvement on \EPSEMCRIT{} relative to \ZEROSHOT{}, we observe a Spearman correlation coefficient of 0.402 with a p value of 0.008. This moderate positive correlation suggests that suggestibility partially explains why certain models benefit more from memory augmentation than others. For instance, Llama 4 Scout's low suggestibility scores (averaging 56.2\% across datasets) help account for its limited gains, while the high suggestibility of GPT-5 and Qwen3-Instruct aligns with their consistent high improvements over \ZEROSHOT{}.
+
+\paragraph{However, suggestibility does not address gains of critique-based methods over few-shot learning.}
+When measuring the improvement of \EPSEMCRIT{} relative to \EPLABEL{} - which already provides retrieved examples with correct labels - the correlation weakens substantially to 0.077 and is no longer statistically significant with a p value of 0.626. This suggests that while suggestibility partially explains a model's ability to benefit from external information generally, it does not account for the marginal benefit that structured critiques provide over raw input-output examples. The additional value of critique-based methods likely depends on factors beyond suggestibility such as whether the task contains generalizable patterns that critiques can articulate and whether the model can extract such patterns from examples in the critique-generation process.
+
+\paragraph{Low suggestibility may impose a ceiling on possible gains.}
+Llama 4 Scout exhibits the lowest average suggestibility across datasets (56.2\%) and shows the smallest improvements from critique-based methods, outperforming baselines on only 3 of 7 datasets. Even on preference data, where the model has no parametric knowledge of the user's preferences, the model frequently refused to return the correct answer. This may suggest that sufficient suggestibility may be a necessary but insufficient condition for benefiting from memory augmentation.
+
+\paragraph{High suggestibility comes with safety concerns.}
+While high suggestibility enables the benefits we observe in this work, it also raises concerns when models accept false information that contradicts their own knowledge. GPT-5's willingness to follow incorrect critiques on fact-based datasets (e.g., 74\% suggestibility on Multi-Condition Ranking, where it achieves 81.6\% zero-shot accuracy) suggests that even highly capable models may be overly deferential to contextual information. This reflects a tension in current alignment approaches: the same receptiveness that enables learning from feedback also creates vulnerabilities to adversarial or erroneous inputs. We leave deeper investigation of this tradeoff to future work.

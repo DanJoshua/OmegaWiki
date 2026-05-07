@@ -12,6 +12,7 @@ tags:
 maturity: emerging
 key_papers:
   - evo-memory-benchmarking-llm-agent-test
+  - learning-supervision-semantic-episodic-memory-reflective
 first_introduced: "2025"
 date_updated: 2026-05-02
 related_concepts:
@@ -74,6 +75,7 @@ The signature $U: \mathcal{M} \times \mathcal{E} \to \mathcal{M}$ is the definin
 ## Key papers
 
 - [[evo-memory-benchmarking-llm-agent-test]] — introduces the streaming benchmark and the ReMem refine operator that operationalize the concept.
+- [[learning-supervision-semantic-episodic-memory-reflective]] — instantiates the episodic+semantic memory split in a supervised classification setting; introduces the suggestibility metric to explain variance in memory augmentation gains.
 
 ## My understanding
 

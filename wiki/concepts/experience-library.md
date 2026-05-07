@@ -12,6 +12,7 @@ tags:
 maturity: emerging
 key_papers:
   - flex-continuous-agent-evolution-forward-learning
+  - learning-supervision-semantic-episodic-memory-reflective
 first_introduced: "FLEX (Cai et al., 2025)"
 date_updated: 2026-05-02
 related_concepts:
@@ -64,6 +65,7 @@ When the deployment environment is closed-source or compute-limited; when contin
 ## Key papers
 
 - [[flex-continuous-agent-evolution-forward-learning]]
+- [[learning-supervision-semantic-episodic-memory-reflective]] — implements a simplified two-tier experience library (episodic critiques + semantic summary) for supervised classification; demonstrates that critique grounding outperforms storing raw labels.
 
 ## My understanding
 

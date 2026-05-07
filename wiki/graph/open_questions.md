@@ -38,6 +38,10 @@ _Auto-generated open questions. Do not edit._
 - [paper/learning-job-experience-driven-self-evolving] Can the agent learn from *failed* trajectories as effectively as from successful ones, beyond replanning hints?
 - [paper/learning-job-experience-driven-self-evolving] How robust is the cross-LLM memory transfer when target and source models differ in tool-use conventions or tokenizer assumptions?
 - [paper/learning-job-experience-driven-self-evolving] Can human-in-the-loop edits to the memory module accelerate evolution without destabilizing learned behaviors?
+- [paper/learning-supervision-semantic-episodic-memory-reflective] Can suggestibility be predicted from model architecture or pretraining data?
+- [paper/learning-supervision-semantic-episodic-memory-reflective] Does EP+SEM_CRIT scale to long-horizon, multi-turn agents where supervision is sequential and implicit rather than pre-labeled?
+- [paper/learning-supervision-semantic-episodic-memory-reflective] How does critique-grounded memory interact with parameter-level test-time adaptation (LoRA, in-context fine-tuning)?
+- [paper/learning-supervision-semantic-episodic-memory-reflective] Is the three-part critique structure universally optimal or domain-dependent?
 - [paper/sok-agentic-skills-beyond-tool-use] **Verified autonomous skill generation**: how to gate self-generated skills with regression-style evaluation analogous to CI before admission to a library?
 - [paper/sok-agentic-skills-beyond-tool-use] **Unsupervised skill discovery**: can RL-style unsupervised skill-discovery techniques transfer to LLM agents, identifying skill boundaries from interaction traces alone?
 - [paper/sok-agentic-skills-beyond-tool-use] **Formal verification across heterogeneous representations**: NL/policy skills resist static analysis; combining rule-based, semantic-LLM, and runtime-behavioral verification.
@@ -106,6 +110,9 @@ _Auto-generated open questions. Do not edit._
 - [concept/skill-marketplace-supply-chain-risk] Anti-injection guarantees for NL policies that cannot be statically analyzed.
 - [concept/skill-marketplace-supply-chain-risk] Liability allocation among skill authors, platform operators, and users.
 - [concept/skill-marketplace-supply-chain-risk] Certification mechanisms that align market incentives with reliability.
+- [concept/suggestibility-metric-model-receptivity-external-reasoning] Can suggestibility be predicted from pretraining data or RLHF alignment procedure without running experiments?
+- [concept/suggestibility-metric-model-receptivity-external-reasoning] What is the causal mechanism? (Attention head specialization? RLHF-induced deference to human-attributed signals?)
+- [concept/suggestibility-metric-model-receptivity-external-reasoning] Is there an optimal suggestibility level that balances adaptability and robustness to noise?
 - [concept/test-time-learning] Unsupervised TTL with no feedback at all.
 - [concept/test-time-learning] Combining parameter-level and memory-level TTL without interference.
 - [concept/test-time-learning] Characterizing which deployment streams admit transferable test-time updates and which do not.
@@ -123,6 +130,7 @@ _Auto-generated open questions. Do not edit._
 - [claim/claim-gradient-free-agents-can-match-parameter-tuning] Gradient-free experience-library learning can match or exceed gradient-based parameter tuning on agentic reasoning benchmarks (status: weakly_supported)
 - [claim/claim-self-evolution-introduces-emergent-safety-risks] Self-evolution introduces emergent safety risks (misevolution, reward hacking, alignment drift) not present in static agents (status: weakly_supported)
 - [claim/claim-static-llm-agents-need-evolution] Static LLM-based agents are a critical bottleneck in open-ended deployments and require self-evolution (status: weakly_supported)
+- [claim/critique-grounded-memory-improves-agent-adaptation] Critique-grounded episodic+semantic memory improves agent task accuracy without parameter updates (status: weakly_supported)
 - [claim/curated-skills-outperform-self-generated] Curated agentic skills outperform self-generated skills (status: weakly_supported)
 - [claim/diversity-aware-population-selection-prevents-premature] Instance-wins (diversity-aware) selection outperforms greedy and top-k selection in evolutionary prompt search for heterogeneous tool-use tasks (status: weakly_supported)
 - [claim/execution-grounded-relevance-vs-semantic-similarity] Description-based retrieval underperforms execution-grounded relevance for selecting AI agents (status: weakly_supported)
