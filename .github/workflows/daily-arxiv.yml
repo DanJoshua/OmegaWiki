@@ -45,6 +45,8 @@ jobs:
     env:
       HAS_CLAUDE_CODE_AUTH: ${{ secrets.ANTHROPIC_API_KEY != '' || secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
       HAS_REVIEW_LLM: ${{ secrets.LLM_API_KEY != '' && secrets.LLM_BASE_URL != '' && secrets.LLM_MODEL != '' }}
+      SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
+      DEEPXIV_TOKEN: ${{ secrets.DEEPXIV_TOKEN }}
 
     steps:
       - name: Checkout
