@@ -201,7 +201,7 @@ jobs:
 
             If the mode is "inform", do not ingest or mutate the wiki. Keep borderline papers as "maybe".
           claude_args: |
-            --max-turns 60
+            --max-turns 100
             --allowedTools "Read,Write,Edit,Bash"
 
       - name: Note skipped Claude recommendation
