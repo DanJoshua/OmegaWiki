@@ -260,6 +260,8 @@ jobs:
 
       - name: Commit auto-ingest changes
         if: github.event_name != 'schedule' || steps.resolve.outputs.schedule_enabled == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           if [ "$DAILY_ARXIV_MODE" != "auto-ingest" ]; then
@@ -276,6 +278,9 @@ jobs:
           fi
 
           git commit -m "daily-arxiv auto-ingest"
+          # The Claude action clears the auth header that actions/checkout
+          # installed; restore it before pushing.
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push
 
       - name: Send digest e-mail
