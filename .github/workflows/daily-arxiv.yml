@@ -32,10 +32,8 @@ on:
         default: true
 
 permissions:
-  # contents: write — required so the auto-ingest commit step can push to main.
-  # id-token: write — required so claude-code-action@v1 can fetch an OIDC
-  # token to exchange for a Claude Code GitHub App token.
-  # See docs/daily-arxiv-deployment.md (P1) for the failure signature.
+  # contents: write — auto-ingest commit step pushes to main.
+  # id-token: write — claude-code-action exchanges OIDC for an app token.
   contents: write
   id-token: write
 
@@ -49,11 +47,8 @@ jobs:
     env:
       HAS_CLAUDE_CODE_AUTH: ${{ secrets.ANTHROPIC_API_KEY != '' || secrets.CLAUDE_CODE_OAUTH_TOKEN != '' }}
       HAS_REVIEW_LLM: ${{ secrets.LLM_API_KEY != '' && secrets.LLM_BASE_URL != '' && secrets.LLM_MODEL != '' }}
-      # Setting these as repo secrets is necessary but not sufficient — they
-      # must also be exposed to the Python step's process env. Without these
-      # two lines, fetch_s2.py runs in anonymous mode (1 req per 3 s) and the
-      # prepare step blows past its budget against ~1000 daily candidates.
-      # See docs/daily-arxiv-deployment.md (P4).
+      # Repo secrets must be exposed as env vars here for the Python steps;
+      # otherwise S2/DeepXiv calls run anonymous and hit rate-limit walls.
       SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
       DEEPXIV_TOKEN: ${{ secrets.DEEPXIV_TOKEN }}
 
@@ -210,13 +205,11 @@ jobs:
 
             If the mode is "inform", do not ingest or mutate the wiki. Keep borderline papers as "maybe".
           claude_args: |
-            # max-turns must be high enough for the decision step over today's
-            # candidates AND one full /ingest cycle (~40-50 tool calls per
-            # paper). 20 (default) and 60 are too low — see P6.
-            # allowedTools must include Skill (so /ingest can be invoked at
-            # all), TodoWrite (used by /ingest), and Agent (for /ingest's
-            # subagent fan-out). Without Skill, Claude reports
-            # ingest_status: success without actually creating files — see P8.
+            # 100 turns fits the decision step plus one full /ingest cycle
+            # (~40–50 tool calls per paper); raise if max_auto_ingest > 1.
+            # allowedTools must include Skill or /ingest cannot be invoked;
+            # TodoWrite and Agent support /ingest's task tracking and
+            # subagent fan-out.
             --max-turns 100
             --allowedTools "Read,Write,Edit,Bash,Skill,TodoWrite,Agent"
 
@@ -294,11 +287,8 @@ jobs:
           fi
 
           git commit -m "daily-arxiv auto-ingest"
-          # actions/checkout@v4 with persist-credentials installs an auth
-          # header in .git/config; the upstream claude-code-action step
-          # unsets it as cleanup, so the remote URL is left without
-          # credentials. Re-embed GITHUB_TOKEN before pushing.
-          # See docs/daily-arxiv-deployment.md (P7).
+          # claude-code-action clears the auth header that actions/checkout
+          # installed; re-embed GITHUB_TOKEN before pushing.
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push
 
