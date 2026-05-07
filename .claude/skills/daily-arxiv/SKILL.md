@@ -19,6 +19,8 @@ Load references only when needed:
 - `/daily-arxiv status`: inspect config, workflow presence, schedule, mode, API/e-mail secret availability, and recent artifacts when available.
 - `/daily-arxiv disable`: set `schedule.enabled: false` in config or tell the user what to change; manual `/daily-arxiv` must still work.
 
+> **CI deployment has eight non-obvious gates** (auth, OIDC, app install, env passthroughs, max-turns, push re-auth, allowedTools). When running `setup` or `status`, surface every missing gate as a hard-gate finding (not "optional polish") and point the user at [`docs/daily-arxiv-deployment.md`](../../../docs/daily-arxiv-deployment.md) for symptom-keyed troubleshooting. Anonymous-tier S2 is broken at scale, not slow — treat S2/DeepXiv secrets as required for any daily-cadence pipeline.
+
 ## Inputs
 
 - `--mode inform|auto-ingest`: default `inform`. Never infer `auto-ingest` from repo state.

@@ -224,6 +224,11 @@ Actions secrets. In CI inform mode, recommendations can use Claude Code auth
 (`ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN`) or the OpenAI-compatible
 `LLM_*` review model; auto-ingest still requires Claude Code.
 
+> **Deploying on GitHub Actions has eight non-obvious gates.** See
+> [`docs/daily-arxiv-deployment.md`](docs/daily-arxiv-deployment.md) for the
+> setup checklist and a symptom-keyed troubleshooting table. Every fix the
+> workflow currently bakes in cross-references that doc.
+
 ## Skills
 
 24 slash commands spanning the full research lifecycle:
