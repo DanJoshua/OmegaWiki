@@ -19,10 +19,24 @@ This page is the operator's manual for running the daily arXiv pipeline on GitHu
    ```
    `DEEPXIV_TOKEN` lives in `~/.env`, not the project `.env` — the SDK auto-registers there.
 
-4. **SMTP secrets**, if `email.enabled: true` in `config/daily-arxiv.yml`:
+4. **Confirm the workflow exposes those secrets to the Python step.** Storing the secrets is only half the work — `.github/workflows/daily-arxiv.yml` must also reference them in its job-level `env:` block, otherwise the `Prepare recommendation context` step runs anonymous and rate-limits out:
+   ```bash
+   grep -A4 '^    env:' .github/workflows/daily-arxiv.yml | grep -E 'SEMANTIC_SCHOLAR_API_KEY|DEEPXIV_TOKEN'
+   ```
+   Both lines should print. If either is missing, add them under the `daily-arxiv:` job's `env:`:
+   ```yaml
+   jobs:
+     daily-arxiv:
+       env:
+         SEMANTIC_SCHOLAR_API_KEY: ${{ secrets.SEMANTIC_SCHOLAR_API_KEY }}
+         DEEPXIV_TOKEN:            ${{ secrets.DEEPXIV_TOKEN }}
+   ```
+   `/daily-arxiv setup` performs this check automatically.
+
+5. **SMTP secrets**, if `email.enabled: true` in `config/daily-arxiv.yml`:
    `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM`, `DAILY_ARXIV_EMAIL_TO`.
 
-5. **Verify with one manual dispatch** before relying on the cron:
+6. **Verify with one manual dispatch** before relying on the cron:
    ```bash
    gh workflow run daily-arxiv.yml --ref main
    gh run watch

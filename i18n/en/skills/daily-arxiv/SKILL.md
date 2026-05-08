@@ -15,7 +15,7 @@ Load references only when needed:
 ## Commands
 
 - `/daily-arxiv`: run a one-off recommendation pass now. If `config/daily-arxiv.yml` is missing, infer defaults from the wiki and continue.
-- `/daily-arxiv setup`: create or repair `config/daily-arxiv.yml` from `config/daily-arxiv.yml.example`, check `.github/workflows/daily-arxiv.yml`, and explain required secrets.
+- `/daily-arxiv setup`: create or repair `config/daily-arxiv.yml` from `config/daily-arxiv.yml.example`; check `.github/workflows/daily-arxiv.yml` exists and that its job-level `env:` block exposes both `SEMANTIC_SCHOLAR_API_KEY` and `DEEPXIV_TOKEN` (without those, secrets are stored but never reach the prepare step and the daily run rate-limits out); and explain required secrets.
 - `/daily-arxiv status`: inspect config, workflow presence, schedule, mode, API/e-mail secret availability, and recent artifacts when available.
 - `/daily-arxiv disable`: set `schedule.enabled: false` in config or tell the user what to change; manual `/daily-arxiv` must still work.
 
