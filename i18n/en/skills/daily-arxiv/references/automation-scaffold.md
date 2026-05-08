@@ -69,10 +69,12 @@ jobs:
       DEEPXIV_TOKEN:            ${{ secrets.DEEPXIV_TOKEN }}
 ```
 
-`/daily-arxiv setup` greps for both lines and reports any that are missing.
-A `gh secret set` plus a missing exposure is the most common reason the
-daily run rate-limits out — the tester sees their secrets configured and
-assumes the workflow can read them.
+`/daily-arxiv setup` auto-patches the workflow to add either line if
+missing — users should not have to hand-edit YAML for this. A `gh secret
+set` paired with a missing exposure is the most common reason the daily
+run rate-limits out (the tester sees their secrets configured and
+assumes the workflow can read them), so `setup` eliminates the gap
+rather than just reporting it.
 
 ## Artifacts
 
