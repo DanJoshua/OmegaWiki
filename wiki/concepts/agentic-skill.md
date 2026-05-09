@@ -12,10 +12,12 @@ tags:
 maturity: emerging
 key_papers:
   - sok-agentic-skills-beyond-tool-use
+  - skillos-learning-skill-curation-self-evolving
 first_introduced: "2026"
-date_updated: 2026-05-02
+date_updated: 2026-05-09
 related_concepts:
   - skill-lifecycle
+  - skill-curator
   - skill-marketplace-supply-chain-risk
 ---
 
@@ -82,6 +84,7 @@ Soft applicability scores `C : O × G → [0,1]` with thresholding are common in
 ## Key papers
 
 - [[sok-agentic-skills-beyond-tool-use]] — formalizes the four-tuple definition and the seven-pattern + representation×scope taxonomies.
+- [[skillos-learning-skill-curation-self-evolving]] — uses Markdown-format skills (YAML frontmatter + NL instructions) managed by a trainable skill curator; shows that skill representation and curation quality jointly determine self-evolution performance.
 
 ## My understanding
 

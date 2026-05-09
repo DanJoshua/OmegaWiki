@@ -6,7 +6,7 @@ tags:
   - continual-learning
   - tool-use
 my_involvement: reading
-sota_updated: 2026-05-02
+sota_updated: 2026-05-09
 key_venues:
   - arXiv
   - ICLR
@@ -34,6 +34,7 @@ To be filled in. The two recent surveys provide structural framing:
 ## SOTA tracker
 
 - [[learning-supervision-semantic-episodic-memory-reflective]] (2026, CAIS) — critique-grounded episodic+semantic memory adaptation without parameter updates; +8.1pp over zero-shot across 6 datasets.
+- [[skillos-learning-skill-curation-self-evolving]] (2026, arXiv) — RL-trained skill curator (8B) outperforms frontier model curator (Gemini-2.5-Pro) on ALFWorld; +9.8% relative over strongest memory baseline with fewer interaction steps; introduces executor-grounded skill curation via GRPO on grouped task streams.
 
 ## Open problems
 

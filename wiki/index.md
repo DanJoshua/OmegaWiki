@@ -46,6 +46,11 @@ papers:
     tags: [agents, self-evolution, memory, long-horizon, continual-learning, tool-use]
     importance: 3
     domain: NLP
+  - slug: skillos-learning-skill-curation-self-evolving
+    title: "SkillOS: Learning Skill Curation for Self-Evolving Agents"
+    tags: [agents, llm-agents, self-evolving-agents, skill-curation, reinforcement-learning, procedural-memory, skill-lifecycle]
+    importance: 3
+    domain: NLP
   - slug: sok-agentic-skills-beyond-tool-use
     title: "SoK: Agentic Skills - Beyond Tool Use in LLM Agents"
     tags: [agents, llm-agents, agentic-skills, skill-lifecycle, design-patterns, security, governance, sok]
@@ -121,6 +126,10 @@ concepts:
   - slug: self-evolving-memory
     title: "Self-evolving Memory"
     tags: [llm-agents, memory, continual-learning, test-time]
+    maturity: emerging
+  - slug: skill-curator
+    title: "Skill Curator"
+    tags: [agents, self-evolving-agents, skill-management, reinforcement-learning, procedural-memory]
     maturity: emerging
   - slug: skill-lifecycle
     title: "Skill Lifecycle"
@@ -270,6 +279,12 @@ claims:
     status: supported
     confidence: 0.8
     domain: ML Systems
+  - slug: rl-trained-skill-curator-outperforms-frontier-curator
+    title: "RL-Trained Skill Curator Outperforms Frontier Model Curator Due to Executor Alignment"
+    tags: [skill-curation, self-evolving-agents, reinforcement-learning, executor-alignment]
+    status: weakly_supported
+    confidence: 0.68
+    domain: NLP
   - slug: sota-agents-fail-deep-wide-information-seeking
     title: "State-of-the-art LLM agents fail at combined deep + wide information seeking"
     tags: [agents, benchmark, search-agents, information-seeking, evaluation]

@@ -12,9 +12,11 @@ tags:
 maturity: emerging
 key_papers:
   - evolver-self-evolving-llm-agents-through
+  - skillos-learning-skill-curation-self-evolving
 first_introduced: "2025"
-date_updated: 2026-05-02
-related_concepts: []
+date_updated: 2026-05-09
+related_concepts:
+  - skill-curator
 ---
 
 ## Definition
@@ -76,6 +78,7 @@ The pattern is parameterised by the dedup threshold $\theta_{\text{sim}}$, the p
 ## Key papers
 
 - [[evolver-self-evolving-llm-agents-through]] — introduces the full closed-loop instantiation with self-distillation + GRPO
+- [[skillos-learning-skill-curation-self-evolving]] — fits the lifecycle pattern but decouples curation (trainable curator via RL) from execution (frozen executor); shows that skills can serve as the principled substrate for the experience base.
 
 ## My understanding
 

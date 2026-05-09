@@ -42,6 +42,10 @@ _Auto-generated open questions. Do not edit._
 - [paper/learning-supervision-semantic-episodic-memory-reflective] Does EP+SEM_CRIT scale to long-horizon, multi-turn agents where supervision is sequential and implicit rather than pre-labeled?
 - [paper/learning-supervision-semantic-episodic-memory-reflective] How does critique-grounded memory interact with parameter-level test-time adaptation (LoRA, in-context fine-tuning)?
 - [paper/learning-supervision-semantic-episodic-memory-reflective] Is the three-part critique structure universally optimal or domain-dependent?
+- [paper/skillos-learning-skill-curation-self-evolving] Can skill curators transfer across agent ecosystems without executor-specific fine-tuning?
+- [paper/skillos-learning-skill-curation-self-evolving] How should `SkillRepo` be pruned or reorganised when the executor itself is updated?
+- [paper/skillos-learning-skill-curation-self-evolving] Can agentic skill search (finding the right skill in a large repo) be co-optimised with curation?
+- [paper/skillos-learning-skill-curation-self-evolving] Do meta-skills that emerge in `SkillRepo` correspond to human-interpretable strategies?
 - [paper/sok-agentic-skills-beyond-tool-use] **Verified autonomous skill generation**: how to gate self-generated skills with regression-style evaluation analogous to CI before admission to a library?
 - [paper/sok-agentic-skills-beyond-tool-use] **Unsupervised skill discovery**: can RL-style unsupervised skill-discovery techniques transfer to LLM agents, identifying skill boundaries from interaction traces alone?
 - [paper/sok-agentic-skills-beyond-tool-use] **Formal verification across heterogeneous representations**: NL/policy skills resist static analysis; combining rule-based, semantic-LLM, and runtime-behavioral verification.
@@ -102,6 +106,10 @@ _Auto-generated open questions. Do not edit._
 - [concept/self-evolving-memory] Unsupervised self-evolution: how to refine memory without explicit feedback signals.
 - [concept/self-evolving-memory] Catastrophic interference between self-evolving memory and parameter-level test-time learning (LoRA adapters, in-context fine-tuning).
 - [concept/self-evolving-memory] Theoretical complexity / transfer guarantees for experience reuse beyond cluster-similarity heuristics.
+- [concept/skill-curator] **Cross-executor transfer**: can a curator trained on executor A be fine-tuned cheaply for executor B?
+- [concept/skill-curator] **Hierarchical skill curation**: can the curator manage both atomic skills and higher-level meta-skills in a structured hierarchy?
+- [concept/skill-curator] **Multi-agent shared curators**: can multiple agents share a single curator while maintaining per-agent executor alignment?
+- [concept/skill-curator] **Drift handling**: as the executor updates over time, how should the curator detect and respond to drift in which skills are useful?
 - [concept/skill-lifecycle] Unsupervised discovery without human curricula or task definitions.
 - [concept/skill-lifecycle] CI-style admission gates between distillation and storage.
 - [concept/skill-lifecycle] Drift detection between execution and evaluation/update.
@@ -136,6 +144,7 @@ _Auto-generated open questions. Do not edit._
 - [claim/execution-grounded-relevance-vs-semantic-similarity] Description-based retrieval underperforms execution-grounded relevance for selecting AI agents (status: weakly_supported)
 - [claim/memory-evolution-gain-correlates-with-task-similarity] Self-evolving memory's gain correlates with within-dataset task similarity (status: weakly_supported)
 - [claim/module-level-blame-attribution-enables-stable] Module-level blame attribution enables stable, targeted improvement of modular tool-use policies under sparse end-of-trajectory supervision (status: weakly_supported)
+- [claim/rl-trained-skill-curator-outperforms-frontier-curator] RL-Trained Skill Curator Outperforms Frontier Model Curator Due to Executor Alignment (status: weakly_supported)
 - [claim/self-distillation-vs-external-teacher-crossover] Self-distilled experience principles outperform external-teacher distillation once the agent's base model crosses a capacity threshold (status: weakly_supported)
 - [claim/single-llm-matches-multi-agent-debate] A single LLM with well-crafted prompts can match complex multi-agent debate frameworks on reasoning benchmarks (status: weakly_supported)
 - [claim/sota-agents-fail-deep-wide-information-seeking] State-of-the-art LLM agents fail at combined deep + wide information seeking (status: weakly_supported)

@@ -22,7 +22,8 @@ keywords:
   - streaming task streams
 domain: NLP
 code_url: ""
-cited_by: []
+cited_by:
+  - skillos-learning-skill-curation-self-evolving
 ---
 
 ## Problem

@@ -25,7 +25,8 @@ keywords:
   - workflow topology
 domain: "NLP"
 code_url: "https://github.com/EvoAgentX/Awesome-Self-Evolving-Agents"
-cited_by: []
+cited_by:
+  - skillos-learning-skill-curation-self-evolving
 ---
 
 ## Problem

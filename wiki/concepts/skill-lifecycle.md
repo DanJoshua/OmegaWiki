@@ -12,6 +12,7 @@ tags:
 maturity: emerging
 key_papers:
   - sok-agentic-skills-beyond-tool-use
+  - skillos-learning-skill-curation-self-evolving
 first_introduced: "2026"
 date_updated: 2026-05-02
 related_concepts:
@@ -76,6 +77,7 @@ Apply the lifecycle as a *coverage checklist* when surveying or designing a skil
 ## Key papers
 
 - [[sok-agentic-skills-beyond-tool-use]] — proposes the seven-stage lifecycle and maps representative systems to lifecycle contributions.
+- [[skillos-learning-skill-curation-self-evolving]] — instantiates stages 2–7 (practice, distillation, storage, retrieval, execution, evaluation/update) with a learned RL curation policy; introduces the modular skill-curator/executor split.
 
 ## My understanding
 

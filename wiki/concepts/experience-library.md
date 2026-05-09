@@ -13,6 +13,7 @@ maturity: emerging
 key_papers:
   - flex-continuous-agent-evolution-forward-learning
   - learning-supervision-semantic-episodic-memory-reflective
+  - skillos-learning-skill-curation-self-evolving
 first_introduced: "FLEX (Cai et al., 2025)"
 date_updated: 2026-05-02
 related_concepts:
@@ -66,6 +67,7 @@ When the deployment environment is closed-source or compute-limited; when contin
 
 - [[flex-continuous-agent-evolution-forward-learning]]
 - [[learning-supervision-semantic-episodic-memory-reflective]] — implements a simplified two-tier experience library (episodic critiques + semantic summary) for supervised classification; demonstrates that critique grounding outperforms storing raw labels.
+- [[skillos-learning-skill-curation-self-evolving]] — SkillRepo is an experience library of Markdown skills; introduces a trainable curator policy that manages the library via RL rather than heuristics.
 
 ## My understanding
 
