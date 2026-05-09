@@ -1,0 +1,54 @@
+\section{Experiments}
+
+We conduct experiments on both multi-turn agentic tasks and single-turn reasoning tasks, in line with prior work~\citep{xia2026skillrl, wei2025evo, DBLP:journals/corr/abs-2602-10652}. We additionally show that the trained skill curator transfers across agent executors and task domains, highlighting its flexibility and generalizability.
+
+\input{tables/alfworld}
+
+\subsection{Setup}
+We briefly discuss the experiment setup throughout this paper. Full description of datasets, implementations, baselines, and evaluations can be found in Appendix~\ref{app: implementation_details}.
+
+\noindent\textbf{Dataset.} For agentic tasks, we conduct experiments on ALFWorld~\citep{shridhar2021alfworld} and WebShop~\citep{10.5555/3600270.3601778}. ALFWorld is a text-based interactive environment aligned with the ALFRED embodied AI benchmark, where agents must complete household tasks through textual navigation and object manipulation. WebShop simulates an online shopping environment in which agents navigate a realistic web interface to identify and purchase products that satisfy user-specified requirements. For each benchmark, we train \ours{} on its training split where $Z_i$ is the default task type annotations, and evaluate on the corresponding test set. In addition to agentic tasks, we also benchmark for single-turn reasoning tasks, including AIME24, AIME25, and GPQA-Diamond~\citep{rein2024gpqa}. Training data are constructed from DeepMath-103k~\citep{he2026deepmathk}, where we randomly sample a subset of 33,000 data points. 
+
+\noindent\textbf{Evaluation Configurations.} 
+We evaluate all methods across two dimensions, \textit{effectiveness} and \textit{efficiency}. For effectiveness, we measure the success rate (SR) and accuracy for agentic tasks and reasoning tasks, respectively. For efficiency, we compute the number of execution steps per agentic task and the number of tokens per reasoning problem, respectively. We compare \ours{} with three categories of baselines: 
+(i) a memory-free agent (No Memory); 
+(ii) existing memory-based methods, including ReasoningBank~\citep{ouyang2026reasoningbank}, which distills reusable insights from past experiences, and MemP~\citep{DBLP:journals/corr/abs-2508-06433}, which induces procedural memory with advanced memory-management strategies; and 
+(iii) internal variants of our framework, including \ours{}-base, which uses the initial skill curator without RL training, and \ours{}-gemini, which uses Gemini-2.5-Pro to directly perform skill curation instead of learning the curator with RL. All prompts used can be found in Appendix~\ref{app: prompt}.
+
+\noindent\textbf{Implementation Details.} 
+We use Qwen3-8B~\citep{DBLP:journals/corr/abs-2505-09388} as the base model for $\pi_{\mathcal{S}}$. The frozen executor is also instantiated with Qwen3-8B during training. We train our model using GRPO with a learning rate $1\times10^{-6}$, batch size $32$, and group size $8$. Training is conducted on 16 H100 GPUs using the \texttt{verl} framework~\citep{sheng2024hybridflow}. The full training process takes approximately 3 days for ALFWorld, 2.5 days for reasoning tasks, and 5 days for WebShop.
+For testing, we additionally include Qwen3-32B, Gemini-2.5-Pro~\citep{DBLP:journals/corr/abs-2507-06261}, and Gemini-3.1-Flash-Lite (Appendix~\ref{sec:appendix-gemini-flash}) as executors to evaluate the generalization of \ours{} under different executor scales and architectures. Task outcome signal $\mathbbm{1}_{\xi_t}$ is obtained via LLM-as-a-judge with the frozen agent executor (prompt shown in Appendix~\ref{app: prompt}). We use ReAct~\citep{DBLP:conf/iclr/YaoZYDSN023} for agent execution and CoT~\citep{DBLP:conf/nips/Wei0SBIXCLZ22} for reasoning tasks. For the reward function, we set $\lambda_f=1.0$, $\lambda_u=0.1$, and $\lambda_c=0.05$.
+We report averaged performance and standard deviation over 3 runs. 
+
+\input{tables/merged}
+\subsection{Main Results}
+
+
+Tables~\ref{table: alfworld} and~\ref{tab:merged_results} summarize the results for different benchmarks with Qwen3-8B as the skill curator on various agent executors. Based on the results, we have the following observations.
+
+\noindent\textbf{\ours{} achieves strong performance gains across benchmarks.}
+Across all three benchmarks, \ours{} consistently outperforms both memory-free and memory-based baselines, showing that the gains come from \emph{learning to manage and evolve} skills rather than from maintaining a static collection. On ALFWorld, \ours{} improves the average success rate from 55.7 to 61.2 over the strongest baseline ReasoningBank with Qwen3-8B as the executor; similar trends hold on WebShop and reasoning tasks. Strikingly, our RL-trained 8B curator even surpasses \ours{}-gemini, despite the latter using a far stronger frontier model as the curator, demonstrating that targeted training of a small curator can outweigh raw model scale. The benefits brought by RL training are also compounded with executor capacity, yielding $+9.5$ absolute improvement with Gemini-2.5-Pro versus $+7.9$ with Qwen3-8B for ALFworld, compared with \ours{}-base.
+
+\noindent\textbf{\ours{} is more efficient, requiring fewer interactions and lower execution cost.}
+The gains of \ours{} are accompanied by better efficiency rather than longer trajectories. On ALFWorld, \ours{} reduces the average interaction steps by $2.2$, $3.0$, and $3.1$ compared with ``no memory'' setting with 3 executors, consistently outperforming all memory-based baselines. This trend extends to WebShop, where \ours{} secures higher success rates with fewer environment interactions. These results indicate that the learned skill manager enables the executor to identify procedural shortcuts and bypass redundant exploration. Rather than relying on additional trial-and-error, \ours{} improves performance by distilling experience into direct, actionable expertise that simplifies task execution.
+
+\noindent\textbf{The gains differ between agentic and reasoning tasks, reflecting different forms of reusable skills.}
+A notable trend is that the gains of \ours{} are generally larger on multi-turn agentic benchmarks than on single-turn reasoning tasks. We hypothesize that this difference arises from how reusable skills manifest across task types. Agentic tasks naturally expose procedural regularities, such as action ordering, exploration strategies, recovery behaviors, and environment-specific constraints, which can be repeatedly composed and refined across task streams. Reasoning tasks also benefit from skill curation, but their reusable knowledge often appears at a more abstract level, such as decomposition heuristics, constraint formulation, or verification patterns, rather than as directly reusable action procedures. As a result, \ours{} still improves reasoning performance, while the gains are typically smaller than those observed on agentic benchmarks. We provide a case study demonstrating skills curated for different tasks in Figure~\ref{fig: skill_case}.
+
+
+\subsection{Generalization of \ours{}}\label{exp:generalization}
+
+\begin{figure}[t]
+\begin{center}
+\includegraphics[width=0.95\textwidth]{figures/generalization.pdf}
+\end{center}
+\vspace{-3mm}
+\caption{Cross-task generalization results of \ours{} with (a) Qwen3-8B, (b) Qwen3-32B, and (c) Gemini-2.5-Pro as frozen executors. We plot relative improvement with baselines from \textbf{\textcolor{lightgreen}{least}} to \textbf{\textcolor{deepgreen}{most}}.}
+\label{fig: task_generalization}
+\vspace{-5mm}
+\end{figure}
+
+\noindent\textbf{\ours{} is transferable and remains effective for different agent executors.}
+During training, we use Qwen3-8B as the executor. To test whether \ours{} brings improvement for executors that are not seen in training, we pair the trained skill curator with different executors. As shown in Table~\ref{table: alfworld} and \ref{tab:merged_results}, \ours{} consistently improves a wide range of frozen executors across benchmarks, from open-source models (Qwen3-8B, Qwen3-32B) to frontier models (Gemini-2.5-Pro). On ALFWorld, it lifts the average success rate of Qwen3-8B from 47.9 to 61.2 and Gemini-2.5-Pro from 66.4 to 80.2, demonstrating compatibility with executors of varying capacity. Notably, using Gemini-2.5-Pro directly as the curator (\ours{}-gemini) underperforms our trained curator, especially when paired with the smaller Qwen3-8B executor. This highlights a curator-executor mismatch: stronger reasoning ability alone does not guarantee effective skill curation, as frontier-generated skills may be misaligned with the executor's capacity or usage patterns. By contrast, \ours{} learns executor-grounded curation behaviors through RL, producing skills that better match the downstream agent.
+
+\noindent\textbf{\ours{} delivers consistent performance improvement when generalized to different task domains.} Figure~\ref{fig: task_generalization} shows that the skill curator learned by \ours{} transfers well across different tasks. While training and testing on the same task often gives the strongest gain, most off-diagonal entries still bring performance improvement over baselines, indicating that \ours{} captures reusable skills beyond task-specific heuristics. Specifically, skill curator $\pi_{s}$ learned from reasoning tasks transfer particularly well to the two agentic tasks, likely because they contain more abstract and high-level strategies, such as decomposition, verification, and adaptive planning, which are broadly useful across settings. In contrast, skills learned from WebShop or ALFWorld are more tied to environment-specific knowledge, making them less transferable across tasks.

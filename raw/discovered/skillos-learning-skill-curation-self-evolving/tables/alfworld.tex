@@ -1,0 +1,50 @@
+% \newcommand*\inlineimage[1]{\raisebox{-0.09\baselineskip}{\includegraphics[height=0.99\baselineskip]{#1}}\xspace}
+% \DeclareRobustCommand{\frozenmark}{\leavevmode\inlineimage{./figures/snowflake.png}}
+\newcommand{\frozenmark}{%
+  \raisebox{-0.12em}{\includegraphics[height=0.9em]{figures/snowflake.png}}%
+}
+\newcommand{\firemark}{%
+  \raisebox{-0.12em}{\includegraphics[height=0.9em]{figures/fire.png}}%
+}
+
+\begin{table}[t]
+\centering\setlength{\tabcolsep}{3.5pt}
+\small
+\setlength{\belowcaptionskip}{6.0pt}
+  \caption{Experiment results on ALFWorld benchmark. Success rate (SR $\uparrow$) and the number of steps (Steps $\downarrow$) are reported on 6 subsets with 3 different frozen executors.}
+  \label{table: alfworld}
+  \begin{tabular}{lccccccccc}
+    \toprule
+    \multirow{2}{*}{{\textbf{Methods}}}& {\textbf{Curator}}&\textbf{Pick}&\textbf{Look}&{\textbf{Clean}}&{\textbf{Heat}}&{\textbf{Cool}}&{\textbf{Pick2}}&{\textbf{{Avg. SR}}}&\multirow{2}{*}{{\textbf{{Steps}}}}\\
+    &$\pi_{\mathcal{S}}$&{(35)}&{(13)} &{(27)} & {(16)}&{(25)}&{(24)}&(140)\\
+    \midrule
+    \multicolumn{10}{c}{\cellcolor{gray!15}\textit{Executor $\pi_{\mathcal{L}}$: Qwen3-8B}} \\
+    No Memory&None&\valstd{78.1}{1.6}	&\valstd{46.2}{7.7}	&\valstd{33.3}{13.4}&	\valstd{37.5}{10.8}	&\valstd{29.3}{6.1}&	\valstd{47.2}{6.4}	&\valstd{47.9}{1.2}&	21.1 \\
+    ReasoningBank&\frozenmark~Qwen3-8B&\valstd{83.8}{0.0}&	\valstd{48.7}{7.2}&	\valstd{49.4}{16.2}	&\valstd{39.6}{4.4}	&\valstd{41.3}{8.5}	&\valstd{54.2}{8.8}	&\valstd{55.7}{3.1}&	20.1\\
+    MemP&\frozenmark~Qwen3-8B&\valstd{80.0}{5.7}&\valstd{43.6}{4.4}&\valstd{24.7}{4.3}&\valstd{33.3}{3.6}&\valstd{38.7}{6.1}&\valstd{48.6}{6.4}&\valstd{49.7}{0.7}&21.0 \\
+    \hdashline
+    \ours{}-base &\frozenmark~Qwen3-8B&\valstd{79.0}{8.7}&	\valstd{41.0}{4.4}	&\valstd{45.7}{4.3}&	\valstd{37.5}{9.5}	&\valstd{38.7}{4.0}	&\valstd{55.6}{2.1}&	\valstd{53.1}{2.5}	&20.4 \\
+    \ours{}-gemini &\frozenmark~Gemini-2.5-Pro&\valstd{77.1}{6.0}&	\valstd{53.8}{6.1}&	\valstd{37.0}{6.4}&	\valstd{37.5}{9.5}	&\valstd{36.0}{3.2}	&\valstd{50.0}{6.7}&	\valstd{50.7}{3.6}	&20.8\\
+    \ours{} &\firemark~Qwen3-8B&\valstd{\textbf{85.7}}{3.3}	&\valstd{\textbf{56.4}}{7.7}	&\valstd{\textbf{54.3}}{8.6}	&\valstd{\textbf{43.8}}{9.5}	&\valstd{\textbf{46.7}}{2.3}&	\valstd{\textbf{62.5}}{6.4}	&\valstd{\textbf{61.2}}{4.6}&	\textbf{18.9}\\
+    \midrule
+    \multicolumn{10}{c}{\cellcolor{gray!15}\textit{Executor $\pi_{\mathcal{L}}$: Qwen3-32B}} \\
+    No Memory&None&\valstd{80.0}{2.9}	&\valstd{69.2}{0.0}	&\valstd{45.6}{7.7}	&\valstd{37.5}{16.5}&	\valstd{42.7}{6.1}	&\valstd{43.1}{2.4}	&\valstd{54.5}{2.5}	&20.3\\
+    ReasoningBank&\frozenmark~Qwen3-8B&\valstd{86.7}{3.0}	&\valstd{71.8}{5.4}&	\valstd{50.6}{6.3}&	\valstd{45.8}{13.3}&	\valstd{52.0}{8.9}	&\valstd{51.4}{5.1}	&\valstd{61.4}{2.5}&	18.7\\
+    MemP&\frozenmark~Qwen3-8B&\valstd{80.0}{2.9}&\valstd{76.9}{0.0}&\valstd{44.4}{7.4}&\valstd{37.5}{10.8}&\valstd{42.7}{2.3}&\valstd{47.2}{6.4}&\valstd{55.7}{3.7}&20.0 \\
+    \hdashline
+    \ours{}-base&\frozenmark~Qwen3-8B&\valstd{82.9}{2.9}&	\valstd{69.2}{11.8}	&\valstd{48.1}{2.1}&	\valstd{50.0}{9.7}	&\valstd{48.0}{14.4}	&\valstd{52.8}{11.0}&	\valstd{59.8}{3.0}	&19.2\\
+    \ours{}-gemini &\frozenmark~Gemini-2.5-Pro&\valstd{\textbf{97.1}}{3.0}&	\valstd{76.9}{5.4}	&\valstd{55.6}{6.0}	&\valstd{43.8}{11.3}&	\valstd{40.0}{5.7}&	\valstd{54.2}{4.9}&	\valstd{63.6}{4.2}&18.1\\
+    \ours{} &\firemark~Qwen3-8B&\valstd{91.4}{3.3}&	\valstd{\textbf{76.9}}{4.4}&	\valstd{\textbf{59.3}}{8.6}&	\valstd{\textbf{56.3}}{12.5}&	\valstd{\textbf{57.3}}{10.1}&	\valstd{\textbf{62.5}}{4.2}	&\valstd{\textbf{68.6}}{5.7}	&\textbf{17.3} \\
+    \midrule
+    \multicolumn{10}{c}{\cellcolor{gray!15}\textit{Executor $\pi_{\mathcal{L}}$: Gemini-2.5-pro}} \\
+    No Memory&None&\valstd{90.5}{3.2}&	\valstd{66.7}{5.1}	&\valstd{48.1}{10.2}&	\valstd{39.6}{17.1}	&\valstd{68}{7.4}	&\valstd{68.1}{3.8}	&\valstd{66.4}{2.0}&	17.7\\
+    ReasoningBank&\frozenmark~Qwen3-8B&\valstd{91.4}{3.4}&	\valstd{61.5}{4.1}	&\valstd{63.0}{9.3}	&\valstd{39.6}{10.3}	&\valstd{70.7}{3.2}&	\valstd{76.4}{8.5}&	\valstd{71.4}{2.9}	&16.0\\
+    MemP &\frozenmark~Qwen3-8B& \valstd{95.2}{2.1}&\valstd{\textbf{74.4}}{6.8}&\valstd{61.7}{7.6}&\valstd{56.3}{12.4}&\valstd{76.0}{6.2}&\valstd{68.1}{8.5}&\valstd{74.3}{3.4}&15.2\\
+    \hdashline
+    \ours{}-base&\frozenmark~Qwen3-8B&\valstd{91.4}{1.6}	&\valstd{69.2}{7.7}&	\valstd{56.8}{5.7}&	\valstd{54.2}{13.7}&	\valstd{72.0}{4.0}&	\valstd{66.7}{11.0}&	\valstd{70.7}{3.0}&	16.3 \\
+    \ours{}-gemini&\frozenmark~Gemini-2.5-Pro&\valstd{94.3}{5.7}&	\valstd{69.2}{0.0}&	\valstd{\textbf{77.8}}{5.7}	&\valstd{\textbf{75.0}}{16.5}&	\valstd{80.0}{12.2}&	\valstd{66.7}{2.4}	&\valstd{79.3}{2.6}&	14.9\\
+    \ours{}&\firemark~Qwen3-8B&\valstd{\textbf{95.2}}{2.9}	&\valstd{71.8}{7.7}&\valstd{74.1}{13.0}	&\valstd{72.9}{10.1}&	\valstd{\textbf{77.3}}{6.1}	&\valstd{\textbf{77.8}}{10.0}&	\valstd{\textbf{80.2}}{3.1}&	\textbf{14.8}\\
+  \bottomrule
+\end{tabular}
+\vspace{-5mm}
+\end{table}
