@@ -13,6 +13,7 @@ maturity: emerging
 key_papers:
   - sok-agentic-skills-beyond-tool-use
   - skillos-learning-skill-curation-self-evolving
+  - skill-r1-agent-skill-evolution-reinforcement
 first_introduced: "2026"
 date_updated: 2026-05-02
 related_concepts:

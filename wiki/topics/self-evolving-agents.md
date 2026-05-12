@@ -35,6 +35,7 @@ To be filled in. The two recent surveys provide structural framing:
 
 - [[learning-supervision-semantic-episodic-memory-reflective]] (2026, CAIS) — critique-grounded episodic+semantic memory adaptation without parameter updates; +8.1pp over zero-shot across 6 datasets.
 - [[skillos-learning-skill-curation-self-evolving]] (2026, arXiv) — RL-trained skill curator (8B) outperforms frontier model curator (Gemini-2.5-Pro) on ALFWorld; +9.8% relative over strongest memory baseline with fewer interaction steps; introduces executor-grounded skill curation via GRPO on grouped task streams.
+- [[skill-r1-agent-skill-evolution-reinforcement]] (2026, COLM submitted) — bi-level GRPO trains a separate lightweight skill generator (Qwen3-4B) to iteratively revise skills for a frozen task LLM; +12.1pp over Vanilla GRPO on GAIA (41.8% total); introduces recurrent-skill-evolution with intra/inter-generation advantages.
 
 ## Open problems
 

@@ -13,6 +13,7 @@ maturity: emerging
 key_papers:
   - flex-continuous-agent-evolution-forward-learning
   - learning-supervision-semantic-episodic-memory-reflective
+  - skill-r1-agent-skill-evolution-reinforcement
 first_introduced: "FLEX (Cai et al., 2025)"
 date_updated: 2026-05-02
 related_concepts:

@@ -46,6 +46,11 @@ papers:
     tags: [agents, self-evolution, memory, long-horizon, continual-learning, tool-use]
     importance: 3
     domain: NLP
+  - slug: skill-r1-agent-skill-evolution-reinforcement
+    title: "Skill-R1: Agent Skill Evolution via Reinforcement Learning"
+    tags: [agent-skills, reinforcement-learning, skill-evolution, grpo, self-evolving-agents, frozen-llm]
+    importance: 3
+    domain: NLP
   - slug: skillos-learning-skill-curation-self-evolving
     title: "SkillOS: Learning Skill Curation for Self-Evolving Agents"
     tags: [agents, llm-agents, self-evolving-agents, skill-curation, reinforcement-learning, procedural-memory, skill-lifecycle]
@@ -130,6 +135,10 @@ concepts:
   - slug: skill-curator
     title: "Skill Curator"
     tags: [agents, self-evolving-agents, skill-management, reinforcement-learning, procedural-memory]
+    maturity: emerging
+  - slug: recurrent-skill-evolution
+    title: "Recurrent Skill Evolution"
+    tags: [agent-skills, reinforcement-learning, self-evolving-agents, grpo]
     maturity: emerging
   - slug: skill-lifecycle
     title: "Skill Lifecycle"
@@ -279,6 +288,12 @@ claims:
     status: supported
     confidence: 0.8
     domain: ML Systems
+  - slug: recurrent-skill-evolution-bilevel-grpo-outperforms-vanilla-grpo
+    title: "Recurrent Bi-Level GRPO Skill Evolution Outperforms Vanilla GRPO on Multi-Step Agent Tasks"
+    tags: [skill-evolution, reinforcement-learning, grpo, self-evolving-agents, agent-skills]
+    status: weakly_supported
+    confidence: 0.72
+    domain: NLP
   - slug: rl-trained-skill-curator-outperforms-frontier-curator
     title: "RL-Trained Skill Curator Outperforms Frontier Model Curator Due to Executor Alignment"
     tags: [skill-curation, self-evolving-agents, reinforcement-learning, executor-alignment]

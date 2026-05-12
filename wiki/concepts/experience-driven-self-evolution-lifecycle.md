@@ -13,6 +13,7 @@ maturity: emerging
 key_papers:
   - evolver-self-evolving-llm-agents-through
   - skillos-learning-skill-curation-self-evolving
+  - skill-r1-agent-skill-evolution-reinforcement
 first_introduced: "2025"
 date_updated: 2026-05-09
 related_concepts:
