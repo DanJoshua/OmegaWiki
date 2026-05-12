@@ -1,0 +1,85 @@
+
+% Here is my abstract contents brainstorm draft. The methodology design is illustrated in the figure. Please based on my abstract content and the figure, provide a formal abstract and a contribution list of 4 bullet points to present the story. I want the writing to be major machine learning conference paper styles, like NIPS, ICLR, ICML.
+
+% \begin{abstract}
+
+% 1. Background: Agent skills advanced LLM agents (in introduction, we need to expand on Anthropic use cases and more references)
+% 2. Limitation 1: Agent skills are mostly pre-defined and lack an adaptive way to improve through previous trials and errors (we need references in the intro)
+% 3. Limitation 2: Agent skills are limited to a set of reusable skills that cannot be tailored to individual tasks' scenarios. (references in intro)
+% 4. To bridge the limitations, we propose Skill-R1, which enables agent skill self-evolution through reinforcement learning from verifiable rewards.
+% 5. Design 1: We enable a skill generator which summarizes prevously rollouted trajectories with previously generated skills as conditions, learns from the trails and errors (possitive and negative verifiable rewards), and recurrently generate "next generation" of rollouts. (Please read my illustration figure and the response to small-LLLM loop is recurrent and can generate several genrations of rollout groups)
+% 6. Design 2: To further enable GRPO for parameter updates, we identify bi-level group advantages which are both the advantages among the group of a certain generation of rollouts, as well as next generation advantages (inter-generation groups.). (Please read my illustration figure. Also please help me better illustrate this in an intuitive evoluationary narrative.)
+
+% Please note to link Designs to limitations.
+
+% \end{abstract}
+
+
+% \begin{abstract}
+% Agentic large language models often rely on skills, reusable natural language procedures that condition how the agent plans, acts, and uses tools.
+% In conventional systems, agent skills are either predefined or updated without an explicit trial-and-error loop on the current task instance, 
+% which can limit adaptivity and instance-level specialization. 
+% We propose \textbf{Skill-R1}, a reinforcement learning framework that enables skills to evolve from verifiable rewards through an iterative generate evaluate update process.
+% \textbf{Skill-R1} introduces an evolutionary rollout mechanism that organizes interaction into multiple generations. 
+% In each step of skill evolution, a lightweight skill generator conditions on the task context together with previously collected rollouts and their verified outcomes,
+% synthesizes updated skills, and injects them as conditioning into a task LLM to produce a new generation of rollouts. 
+% Verified rewards act as selection signals over the updated skills, and the resulting successes and failures provide supervision for producing the next generation of skills.
+% This recurrent design targets instance-level adaptation by self-evolution of skills to the observed error patterns and progress signals on the current task.
+% To optimize the skill generator from these evolutionary rollouts, we develop a bi-level group relative policy optimization objective 
+% that combines \textit{intra-generation} and \textit{inter-generation} advantages. 
+% The intra-generation advantage compares rollouts within the same generation to capture relative quality under shared conditioning.
+% The inter-generation advantage measures improvement across successive generations to encourage progress in the evolving skill conditioned rollout distribution.
+% Importantly, the task LLM is treated as a frozen black box and can be either closed or open,
+% making \textbf{Skill-R1} model agnostic while still enabling reinforcement learning updates to the skill generator.
+% Empirically, we evaluate \textbf{Skill-R1} on agent tasks with programmatically verifiable outcomes and observe consistent gains over fixed skill baselines and single generation self refinement variants, along with analyses that isolate the roles of multi generation evolution and bi-level advantages.
+% \end{abstract}
+
+
+\begin{abstract}
+Agentic large language models often rely on skills, reusable natural-language procedures that guide planning, action, and tool use.
+In practice, however, skills are typically improved through prompt engineering or by aligning the task LLM itself to revised skills, 
+which is costly, model-specific, and often infeasible for closed-source models.
+Meanwhile, skill optimization is not a one-step prompt engineering problem, but a recurrent process with two coupled levels of credit assignment.
+% \tong{Might it be helpful to clarify in the abstract what makes this recurrent process technically challenging or non-trivial to solve?}
+A useful skill must improve rollout quality under the current conditioning, while a useful revision must turn observed successes and failures into a better skill for the next round.
+We therefore formulate skill evolution as a bi-level optimization problem over rollout selection within each generation and skill improvement across generations.
+We propose \textbf{Skill-R1}, a reinforcement learning framework for instance-level recurrent skill optimization from verifiable rewards.
+Rather than updating the task LLM, \textbf{Skill-R1} trains a lightweight skill generator that conditions on the task context, 
+prior rollouts, and their verified outcomes to produce skills that steer a frozen task LLM.
+This design preserves black-box compatibility with both open- and closed-source models while making adaptation substantially cheaper than model-level updates.
+\textbf{Skill-R1} proceeds over multiple generations. At each generation, the current skill induces rollouts from the task LLM, whose verified outcomes are fed back to produce the next revision.
+To optimize the skill generator over this recurrent process, we introduce a bi-level group-relative policy optimization objective with \textit{intra-generation} and \textit{inter-generation} advantages.
+The intra-generation term compares rollouts under shared skill conditioning, while the inter-generation term rewards revisions that improve the induced behavior over successive generations.
+Together, these terms provide a principled objective for directional skill evolution rather than one-shot or heuristic self-refinement.
+% \tong{Might it be helpful to clarify in the abstract how the bi-level decomposition specifically addresses the technical challenges of recurrent skill optimization?}
+% \fixme{
+% Empirically, on agent tasks with programmatically verifiable outcomes, \textbf{Skill-R1} consistently outperforms fixed-skill baselines and single-generation self-refinement variants. Further analysis isolates the benefits of multi-generation evolution and the proposed bi-level advantages.
+% }
+Empirical evaluations suggest that Skill-R1 achieves consistent improvements over both no-skill baselines and standard GRPO across benchmarks with verifiable rewards. The gains are particularly strong on complex, multi-step tasks, where single-pass refinement methods struggle.
+\end{abstract}
+
+
+
+% The LONG VERSION
+% \begin{abstract}
+% Agentic large language models often rely on skills, reusable natural language procedures that shape how the agent plans, acts, and uses tools.
+% Yet skill adaptation in current systems remains limited: skills are often fixed in advance, revised through heuristic prompt engineering or LLM-based rewriting, or improved only by adapting the underlying task LLM itself, which is costly, model-dependent, and often infeasible for closed-source models.
+% Moreover, effective skill improvement is inherently sequential.
+% A useful skill update should not only produce stronger rollouts under the current skill conditioning, but also correct the failure modes of earlier attempts and drive sustained progress on the current task instance.
+% Existing skill self-evolution pipelines rarely provide a principled optimization mechanism for this process, leaving both the direction and efficiency of skill improvement weakly controlled.
+
+% We propose \textbf{Skill-R1}, a reinforcement learning framework for instance-level skill evolution from verifiable rewards through an iterative generate-evaluate-update process.
+% Rather than adapting the task LLM, \textbf{Skill-R1} learns a lightweight skill generator that conditions on the task context together with previously collected rollouts and their verified outcomes, and synthesizes updated skills to condition a frozen task LLM.
+% This design preserves black-box compatibility with both open- and closed-source task LLMs while making skill adaptation substantially cheaper than model-level updates.
+
+% To support sequential skill improvement, \textbf{Skill-R1} introduces an evolutionary rollout mechanism that organizes interaction into multiple generations.
+% At each generation, the updated skill induces a new rollout distribution from the task LLM, and the resulting successes and failures are fed back as supervision for the next skill revision.
+% This recurrent design enables skills to evolve in response to observed error patterns and progress signals on the current instance, rather than remaining static or relying on one-shot self-refinement.
+
+% To optimize the skill generator from these evolutionary rollouts, we develop a bi-level group-relative policy optimization objective that combines \textit{intra-generation} and \textit{inter-generation} advantages.
+% The intra-generation advantage compares rollouts within the same generation to capture relative quality under shared skill conditioning.
+% The inter-generation advantage measures improvement across successive generations, explicitly encouraging updated skills to move the induced rollout distribution toward higher-reward behaviors over time.
+% Together, these two levels of advantage provide a principled optimization strategy for skill evolution that rewards both local relative quality and global progress across revisions.
+
+% Empirically, we evaluate \textbf{Skill-R1} on agent tasks with programmatically verifiable outcomes and observe consistent gains over fixed-skill baselines and single-generation self-refinement variants, together with analyses that isolate the contributions of multi-generation evolution and bi-level advantages.
+% \end{abstract}

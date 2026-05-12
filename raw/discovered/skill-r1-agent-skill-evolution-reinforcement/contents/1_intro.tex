@@ -1,0 +1,57 @@
+\section{Introduction}
+
+% \paragraph{Skills as a practical interface for agent behavior.}
+Agentic large language models increasingly rely on external skills~\citep{xu2026agent,jiang2026sok,chen2026cua,nguyen2025guisurvey,huang2025towardsagentic}, 
+which are reusable natural-language procedures that specify how an agent should decompose a task, invoke tools, and verify intermediate results. 
+Since skills are designed as complementary modules of the task language model, 
+they provide a practical interface for shaping LLM behavior without updating the task language model. 
+This separation is practical in realistic deployments, where the task model may be proprietary~\citep{gao2025survey,huang2025surveyfoundation}, 
+expensive to adapt~\citep{zhou2025memento,wu2024personalizedmllm,wu2025mitigatingforget,wang2025selfupdatable,zhang2024personalizationsurvey}, or shared across many downstream tasks~\citep{li2026organizing,chen2026skillcraft,jiang2026xskill}.
+
+% \paragraph{The challenge of recurrent instance-level skill improvement.}
+However, many skill-based systems rely on well-engineered skills as predefined and fixed artifacts, 
+or revise them only through prompting and single-round self-refinement~\citep{jiang2026sok,xu2026agent,chen2026cua,jiang2026xskill,chen2026skillcraft,xia2026skillrl,zhang2026memskill}. 
+These strategies can be misaligned and inefficient, since they rely on repeated prompt edits and are not directly aligned with downstream rewards~\citep{wu2025incontext,kveton2025activedpo,xia2025surveyactive}.
+On the other hand, some recent works adapt the task language model to the skill by fine-tuning the task language model on the skill~\citep{wang2025reinforcement,li2025commit,wang2024instructgraph},
+but this approach can be computationally costly and limited in adaptivity to many downstream tasks~\citep{zhou2025memento,xia2026skillrl,jiang2026adaptationagenticaisurvey,wu2025mitigatingforget,yao2024federatedllm}.
+Moreover, skill optimization should not be a single prompt-editing step, but a recurrent decision problem: 
+a useful skill should improve rollout quality under the current context, 
+and a useful revision should transform observed successes and failures into a better skill for the next round. 
+This naturally leads to a bi-level optimization objective that couples execution quality within each generation with skill improvement across generations.
+% \tong{Might it be helpful to explain in the introduction why existing single-level optimization approaches (e.g., standard RL or GRPO) are insufficient for this recurrent skill optimization problem?}
+
+% \paragraph{Overview of Skill-R1.}
+To address this problem, we propose \textbf{Skill-R1}, a reinforcement learning framework for recurrent agent skill evolution from verifiable rewards. 
+\textbf{Skill-R1} separates \emph{task execution} from \emph{skill improvement}. 
+A frozen task LLM produces rollouts conditioned on the current skill, 
+while a lightweight skill generator is trained to revise that skill based on the task context, prior rollouts, and their verified outcomes~\citep{xia2025knowledgequery,wang2025dice,vannguyen2025smallsurvey}. 
+By updating only the skill generator, the framework remains compatible with both open- and closed-source task models and can be more efficient than updating the task model itself~\citep{vannguyen2025smallsurvey,xia2025surveyactive}.
+
+% \paragraph{Evolutionary rollouts across generations.}
+The core interaction loop of \textbf{Skill-R1} is multi-generation. 
+For a given instance, the current skill induces a group of rollouts from the frozen task model, a verifier scores these rollouts, and the resulting trials and errors~\citep{wu2025ocean, wu2024decot},
+and reward signals are appended to an instance-specific history that conditions the next skill revision. 
+Recurring execution of this process yields an evolutionary view of skill improvement, in which each generation proposes a new skill, 
+tests it through a rollout population, and passes forward evidence for subsequent refinement.
+This recurrent structure makes it possible to optimize directional improvement~\citep{xia2026skillrl,sun2025seagent,zhou2025memento} on the same instance rather than selecting among isolated one-shot attempts.
+
+% \paragraph{Bi-level credit assignment for skill evolution.}
+The policy optimization of the skill generator requires both intra-generation and inter-generation credit assignment to optimize the skill generator.
+To enable optimization of the recurrent skill generator, we introduce a bi-level group-relative policy optimization~\citep{zhong2026rc,shao2024deepseekmath,mundada2026wsgrpo} objective that mirrors the recurrent structure above. 
+The \emph{intra-generation} term compares rollouts sampled under the same skill and captures relative execution quality within a generation. 
+The \emph{inter-generation} term measures whether a revised skill improves the average verified performance relative to the previous generation.
+Together, these signals provide a principled objective for rewarding both strong rollouts and beneficial skill revisions~\citep{wu2025incontext, surana2026massdpo, li2025impsamplingdpo, huang2025pluralistic}.
+% \fixme{Empirical findings}
+Our experiments demonstrate that Skill-R1 consistently improves agent performance across diverse reasoning and tool-use benchmarks, outperforming both no-skill baselines and standard GRPO. 
+We also show a clear performance gap between skill generations, which demonstrates the effectiveness of the recurrent skill evolution.
+% Instead of relying on one-shot edits, Skill-R1 adopts an iterative evolution process guided by execution feedback, enabling more reliable and targeted improvements. The multi-generation framework supports progressive capability building, while the bi-level objective ensures that updates are both locally effective and aligned with longer-term optimization. 
+% Furthermore, learning the skill editor plays a critical role by allowing the system to distinguish persistent failure modes from incidental noise, resulting in more stable and transferable skill adaptations.
+We summarize the contributions of this work as follows:
+\begin{itemize}
+    \item We formulate recurrent instance-level skill evolution as a bi-level group-relative policy optimization problem.
+    \item We propose \textbf{Skill-R1}, a model-agnostic framework that trains a lightweight skill generator while keeping the task LLM frozen.
+    \item We introduce a recurrent multi-generation rollout process together with a bi-level GRPO objective that combines \emph{intra-} and \emph{inter-generation} advantages. 
+    % \tong{Might it be helpful to verify that the benefit of combining intra- and inter-generation advantages is demonstrated through ablation studies in the experimental section?}
+    \item We evaluate \textbf{Skill-R1} on agent tasks with verifiable rewards, comparing with agent skill and GRPO baselines and achieving superior performance.
+    % comparing against fixed-skill and single-generation baselines and isolating the effects of multi-generation evolution and bi-level advantages through ablations.} \tong{It seems that the keyword 'ablation' is only mentioned here in this paper.}
+\end{itemize}

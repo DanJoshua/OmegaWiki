@@ -1,0 +1,138 @@
+\section{Related Work}
+
+\subsection{Agent Skill in Language Models}
+
+% \begin{itemize}
+%     \item \href{https://arxiv.org/pdf/2504.06821}{https://arxiv.org/pdf/2504.06821}
+%     \item \href{https://arxiv.org/pdf/2602.02474}{https://arxiv.org/pdf/2602.02474}
+%     \item \href{https://arxiv.org/pdf/2603.18743}{https://arxiv.org/pdf/2603.18743}
+%     \item \href{https://www.arxiv.org/pdf/2602.08234}{https://www.arxiv.org/pdf/2602.08234}
+%     \item \href{https://arxiv.org/pdf/2601.21557}{https://arxiv.org/pdf/2601.21557}
+%     \item \href{https://arxiv.org/pdf/2308.00304}{https://arxiv.org/pdf/2308.00304}
+%     \item \href{https://arxiv.org/pdf/2602.12430}{https://arxiv.org/pdf/2602.12430}
+%     \item \href{https://arxiv.org/pdf/2504.06821}{https://arxiv.org/pdf/2504.06821}
+%     \item \href{https://arxiv.org/pdf/2504.07079}{https://arxiv.org/pdf/2504.07079}
+%     \item \href{https://arxiv.org/pdf/2601.21123}{https://arxiv.org/pdf/2601.21123}
+%     \item \href{https://arxiv.org/pdf/2603.12056}{https://arxiv.org/pdf/2603.12056}
+%     \item \href{https://arxiv.org/pdf/2602.02474}{https://arxiv.org/pdf/2602.02474}
+%     \item \href{https://arxiv.org/pdf/2603.18743}{https://arxiv.org/pdf/2603.18743}
+%     \item \href{https://arxiv.org/pdf/2603.25158}{https://arxiv.org/pdf/2603.25158}
+%     \item \href{https://arxiv.org/pdf/2603.00718}{https://arxiv.org/pdf/2603.00718}
+%     \item \href{https://arxiv.org/pdf/2512.17102}{https://arxiv.org/pdf/2512.17102}
+% \end{itemize}
+
+Recent work treats agent skills as reusable procedural abstractions that guide LLM behavior without modifying model parameters. Surveys (~\citep{xu2026agent},~\citep{jiang2026sok}) characterize skills as structured intermediates between tool usage and agent coordination. On the acquisition side, prior work has focused on constructing and organizing skill libraries~\citep{nguyen2025guisurvey, huang2025surveyfoundation}. SkillWeaver(~\citep{zheng2025skillweaver}) enables agents to autonomously discover and distill skills through web interaction, while ASI(~\citep{wang2025inducing}) shows that programmatic skill representations improve reliability via verifiability. Similarly, CUA-Skill~\citep{chen2026cua} introduces a repository of parameterized execution graphs for computer-use agents. Adjacent agentic-LLM work treats reusable procedures and contextual conditioning as central design tools for tool use, document reasoning, and multimodal interaction~\citep{xia2025sand, wu2025docreact,wu2025ctrls,wang2025dice,huang2025towardsagentic}. Other works study orchestration and system-level design ~\citep{li2026organizing}, which explores ecosystem-scale skill coordination. More recent efforts move beyond static skill banks toward skill evolution. MemSkill~\citep{zhang2026memskill} models memory operations as skills refined through iterative control loops, while Memento-Skills~\citep{zhou2025memento} enables continual skill improvement through reflective updates without modifying the base model. However, these approaches largely rely on heuristic refinement or implicit feedback signals.
+
+\subsection{Reinforcement Learning for Language Models}
+
+Reinforcement learning has become a central paradigm for aligning language models with task objectives and feedback signals. Methods such as PPO ~\citep{schulman2017proximal} and its variants optimize policies using scalar rewards, while more recent approaches like GRPO ~\citep{shao2024deepseekmath} introduce group-relative comparisons to stabilize training and improve sample efficiency. Recent variants further extend GRPO to weakly-supervised and reward-conditioned settings~\citep{mundada2026wsgrpo,zhong2026rc}. Several works extend RL to agent settings and skill learning. SkillRL~\citep{xia2026skillrl} jointly learns hierarchical skills and policies through recursive reinforcement learning, enabling agents to acquire reusable behaviors over time. Despite these advances, most existing methods focus on optimizing the task model itself or operate within a single-generation setting, limiting their ability to capture iterative improvement.
+
+
+% Recent work treats skills as explicit, reusable procedural modules for LLM agents, rather than leaving all behavior implicit in model weights. This perspective appears in in-context skill elicitation for compositional reasoning~\citep{chen2024skills}, broader formulations of agent skills as a modular layer in LLM systems~\citep{xu2026agent}, and systems that acquire or organize skills as executable artifacts, such as programmatic skill induction, web-skill discovery, computer-use skill libraries, and skill-centric evaluation frameworks~\citep{wang2025programmaticskills,zheng2025skillweaver,chen2026cuaskill,chen2026skillcraft}.
+
+% A second line of work studies how skills can be accumulated, distilled, and evolved over time, including memory skills, stateful skill memories, multimodal experience-and-skill learning, trajectory-to-skill distillation, and context-level skill evolution~\citep{zhang2026memskill,zhou2026mementoskills,jiang2026xskill,ni2026trace2skill,ye2026metacontext}. Some approaches further combine skill libraries with reinforcement learning for self-improvement~\citep{xia2026skillrl,wang2026selfimprovingagentskilllibrary}. In contrast, our work focuses on recurrent instance-level skill revision: we keep the task LLM frozen and optimize a separate skill generator to improve external skills across generations from verifier-scored rollouts.
+
+
+
+
+
+
+
+% \note{Let's add related works here.}
+% \href{https://arxiv.org/pdf/2504.06821}{Agent Skill Induction (ASI)} \textbf{COLM 2025}\\
+% This paper introduces \textbf{Agent Skill Induction (ASI)}, a framework enabling
+% web navigation agents to autonomously learn reusable skills represented as
+% executable Python programs rather than free-form text. Given a natural language
+% query $q$, the agent first generates an action trajectory
+% $\tau = (s_0, a_0, s_1, a_1, \ldots, s_{H-1}, a_{H-1}, s_H)$ using primitive
+% actions (e.g., \texttt{click}, \texttt{scroll}). ASI then abstracts recurring
+% sub-sequences into higher-level programmatic skills (e.g.,
+% \texttt{search\_product(name)}) and verifies them along three dimensions:
+% (1)~\textit{Correctness}---whether executing the rewritten trajectory $\tau_f$
+% solves the task as judged by an evaluator $V_L(e) \rightarrow \{0, 1\}$;
+% (2)~\textit{Skill Usage}---whether $\tau_f$ contains at least one call to a
+% newly induced skill $D$; and (3)~\textit{Skill Validity}---whether all
+% skill-calling actions cause environment state changes. Only verified skills are
+% added to the agent's action library $A_t \cup D_{\text{called}} \rightarrow
+% A_{t+1}$. Unlike AWM, which augments agent memory via $M_t \cup \{d_t\}
+% \rightarrow M_{t+1}$, ASI directly expands the action space. Evaluated on the
+% \textbf{WebArena} benchmark, ASI outperforms the static baseline by
+% $\mathbf{23.5\%}$ and the text-skill counterpart (AWM) by $\mathbf{11.3\%}$ in
+% success rate, while reducing action steps by $10.7$--$15.3\%$ through
+% composition of primitives into higher-level skills. The paper further
+% demonstrates ASI's effectiveness in scaled-up browsing scenarios and
+% cross-website skill transfer, where induced skills can be reused or updated to
+% adapt to new website structures.
+
+% \href{https://arxiv.org/pdf/2512.17102}{Reinforcement Learning for Self-Improving Agent with Skill Library} \textbf{AWS Agentic AI}\\
+% This paper introduces \textbf{SAGE} (\textit{Skill Augmented GRPO for
+% self-Evolution}), a reinforcement learning framework that enables LLM-based
+% agents to continuously self-improve by learning, validating, and reusing
+% executable programmatic skills stored in a skill library $\mathcal{M}$. Unlike
+% prior skill library approaches that rely solely on LLM prompting, SAGE extends
+% Group Relative Policy Optimization (GRPO) with two key components:
+% (1)~\textit{Sequential Rollout}, which deploys agents across a chain of similar
+% tasks $Q = \{q_1, q_2, \ldots, q_N\}$ within each rollout, allowing skills
+% generated from earlier tasks to accumulate in $\mathcal{M}$ and become available
+% for subsequent tasks; and (2)~\textit{Skill-integrated Reward}, which augments
+% the standard outcome-based reward with an additional signal for high-quality
+% skill generation and utilization. The agent follows a unified format (building on
+% DynaSaur and CodeAct) where, during environment interaction, it generates
+% reusable skill functions $\hat{a}$ composed of API calls, immediately executes
+% them, and saves successful skills to the library via operations including
+% \texttt{Skill Usage}, \texttt{Skill Generation}, \texttt{Skill Update}, and
+% \texttt{Skill Save}. Skills are retrieved from $\mathcal{M}$ as a subset
+% $[a_1, \ldots, a_k]$ and injected into context before each task. Evaluated on
+% the \textbf{AppWorld} benchmark, SAGE applied to a supervised-finetuned
+% Qwen2.5-32B-Instruct achieves $\mathbf{72.0\%}$ Task Goal Completion and
+% $\mathbf{60.7\%}$ Scenario Goal Completion---an $8.9\%$ improvement in SGC over
+% the baseline GRPO ($51.8\%$)---while requiring $26\%$ fewer interaction steps
+% (12.1 vs.\ 16.4) and generating $59\%$ fewer tokens (1{,}475 vs.\ 3{,}613).
+% Agents trained with SAGE also demonstrate more than $2\times$ success rate when
+% utilizing learned skills compared to prompting-based approaches, confirming the
+% effectiveness of RL-driven skill acquisition for continuous agent
+% self-improvement.
+
+% \href{https://arxiv.org/pdf/2602.02474}{MemSkill: Learning and Evolving Memory Skills for Self-Evolving Agents}\\
+% This paper presents \textbf{MemSkill}, a framework that replaces the static,
+% hand-designed memory operations in LLM agent systems with \textit{learnable and
+% evolvable memory skills}---structured, reusable routines for extracting,
+% consolidating, and pruning information from interaction traces. MemSkill
+% comprises three core components: (1)~a \textit{controller} that learns to
+% select a small subset of relevant skills from a shared skill bank given the
+% current context; (2)~an LLM-based \textit{executor} that conditions on the
+% selected skills to produce skill-guided memories in a single pass over each
+% span of interaction history; and (3)~a \textit{designer} that periodically
+% mines hard cases---instances where selected skills yield incorrect or
+% incomplete memories---selects representative failures, and uses an LLM to
+% refine existing skills and propose new ones. The system operates through a
+% closed-loop optimization procedure that alternates between two phases:
+% \textit{learning}, where the controller is trained via reinforcement learning
+% with downstream task signals as reward feedback for skill selection, and
+% \textit{evolution}, where the designer updates the skill bank based on
+% accumulated difficult cases, with an optional rollback mechanism if updates
+% cause regression. This skill-conditioned formulation is agnostic to a fixed
+% extraction unit and generalizes across different span lengths when processing
+% long interaction histories. MemSkill is evaluated on four benchmarks---LoCoMo,
+% LongMemEval, HotpotQA, and ALFWorld---spanning conversational memory, long-term
+% memory evaluation, multi-hop question answering, and embodied interactive
+% decision-making. Results demonstrate that the learned and evolved skill bank
+% enables more adaptive memory construction than static baselines, with the
+% reusable skill bank additionally supporting transfer across datasets and base
+% models.
+
+
+
+% \subsection{Reinforcement Learning in Language Models}
+
+% \begin{itemize}
+% \item \href{https://arxiv.org/pdf/2203.02155}{https://arxiv.org/pdf/2203.02155}
+% \item \href{https://arxiv.org/pdf/2402.03300}{https://arxiv.org/pdf/2402.03300}
+% \item \href{https://arxiv.org/pdf/2501.12948}{https://arxiv.org/pdf/2501.12948}
+% \item \href{https://arxiv.org/pdf/2503.23829}{https://arxiv.org/pdf/2503.23829}
+% \item \href{https://arxiv.org/pdf/2506.14245}{https://arxiv.org/pdf/2506.14245}
+% \item \href{https://arxiv.org/pdf/2509.16679}{https://arxiv.org/pdf/2509.16679}
+% \item \href{https://arxiv.org/pdf/2507.04136}{https://arxiv.org/pdf/2507.04136}
+% \item \href{https://arxiv.org/abs/2503.20783}{https://arxiv.org/abs/2503.20783}
+
+% \end{itemize}

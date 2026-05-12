@@ -1,0 +1,105 @@
+\section{Experiments}
+\label{sec:experiments}
+
+Our experiments are designed to address three key questions: (1) whether conditioning a frozen task language model on progressively evolving skills yields measurable gains over a no-skill baseline, (2) whether a multi-generation rollout framework provides benefits beyond standard GRPO training~\citep{shao2024deepseekmath}, and (3) whether a trained skill editor outperforms an inference-only editor without gradient-based optimization. 
+% \tong{Might it be helpful to include in the experimental section a fourth research question about whether the bi-level advantage decomposition (intra vs. inter) contributes to performance, since this is a core technical contribution claimed in the paper?}
+% \subsection{Benchmarks}
+% \paragraph{GAIA.} The GAIA benchmark~\citep{mialon2023gaia} consists of 165 real-world question-answering tasks requiring multi-step reasoning over heterogeneous data sources, including PDFs, spreadsheets, images, and web pages. Tasks are organized into three difficulty levels---Level~1 ($n = 53$), Level~2 ($n = 86$), and Level~3 ($n = 26$)---reflecting increasing compositional complexity and the number of reasoning steps involved. Each task admits a single ground-truth answer that is verified programmatically through the GAIA evaluation suite, which supports numeric normalization, list-element matching, and case-insensitive string comparison.
+
+% \paragraph{WebWalker.} The WebWalker benchmark~\citep{wu2025webwalker} evaluates an agent's capacity to navigate and extract information from web pages via multi-hop traversal. Tasks require the agent to follow hyperlinks, parse heterogeneous web content, and synthesize answers across multiple pages. We include this benchmark to assess whether skill evolution transfers beyond file-centric question answering to interactive web navigation settings, thereby testing the generality of the Skill-R1 framework.
+
+% \subsection{Experimental Setup}
+
+% \paragraph{Skill initialization.} The base skills were constructed through a two-stage distillation procedure applied independently to each benchmark. In the first stage, we ran GPT-4o-mini on a seed set of ten tasks drawn from each benchmark and stored the resulting reasoning traces, capturing the model's step-by-step problem-solving process, tool invocations, and intermediate conclusions. Both successful and unsuccessful trajectories were retained to expose a broad range of solution strategies and failure modes. In the second stage, these traces were presented to a powerful LLM (Claude Opus 4.6) with an instruction to identify recurring patterns across the trajectories and abstract them into concise, reusable skill guides suited to each benchmark's task distribution. This procedure yielded nine base skills per benchmark (Tables~\ref{tab:main_results}, ~\ref{tab:webwalker_results} and ~\ref{tab:webwalker_source}). For reproducibility, each Skill-R1 run deep-copies the skill directory into an isolated per-run folder, whereas baseline runs share a read-only copy of the same skill bank.
+
+
+% \paragraph{Methods.} All our experiments use GPT-4o-mini as task LLM. We evaluate the following configurations, each ablating a different component of the Skill-R1 pipeline:
+
+% \begin{itemize}
+%     \item \textbf{No Skills (Baseline).} The task LLM (GPT-4o-mini) solves each task directly without any skill conditioning, isolating the base model's standalone capability on the benchmark.
+%     \item \textbf{Vanilla GRPO.} Standard Group Relative Policy Optimization is applied to train the editor without the bi-level advantage decomposition or multi-generation rollout structure. This ablation tests whether conventional RL training alone suffices to improve skill quality.
+%     \item \textbf{Memento.} An experience-accumulation baseline that augments the task LLM (GPT-4o-mini) with a persistent memory of prior task-solving trajectories, facilitating the retrieval and reuse of accumulated experience.
+%     \item \textbf{Skill-R1 (Inference Editor).} The full multi-generation rollout pipeline including skill selection, episodic memory, and skill editing, but with the editor operating in inference mode using a frozen Qwen model. Skill edits are proposed on the basis of rollout evidence without any gradient-based training, thereby isolating the contribution of the evolutionary rollout structure from learned editing.
+%     \item \textbf{Skill-R1 (GRPO Editor).} The complete Skill-R1 framework with a GRPO-trained Qwen editor optimized using bi-level advantages (\Cref{eq:bilevel_adv}). The editor is trained online as skills evolve across generations and tasks, representing the full system.
+% \end{itemize}
+\subsection{Experimental Setup}
+\paragraph{Tasks.}We evaluate Skill-R1 on two benchmarks requiring multi-step reasoning, tool use, and verifiable answers: GAIA~\citep{mialon2024gaia}, which consists of 165 real-world tasks over heterogeneous sources (e.g., PDFs, spreadsheets, and web pages), and WebWalker~\citep{wu2025webwalker}, which focuses on multi-hop web navigation and cross-page reasoning. Together, they capture both structured reasoning and interactive decision-making.
+
+\paragraph{Baselines.} Our baselines are designed to isolate key components of the pipeline. No Skills measures the base model’s standalone capability without skill conditioning. Vanilla GRPO applies standard Group Relative Policy Optimization to train the editor without bi-level advantage decomposition or multi-generation rollouts, evaluating whether conventional RL alone suffices to improve skill quality.
+
+\paragraph{Skill initialization.} 
+% % \label{app:skill_init}
+% The base skills were constructed through a two-stage distillation procedure applied independently to each benchmark. In the first stage, we ran GPT-4o-mini on a seed set of ten tasks drawn from each benchmark and stored the resulting reasoning traces, capturing the model's step-by-step problem-solving process, tool invocations, and intermediate conclusions. Both successful and unsuccessful trajectories were retained to expose a broad range of solution strategies and failure modes. In the second stage, these traces were presented to a powerful LLM (Claude Opus 4.6) with an instruction to identify recurring patterns across the trajectories and abstract them into concise, reusable skill guides suited to each benchmark's task distribution. This procedure yielded nine base skills per benchmark (Tables~\ref{tab:main_results}, ~\ref{tab:webwalker_results} and ~\ref{tab:webwalker_source}). For reproducibility, each Skill-R1 run deep-copies the skill directory into an isolated per-run folder, whereas baseline runs share a read-only copy of the same skill bank.
+Base skills are constructed via a two-stage distillation procedure applied per benchmark. First, GPT-4o-mini is run on a seed set of ten tasks to collect reasoning traces, including both successful and failed trajectories. Second, these traces are provided to a stronger LLM (Claude Opus 4.6), which abstracts recurring patterns into concise, reusable skill guides. For reproducibility, each Skill-R1 run uses an isolated copy of the skill directory, while baselines share a read-only version.
+\paragraph{Training vs. Inference Decomposition.} Skill-R1 (Inference) runs the full multi-generation rollout pipeline but uses a frozen Qwen editor, thereby isolating the effect of the rollout framework from any gradient-based learning. Skill-R1 (GRPO) represents the full system, where the Qwen-based editor is trained online with GRPO and bi-level advantages, capturing the additional gains from learned skill refinement.
+
+All experiments use GPT-4o-mini as the task-solving model. 
+% Base skills are initialized via the two-stage distillation procedure described in Appendix ~\ref{app:skill_init}.
+
+\subsection{Results for GAIA}
+
+\begin{table}[ht]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Method} & \textbf{Level 1} ($n\!=\!53$) & \textbf{Level 2} ($n\!=\!86$) & \textbf{Level 3} ($n\!=\!26$) & \textbf{Overall} ($n\!=\!165$) \\
+\midrule
+GPT-4o-mini (no skills)             & 4/53 \;\;(7.5\%)  & 6/86 \;\;(7.0\%)  & 0/26 \;\;(0.0\%)  & 10/165 \;\;(6.1\%)  \\
+Vanilla GRPO (Qwen3-4b)                    & 21/53 \;\;(39.6\%)   & 24/86 \;\;(27.9\%)   & 4/26 \;\;(15.4\%)   & 49/165 \;\;(29.7\%)   \\
+
+Skill-R1 (Inference, Qwen3-4b)      & 22/53 (41.5\%)     & 21/86 (24.4\%)     & 8/26 \;\;(30.8\%)  & 51/165 (30.9\%)     \\
+Skill-R1 (GRPO, Qwen3-4b)           & \textbf{31/53 (58.5\%)} & \textbf{28/86 (32.6\%)} & \textbf{10/26 (38.5\%)} & \textbf{69/165 (41.8\%)} \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Main results on the GAIA benchmark (165 tasks).}
+\label{tab:main_results}
+\end{table}
+
+Tables~\ref{tab:main_results} presents the results on GAIA. GPT-4o-mini (no skills) performs poorly, achieving only $6.1\%$ accuracy, highlighting its difficulty with multi-step reasoning over heterogeneous sources. Vanilla GRPO substantially improves performance to $29.7\%$, with gains across all difficulty levels, but remains limited on more complex tasks, particularly Level~3 ($15.4\%$), indicating insufficient ability to compose and reuse structured knowledge. Skill-based reasoning further improves performance. The inference-only Skill-R1 setup achieves $30.9\%$, suggesting that the multi-generation rollout framework itself provides benefits beyond standard RL. Training the editor yields a larger improvement to $41.8\%$, a $+12.1$ point gain over Vanilla GRPO. The improvements are most prominent on harder tasks. Level~3 accuracy increases to $38.5\%$, compared to $0.0\%$ for the no-skill baseline and $15.4\%$ for Vanilla GRPO. This highlights the importance of learned skill refinement in enabling compositional reasoning over complex problems.
+
+
+\subsection{Results for WebWalker}
+
+\begin{table}[ht]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Method} & \textbf{Easy} ($n\!=\!8$) & \textbf{Medium} ($n\!=\!68$) & \textbf{Hard} ($n\!=\!24$) & \textbf{Overall} \\
+\midrule
+GPT-4o-mini (no skills)           & 0/8 \;\;(0.0\%)           & 1/68 \;\;(1.5\%)        & 1/24 \;\;(4.2\%)        & 2/100 \;\;(2.0\%) \\
+Vanilla GRPO (Qwen3-4b)          & 1/8 \;\;(12.5\%)          & 15/68 (22.1\%)          & 6/24 (25.0\%)          & 22/100 (22.0\%) \\
+Skill-R1 (Inference, Qwen3-4B)   & 0/8 \;\;(0.0\%)           & 14/68 (20.6\%)          & 5/24 (20.8\%)          & 19/100 (19.0\%) \\
+Skill-R1 (GRPO, Qwen3-4B)        & \textbf{1/8 \;\;(12.5\%)} & \textbf{20/68 (29.4\%)} & 5/24 (20.8\%)          & \textbf{26/100 (26.0\%)} \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Results on the WebWalker benchmark (100 tasks) by difficulty.}
+\label{tab:webwalker_results}
+\end{table}
+\begin{table}[ht]
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccc}
+\toprule
+\textbf{Method} & \textbf{Multi-source} ($n\!=\!63$) & \textbf{Single-source} ($n\!=\!37$) & \textbf{Overall} \\
+\midrule
+GPT-4o-mini (no skills)           & 1/63 \;\;(1.6\%)         & 1/37 \;\;(2.7\%)         & 2/100 \;\;(2.0\%) \\
+Vanilla GRPO (Qwen3-4b)          & 14/63 (22.2\%)           & 8/37 \;\;(21.6\%)        & 22/100 (22.0\%) \\
+Skill-R1 (Inference, Qwen3-4B)   & 11/63 (17.5\%)           & 8/37 \;\;(21.6\%)        & 19/100 (19.0\%) \\
+Skill-R1 (GRPO, Qwen3-4B)        & \textbf{18/63 (28.6\%)}  & 8/37 \;\;(21.6\%)        & \textbf{26/100 (26.0\%)} \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Results on the WebWalker benchmark (100 tasks) by question type.}
+\label{tab:webwalker_source}
+\end{table}
+
+Tables~\ref{tab:webwalker_results} and~\ref{tab:webwalker_source} present the results on WebWalker. GPT-4o-mini (no skills) achieves only $2.0\%$ accuracy, reflecting the difficulty of multi-hop web navigation and cross-page reasoning. Vanilla GRPO improves performance to $22.0\%$, with consistent gains across difficulty levels. However, performance remains constrained in settings requiring deeper information synthesis, particularly in medium and multi-source tasks. Skill-based reasoning further enhances performance. The inference-only Skill-R1 setup achieves $19.0\%$, showing competitive performance without any gradient-based learning, while the GRPO-trained editor improves results to $26.0\%$, yielding a $+4.0$ percentage point gain over Vanilla GRPO. Improvements are especially evident in medium ($29.4\%$) and multi-source ($28.6\%$) settings, indicating that learned skill refinement enables more effective navigation and aggregation of information across multiple pages. An interesting observation is the relatively lower accuracy on the easy subset. This is primarily due to its small size and sensitivity to brittle navigation failures, such as incomplete page retrieval. As a result, minor errors disproportionately affect performance, leading to higher variance compared to other difficulty levels.
+
+% Tables~\ref{tab:main_results},~\ref{tab:webwalker_results}, and~\ref{tab:webwalker_source} present the main experimental results. GPT-4o-mini (no skills) performs poorly across both benchmarks, achieving $6.1\%$ on GAIA and $2.0\%$ on WebWalker, while Vanilla GRPO substantially improves performance to $29.7\%$ and $22.0\%$, respectively, with gains observed across difficulty levels. However, these improvements remain limited in more complex settings, particularly on GAIA Level~3 and multi-source WebWalker tasks, suggesting that GRPO alone lacks mechanisms to effectively compose and reuse structured knowledge. Introducing skill-based reasoning further enhances performance: the inference-only Skill-R1 variant achieves $30.9\%$ on GAIA and $19.0\%$ on WebWalker, and incorporating a GRPO-trained editor improves results to $41.8\%$ and $26.0\%$, yielding gains of $+10.9$ and $+7.0$ percentage points, respectively. These improvements are most pronounced on harder and multi-source tasks, such as GAIA Level~3 ($38.5\%$ vs.\ $0.0\%$ baseline) and WebWalker medium and multi-source settings ($29.4\%$ and $28.6\%$), indicating that learned skill refinement enables more effective compositional reasoning.
+
+% An interesting observation is the relatively lower accuracy on the easy subset of WebWalker. This inversion is primarily due to the nature of the “easy” bucket, which is small and disproportionately composed of brittle navigation tasks. In several cases, failures arise from parser instability or incomplete page retrieval, where the model is unable to reliably locate the relevant content. Due to the small sample size, such failures introduce higher variance, leading to larger fluctuations in reported accuracy compared to other difficulty levels.
+

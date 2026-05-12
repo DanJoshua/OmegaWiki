@@ -1,0 +1,382 @@
+% % =========================================================
+% \section{MCMC View and Tracking Guarantees for Recurrent Skill Self-Sampling}
+% \label{app:mcmc_view}
+
+% This appendix provides formal statements supporting the MCMC interpretation in
+% Section~\ref{sec:method-loop}. We emphasize that Skill-R1 does not enforce detailed balance, hence classical MCMC
+% stationarity results do not directly apply. Instead, we provide (i) a stationary-limit corollary when parameters converge
+% and (ii) a tracking bound that controls deviation from stationarity under bounded parameter drift.
+
+% \subsection{Preliminaries and notation}
+% Fix an instance $x$. Let $\mu_g$ denote the marginal distribution of the sampled skill $s_g$.
+% We use $\|\cdot\|_{\mathrm{TV}}$ for total variation distance.
+% When discussing a stationary distribution of a kernel, we use $\pi_\phi^\infty$ to denote any invariant distribution
+% associated with a \emph{frozen} transition kernel parameterized by $\phi$.
+
+% \subsection{Stationary-limit guarantee under parameter convergence}
+% \label{app:stationary_limit}
+
+% \begin{proposition}[Stationary-limit of skill sampling under parameter convergence]
+% \label{prop:stationary_limit}
+% Assume that for a fixed instance $x$, the skill generator parameters converge, i.e., $\phi_g \to \phi^\star$ as
+% $g\to\infty$, and the mapping $\phi \mapsto \pi_\phi(\cdot \mid x,\mathcal{H})$ is continuous in total variation for any
+% fixed $(x,\mathcal{H})$.
+% Then the induced skill sampling distribution $\mu_g$ converges to a limiting distribution $\mu^\star$, and $\mu^\star$ is
+% stationary with respect to the frozen proposal distribution $\pi_{\phi^\star}$ in the sense that repeated sampling from
+% $\pi_{\phi^\star}(\cdot \mid x,\mathcal{H})$ yields the same marginal $\mu^\star$.
+% \end{proposition}
+
+% \begin{remark}
+% Proposition~\ref{prop:stationary_limit} is a minimal but fully valid guarantee. It does not claim that the limit equals a
+% Gibbs distribution of the form $\propto \exp(\beta J(s;x))$; it states that if learning stabilizes, the induced sampling
+% stabilizes as well, which is the appropriate notion of stationarity for a learned proposal.
+% \end{remark}
+
+% \subsection{Tracking bound under bounded parameter drift}
+% \label{app:tracking_bound}
+
+% To connect with an MCMC-style notion of stationarity, consider a frozen generation-level transition kernel on skills
+% $T_\phi$ (e.g., a one-step kernel that samples a skill according to the current proposal and returns it as the next state).
+% Let $\pi_\phi^\infty$ denote an invariant distribution of $T_\phi$.
+
+% \begin{assumption}[Uniform mixing of frozen kernels]
+% \label{assump:mixing}
+% For every $\phi$ in a neighborhood of the iterates, the frozen kernel $T_\phi$ is uniformly geometrically ergodic:
+% there exist constants $C \ge 1$ and $\rho \in (0,1)$ such that for any initial distribution $\nu$,
+% \begin{equation}
+% \left\|\nu T_\phi^t - \pi_\phi^\infty \right\|_{\mathrm{TV}} \le C \rho^t \qquad \forall t \ge 0.
+% \label{eq:geom_ergodic}
+% \end{equation}
+% \end{assumption}
+
+% \begin{assumption}[Lipschitz dependence on parameters]
+% \label{assump:lipschitz}
+% There exists $L>0$ such that for all $\phi,\phi'$ in the same neighborhood,
+% \begin{equation}
+% \left\| \pi_\phi^\infty - \pi_{\phi'}^\infty \right\|_{\mathrm{TV}} \le L \|\phi-\phi'\|.
+% \label{eq:lipschitz_inv}
+% \end{equation}
+% \end{assumption}
+
+% \begin{theorem}[Stationary tracking under slow parameter drift]
+% \label{thm:tracking}
+% Assume Assumptions~\ref{assump:mixing}--\ref{assump:lipschitz}. Suppose the parameter updates satisfy a bounded drift
+% condition $\|\phi_g - \phi_{g-1}\| \le \eta$ for all $g$.
+% Then the deviation between the skill marginal $\mu_g$ and the invariant distribution of the frozen kernel satisfies
+% \begin{equation}
+% \left\|\mu_g - \pi_{\phi_g}^\infty \right\|_{\mathrm{TV}}
+% \;\le\;
+% C\rho \left\|\mu_{g-1} - \pi_{\phi_{g-1}}^\infty \right\|_{\mathrm{TV}}
+% \;+\;
+% L\eta.
+% \label{eq:tracking_recursion}
+% \end{equation}
+% In particular, iterating \eqref{eq:tracking_recursion} yields the steady-state bound
+% \begin{equation}
+% \sup_g \left\|\mu_g - \pi_{\phi_g}^\infty \right\|_{\mathrm{TV}}
+% \;\le\;
+% \frac{L\eta}{1 - C\rho},
+% \label{eq:tracking_bound}
+% \end{equation}
+% whenever $C\rho<1$.
+% \end{theorem}
+
+% \begin{remark}[Interpretation]
+% Theorem~\ref{thm:tracking} provides a concrete and falsifiable statement: if the generator parameters change slowly
+% (relative to mixing), then the actual skill sampling distribution tracks the stationary distribution of the corresponding
+% frozen kernel, up to an error proportional to the per-generation drift $\eta$.
+% This gives a formal sense in which a stationary distribution can be meaningfully discussed as an approximation, and it
+% clarifies when an MCMC-inspired view is theoretically compatible with a learned, time-varying proposal.
+% \end{remark}
+
+% \paragraph{Proof sketch.}
+% Let $\mu_g = \mu_{g-1} T_{\phi_g}$ denote one-step evolution under the current frozen kernel.
+% Insert and subtract $\pi_{\phi_g}^\infty$ and use \eqref{eq:geom_ergodic} with $t=1$ to control contraction in total
+% variation, yielding the first term in \eqref{eq:tracking_recursion}. The second term follows by adding and subtracting
+% $\pi_{\phi_{g-1}}^\infty$ and applying \eqref{eq:lipschitz_inv} with $\|\phi_g-\phi_{g-1}\|\le \eta$.
+% Iterating the recursion gives \eqref{eq:tracking_bound}.
+
+% % =========================================================
+% \section{Connections to GRPO Theory and Guarantees for Bi-Level Advantages}
+% \label{app:grpo_bilevel_theory}
+
+% This appendix formalizes how the proposed bi-level advantages relate to group-relative policy optimization (GRPO)
+% and provides basic guarantees supporting their use under recurrent, non-stationary generations.
+% GRPO replaces a learned critic with a prompt-group baseline to reduce variance while preserving a valid policy-gradient
+% update \cite{Shao2024DeepSeekMath}. Our intra-generation advantage follows this principle.
+% Our inter-generation advantage addresses distribution drift induced by recurrent self-sampling across generations, a regime
+% where baseline estimation is known to become unstable \cite{Wang2025KRPO}.
+
+% \subsection{Setup}
+% Fix an instance $x$ and generation $g$ with skill $s_g \sim \pi_\phi(\cdot\mid x,\mathcal H_{g-1})$ and rollouts
+% $y^{(g,i)} \sim \pi_{\mathrm{task}}(\cdot\mid x,s_g)$ for $i=1,\dots,K$.
+% Let $r^{(g,i)} := r(y^{(g,i)})$ and $\bar r_g := \frac{1}{K}\sum_{i=1}^K r^{(g,i)}$.
+
+% We write the skill-conditioned expected reward as
+% \begin{equation}
+% J(s;x) := \mathbb{E}_{y \sim \pi_{\mathrm{task}}(\cdot\mid x,s)}[r(y)].
+% \end{equation}
+% We also define the induced objective of the skill generator under history $\mathcal H_{g-1}$:
+% \begin{equation}
+% \mathcal{J}_g(\phi;x) := \mathbb{E}_{s \sim \pi_\phi(\cdot\mid x,\mathcal H_{g-1})}[J(s;x)].
+% \end{equation}
+
+% \subsection{Intra-generation advantage as a control variate}
+% Define the intra-generation advantage
+% \begin{equation}
+% A_{\mathrm{intra}}(y^{(g,i)}) := r^{(g,i)} - \bar r_g.
+% \end{equation}
+% By construction, it is centered within the generation:
+% \begin{equation}
+% \sum_{i=1}^K A_{\mathrm{intra}}(y^{(g,i)}) = 0.
+% \label{eq:zero_sum_intra}
+% \end{equation}
+
+% \begin{proposition}[Centered group baselines preserve the policy gradient]
+% \label{prop:control_variate}
+% Assume $\pi_{\mathrm{task}}$ and $r$ do not depend on $\phi$. Then for any measurable baseline $b_g$ that is a function of
+% $\{r^{(g,i)}\}_{i=1}^K$ but is independent of the sampled skill $s_g$ given $(x,\mathcal H_{g-1})$, the estimator
+% \[
+% \widehat{\nabla}_\phi \mathcal{J}_g(\phi;x)
+% =
+% \left(\frac{1}{K}\sum_{i=1}^K (r^{(g,i)} - b_g)\right)\nabla_\phi \log \pi_\phi(s_g\mid x,\mathcal H_{g-1})
+% \]
+% is an unbiased estimator of $\nabla_\phi \mathcal{J}_g(\phi;x)$.
+% In particular, choosing $b_g=\bar r_g$ yields an unbiased gradient estimator with reduced variance compared to $b_g=0$.
+% \end{proposition}
+
+% \paragraph{Proof sketch.}
+% Condition on $(x,\mathcal H_{g-1})$. Since $r^{(g,i)}$ depends on $\phi$ only through $s_g$, REINFORCE gives
+% $\nabla_\phi \mathcal{J}_g(\phi;x) = \mathbb{E}[\bar r_g \nabla_\phi \log \pi_\phi(s_g\mid x,\mathcal H_{g-1})]$.
+% Subtracting any baseline independent of $s_g$ leaves the expectation unchanged.
+
+% \subsection{Inter-generation progress as a drift-sensitive statistic}
+% Define the inter-generation advantage
+% \begin{equation}
+% A_{\mathrm{inter}}(g) := \bar r_g - \bar r_{g-1}.
+% \end{equation}
+% This quantity estimates the progress in the induced rollout population quality between successive generations.
+
+% \begin{assumption}[Bounded rewards]
+% \label{assump:bounded_rewards}
+% $r(y)\in[0,R_{\max}]$ for all $y$.
+% \end{assumption}
+
+% \begin{assumption}[Controlled per-generation drift in skill quality]
+% \label{assump:drift}
+% There exists $\Delta \ge 0$ such that for all generations,
+% \[
+% \left|J(s_g;x) - J(s_{g-1};x)\right| \le \Delta
+% \quad \text{almost surely.}
+% \]
+% \end{assumption}
+
+% \begin{lemma}[Concentration of inter-generation progress]
+% \label{lem:inter_concentration}
+% Under Assumption~\ref{assump:bounded_rewards}, for any fixed $g$ and $\delta\in(0,1)$,
+% \[
+% \left|A_{\mathrm{inter}}(g) - \left(J(s_g;x)-J(s_{g-1};x)\right)\right|
+% \le
+% 2R_{\max}\sqrt{\frac{\log(2/\delta)}{2K}}
+% \]
+% with probability at least $1-\delta$ (over sampling of rollout populations in generations $g$ and $g-1$).
+% \end{lemma}
+
+% \paragraph{Proof sketch.}
+% Apply Hoeffding's inequality to $\bar r_g$ and $\bar r_{g-1}$ separately and union bound.
+
+% \begin{remark}[Why this is relevant to GRPO-style instability]
+% Baseline mis-estimation becomes more severe when reward statistics drift rapidly across iterations, motivating dynamic
+% baseline tracking mechanisms \cite{Wang2025KRPO}. Lemma~\ref{lem:inter_concentration} shows that $A_{\mathrm{inter}}(g)$
+% is a statistically well-behaved progress estimator whose noise decays as $O(K^{-1/2})$ even under non-stationarity.
+% \end{remark}
+
+% \subsection{A theory-friendly bi-level objective}
+% A key structural property used by group-relative objectives is that weights are centered within each prompt-group, which
+% yields stable updates and (in some frameworks) cancels terms tied to normalization constants \cite{Zhang2025GVPO}.
+% To preserve this property, we recommend using a decomposed bi-level objective:
+% \begin{equation}
+% \mathcal{L}_{\mathrm{bi}}(\phi)
+% =
+% \mathbb{E}_{x\sim\mathcal D}
+% \left[
+% \sum_{g=1}^G
+% \Big(
+% \underbrace{\sum_{i=1}^K A_{\mathrm{intra}}(y^{(g,i)})}_{\text{centered within generation}}
+% \;+\;
+% \lambda \underbrace{A_{\mathrm{inter}}(g)}_{\text{progress}}
+% \Big)
+% \log \pi_\phi(s_g\mid x,\mathcal H_{g-1})
+% \right].
+% \label{eq:bilevel_loss_skill_level}
+% \end{equation}
+% This form treats both signals as skill-level weights, consistent with the fact that only the skill generator is trained.
+% Moreover, centering within generation remains explicit via \eqref{eq:zero_sum_intra}.
+
+% \begin{proposition}[Bi-level update as an ascent direction with bounded perturbation]
+% \label{prop:bilevel_ascent}
+% Assume $\pi_{\mathrm{task}}$ and $r$ do not depend on $\phi$, and Assumption~\ref{assump:bounded_rewards} holds.
+% Then the stochastic gradient of \eqref{eq:bilevel_loss_skill_level} is an ascent direction for the per-generation objective
+% $\mathcal{J}_g(\phi;x)$ up to an additive perturbation term of magnitude $O(\lambda K^{-1/2})$ due to estimation noise in
+% $A_{\mathrm{inter}}(g)$, controlled by Lemma~\ref{lem:inter_concentration}.
+% \end{proposition}
+
+% \paragraph{Proof sketch.}
+% The intra term yields an unbiased REINFORCE estimator (Proposition~\ref{prop:control_variate}).
+% The inter term depends only on generation-level sample means and thus contributes a bounded extra weight on
+% $\nabla_\phi\log\pi_\phi(s_g\mid\cdot)$. Apply Lemma~\ref{lem:inter_concentration} to bound its deviation from the
+% population progress $J(s_g;x)-J(s_{g-1};x)$.
+
+% \subsection{Relation to recent GRPO extensions}
+% Recent GRPO extensions add additional structure to recover learning signals in challenging regimes and provide theoretical
+% analyses in stylized settings \cite{Chen2025SGPO}, or provide robustness/generalization guarantees when intermediate
+% supervision is unavailable \cite{Mundada2025WSGRPO}. Our bi-level construction is complementary: it keeps the GRPO
+% intra-group centering but adds an explicit progress statistic to stabilize recurrent, generation-indexed self-sampling.
+
+% =========================================================
+
+\section{Appendix}
+
+\subsection{PDB Skill}
+\label{app:pdb_skill_comparison}
+
+This appendix provides the complete content of the \texttt{pdb} skill at three points in time, as referenced in \Cref{sec:analysis}: (1) the original skill from the shared skill library, (2) the version produced by the GRPO-trained Qwen3-4B editor after three generations of evolution (run \texttt{20260320\_131744\_0.25}), and (3) the version produced by the untrained base Qwen3-4B model operating in inference mode (run \texttt{20260321\_185812}).
+
+% -----------------------------------------------------------
+\subsubsection{Original \texttt{pdb} Skill}
+
+The original skill is a general-purpose reference covering BioPython's full API. We reproduce the header description and the Quick Start section to illustrate the skill's initial breadth; the remainder of the document (Dependencies, PDB File Format Basics, Python Libraries, Manual Parsing, Common Tasks, Quick Reference table) is analogous in scope.
+
+\begin{small}
+\begin{verbatim}
+name: pdb
+description: Use this skill whenever the user wants to read, parse, analyze,
+  or manipulate PDB (Protein Data Bank) files. This includes extracting atomic
+  coordinates, analyzing protein structures, identifying residues, chains,
+  ligands, computing distances between atoms, visualizing molecular structures,
+  and converting between molecular file formats. If the user mentions a .pdb
+  file or asks about protein/molecular structure data, use this skill.
+
+# PDB (Protein Data Bank) File Processing Guide
+
+## Quick Start
+
+```python
+from Bio.PDB import PDBParser
+
+parser = PDBParser(QUIET=True)
+structure = parser.get_structure("protein", "structure.pdb")
+
+# Iterate through the hierarchy: Structure -> Model -> Chain -> Residue -> Atom
+for model in structure:
+    for chain in model:
+        print(f"Chain {chain.id}: {len(list(chain.get_residues()))} residues")
+```
+
+## PDB File Format Basics
+
+PDB files are fixed-width text files. Key record types:
+| ATOM   | Standard residue atom coordinates  |
+| HETATM | Non-standard residue (ligands, water) |
+| SEQRES | Full sequence of residues          |
+| REMARK | Comments and metadata              |
+
+[... BioPython parsing examples, distance computation, ligand extraction,
+     sequence extraction, manual ATOM-record parsing, and quick-reference
+     table omitted for brevity -- all preserved in the original file ...]
+\end{verbatim}
+\end{small}
+
+% -----------------------------------------------------------
+\subsubsection{GRPO-Trained Editor: Edited \texttt{pdb} Skill}
+
+\begin{small}
+\begin{verbatim}
+name: pdb
+description: [unchanged from original]
+
+# PDB (Protein Data Bank) File Processing Guide
+
+## Quick Start
+
+```python
+from Bio.PDB import PDBParser
+import numpy as np
+
+# Parse a local PDB file path -- ensure the file exists at the specified path
+parser = PDBParser(QUIET=True)
+
+try:
+    structure = parser.get_structure("structure", "5wb7.pdb")
+except FileNotFoundError:
+    print("Error: The PDB file was not found. Please verify the file name.")
+    raise
+except ImportError:
+    print("Error: BioPython is not installed. pip install biopython")
+    raise
+
+# Access the first model and chain
+models = list(structure)
+if not models:
+    raise ValueError("No models found in the PDB structure.")
+model = models[0]
+
+chains = list(model.get_chains())
+if not chains:
+    raise ValueError("No chains found in the model.")
+chain = chains[0]
+
+residues = list(chain.get_residues())
+if not residues:
+    raise ValueError("No residues found in the chain.")
+```
+
+## Common Misuse and Error Prevention
+
+Note: This skill is for PDB files only. If the user provides an audio
+recording (e.g., .mp3), it cannot be processed here.
+\end{verbatim}
+\end{small}
+
+% -----------------------------------------------------------
+\subsubsection{Base Inference Editor: Edited \texttt{pdb} Skill}
+
+The untrained base Qwen3-4B model replaces the entire skill with the following. No executable code remains. The ``Key Requirements'' section mistakenly names the GAIA task UUID \texttt{7dd30055-0198-452e-8c25-f73dbe27dcb8} as an invalid PDB identifier, and the ``Common Misuse'' section is wholly devoted to handling a calculus homework audio recording (\texttt{Homework.mp3}) that is unrelated to PDB processing.
+
+\begin{small}
+\begin{verbatim}
+name: pdb
+description: [unchanged from original]
+
+# PDB (Protein Data Bank) File Processing Guide
+
+## Key Requirements and Best Practices
+
+- Always ensure the PDB ID is valid and accessible via the RCSB PDB database.
+- Use the correct PDB ID (e.g., "5wb7", not
+  "7dd30055-0198-452e-8c25-f73dbe27dcb8") -- the latter is a UUID or
+  invalid identifier.
+- This skill does NOT handle audio files. If a user provides an audio file
+  (e.g., Homework.mp3) and asks for page numbers, this skill is NOT applicable.
+
+## Common Misuse and Clarifications
+
+- Do not use this skill to extract page numbers from audio recordings.
+- Do not attempt to parse audio files as if they were PDB files.
+- If a user asks about study materials from a lecture, state that the skill
+  cannot process audio content.
+- Always verify the nature of the input: if it is .mp3 or .wav, respond with:
+  "I cannot extract page numbers from audio files."
+
+## Example of Incorrect Use
+
+User: "I have a file called Homework.mp3 with my professor reading the
+       recommended pages. Can you tell me the page numbers?"
+Correct response: "I cannot extract page numbers from audio files. This skill
+  is designed for processing PDB files, not audio recordings."
+
+[--- No code examples remain in the edited skill ---]
+\end{verbatim}
+\end{small}
+
+The contrast is stark. The GRPO-trained editor adds \emph{code} that handles real failure modes---a missing file, a missing library---while preserving the entire original reference. The base inference editor removes all code and fills the skill with content copied from two specific benchmark questions, leaving it useless for any unseen PDB task.

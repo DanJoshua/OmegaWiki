@@ -1,0 +1,49 @@
+\section{Preliminaries}\label{sec:preliminaries}
+
+\subsection{Agent Skills} \label{sec:prelim-skills}
+Recent LLM-agent systems commonly treat skills as reusable units of external procedural knowledge that can be retrieved, executed, and updated without modifying the underlying task model. 
+Following this practice, let $\pi_{\mathrm{task}}$ denote a frozen task LLM, and let $\mathcal{S}$ be a space of explicit skill artifacts.
+
+\begin{definition}[Agent Skill]
+An agent skill is a reusable procedural artifact $s \in \mathcal{S}$ that conditions the execution of the task model on an input instance. 
+A skill may encode natural-language instructions, structured workflows, tool-use guidance, or other procedural constraints, while remaining external to the parameters of $\pi_{\mathrm{task}}$.
+\end{definition}
+
+Given an instance $x$ and a skill $s$, the frozen task model induces a rollout distribution
+\begin{equation} \label{eq:rollout_dist}
+\pi_{\mathrm{task}}(\tau \mid x, s),
+\end{equation}
+where $\tau$ denotes the resulting trajectory. 
+In our setting, skills evolve recurrently on the same instance. 
+We write $s_g \in \mathcal{S}$ for the skill used at generation $g$, and $\mathcal{H}_g$ for the instance-specific history available up to generation $g$, such as prior rollouts and their verified outcomes. 
+These variables will be used to formalize skill evolution in later sections.
+
+
+\subsection{Group-Relative Policy Optimization} \label{sec:prelim-grpo}
+We briefly review Group-Relative Policy Optimization (GRPO) in the language-generation setting, where a policy $\pi_\theta(\cdot \mid x)$ defines a distribution over response rollouts $y$ conditioned on a prompt or context $x \sim \mathcal{D}$. 
+GRPO samples a group
+\begin{equation} \label{eq:group_sampling}
+\mathcal{G}(x)=\{y^{(i)}\}_{i=1}^K,
+\qquad
+y^{(i)} \stackrel{\mathrm{i.i.d.}}{\sim} \pi_\theta(\cdot \mid x),
+\end{equation}
+assigns each rollout a verifier score $r(y^{(i)})$, and defines the group-relative advantage
+\begin{equation} \label{eq:grpo_adv}
+A\!\left(y^{(i)};\mathcal{G}(x)\right)
+=
+r\!\left(y^{(i)}\right)
+-
+\frac{1}{K}\sum_{j=1}^K r\!\left(y^{(j)}\right).
+\end{equation}
+The GRPO objective is
+\begin{equation} \label{eq:grpo_obj}
+\mathcal{L}_{\mathrm{GRPO}}(\theta)
+=
+\mathbb{E}_{x \sim \mathcal{D},\, \mathcal{G}(x)}
+\left[
+\sum_{i=1}^K
+A\!\left(y^{(i)};\mathcal{G}(x)\right)
+\log \pi_\theta\!\left(y^{(i)} \mid x\right)
+\right].
+\end{equation}
+This group-centered objective promotes rollouts that outperform their peers under the same input context.
