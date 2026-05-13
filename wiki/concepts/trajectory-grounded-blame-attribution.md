@@ -17,6 +17,7 @@ date_updated: 2026-05-02
 related_concepts:
   - modular-tool-use-policy
   - diversity-aware-population-selection
+  - skill-intervention-verification
 ---
 
 ## Definition

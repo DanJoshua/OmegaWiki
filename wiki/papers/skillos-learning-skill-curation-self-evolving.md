@@ -89,3 +89,4 @@ SkillOS cleanly separates what the agent *does* (executor) from what it *learns 
 - [[rl-trained-skill-curator-outperforms-frontier-curator]] — core empirical claim from this paper
 - [[comprehensive-survey-self-evolving-ai-agents]] — cited survey; provides taxonomy of self-evolution paradigms
 - [[evo-memory-benchmarking-llm-agent-test]] — cited benchmark for LLM agent memory
+- [[skillgen-verified-inference-time-agent-skill]] — SkillGen addresses skill generation quality via contrastive induction and verification; SkillOS addresses skill curation via RL

@@ -45,6 +45,9 @@ _Auto-generated open questions. Do not edit._
 - [paper/skill-r1-agent-skill-evolution-reinforcement] Can the bi-level GRPO objective be extended to multi-agent settings where skills must generalize across agents?
 - [paper/skill-r1-agent-skill-evolution-reinforcement] What is the sample efficiency of Skill-R1 relative to direct task LLM RLHF?
 - [paper/skill-r1-agent-skill-evolution-reinforcement] Does experience inheritance hold for the skill generator (i.e., can a generator trained on one benchmark transfer to another)?
+- [paper/skillgen-verified-inference-time-agent-skill] Can contrastive induction be applied incrementally as new trajectories arrive (online setting)?
+- [paper/skillgen-verified-inference-time-agent-skill] How does SkillGen interact with skill libraries containing many existing skills (retrieval and composition)?
+- [paper/skillgen-verified-inference-time-agent-skill] Can the verification gate be extended to multi-skill portfolios to maximize net gain across a skill library?
 - [paper/skillos-learning-skill-curation-self-evolving] Can skill curators transfer across agent ecosystems without executor-specific fine-tuning?
 - [paper/skillos-learning-skill-curation-self-evolving] How should `SkillRepo` be pruned or reorganised when the executor itself is updated?
 - [paper/skillos-learning-skill-curation-self-evolving] Can agentic skill search (finding the right skill in a large repo) be co-optimised with curation?

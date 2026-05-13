@@ -103,3 +103,4 @@ Skill-R1 cleanly formalizes a previously informal insight: that skill improvemen
 - [[evotool-self-evolving-tool-use-policy]] — EvoTool uses blame attribution + evolutionary selection; Skill-R1 uses bi-level GRPO
 - [[sok-agentic-skills-beyond-tool-use]] — SoK surveys the skill layer this paper contributes to
 - [[forward-learning-from-experience]] — Skill-R1 updates skill generator (not task LLM parameters) via rollout experience
+- [[skillgen-verified-inference-time-agent-skill]] — SkillGen synthesizes skills from scratch via contrastive induction; Skill-R1 refines existing skills via bi-level RL

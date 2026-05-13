@@ -70,3 +70,4 @@ The core methodological commitment — that *intermediate trajectory diagnostics
 - [[diversity-aware-population-selection-prevents-premature]] — supporting claim
 - [[soyeon-caren-han]] — corresponding author
 - [[shuo-yang]] — first author
+- [[skillgen-verified-inference-time-agent-skill]] — SkillGen operates at the full-skill level using intervention verification; EvoTool operates at the module level using blame attribution

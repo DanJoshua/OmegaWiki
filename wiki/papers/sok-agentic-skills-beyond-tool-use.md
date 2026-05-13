@@ -93,3 +93,4 @@ The paper's strongest contribution is the `(C, π, T, R)` four-tuple — it give
 - Claims: [[curated-skills-outperform-self-generated]], [[skill-marketplaces-expose-supply-chain-risk]]
 - Topic: [[self-evolving-agents]]
 - Sibling /init papers (paper-paper edges backfilled at fan-in)
+- [[skillgen-verified-inference-time-agent-skill]] — SkillGen instantiates Pattern-4 (distillation + evaluation/update) with intervention-based verification

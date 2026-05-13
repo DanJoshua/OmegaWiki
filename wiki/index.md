@@ -56,6 +56,11 @@ papers:
     tags: [agents, llm-agents, self-evolving-agents, skill-curation, reinforcement-learning, procedural-memory, skill-lifecycle]
     importance: 3
     domain: NLP
+  - slug: skillgen-verified-inference-time-agent-skill
+    title: "SkillGen: Verified Inference-Time Agent Skill Synthesis"
+    tags: [agents, llm-agents, self-evolving-agents, skill-synthesis, skill-lifecycle, contrastive-learning, intervention-verification, multi-agent]
+    importance: 3
+    domain: NLP
   - slug: sok-agentic-skills-beyond-tool-use
     title: "SoK: Agentic Skills - Beyond Tool Use in LLM Agents"
     tags: [agents, llm-agents, agentic-skills, skill-lifecycle, design-patterns, security, governance, sok]
@@ -155,6 +160,14 @@ concepts:
   - slug: three-laws-self-evolving-ai-agents
     title: "Three Laws of Self-Evolving AI Agents"
     tags: [agents, self-evolution, safety, alignment, ethics]
+    maturity: emerging
+  - slug: contrastive-induction-skill-synthesis
+    title: "Contrastive Induction for Skill Synthesis"
+    tags: [agents, skills, skill-synthesis, contrastive-learning, trajectory-analysis]
+    maturity: emerging
+  - slug: skill-intervention-verification
+    title: "Skill Intervention Verification"
+    tags: [agents, skills, skill-synthesis, causal-inference, intervention, credit-assignment]
     maturity: emerging
   - slug: trajectory-grounded-blame-attribution
     title: "Trajectory-Grounded Blame Attribution"
@@ -293,6 +306,12 @@ claims:
     tags: [skill-evolution, reinforcement-learning, grpo, self-evolving-agents, agent-skills]
     status: weakly_supported
     confidence: 0.72
+    domain: NLP
+  - slug: contrastive-induction-outperforms-success-only-skill
+    title: "Contrastive induction over success+failure trajectories outperforms success-only skill synthesis"
+    tags: [skill-synthesis, contrastive-learning, trajectories, agents]
+    status: supported
+    confidence: 0.82
     domain: NLP
   - slug: rl-trained-skill-curator-outperforms-frontier-curator
     title: "RL-Trained Skill Curator Outperforms Frontier Model Curator Due to Executor Alignment"

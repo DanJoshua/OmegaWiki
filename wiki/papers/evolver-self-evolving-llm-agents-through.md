@@ -81,3 +81,4 @@ The paper's contribution is less the components — self-distillation, structure
 
 - [[experience-driven-self-evolution-lifecycle]] — the closed-loop paradigm this paper introduces
 - [[self-distillation-vs-external-teacher-crossover]] — claim derived from the ablation
+- [[skillgen-verified-inference-time-agent-skill]] — SkillGen provides a skill synthesis pathway within the experience-driven evolution loop that EVOLVER uses for principle updates
