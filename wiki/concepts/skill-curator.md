@@ -13,12 +13,14 @@ tags:
 maturity: emerging
 key_papers:
   - skillos-learning-skill-curation-self-evolving
+  - skillgraph-skill-augmented-reinforcement-learning-agents
 first_introduced: "2026"
-date_updated: 2026-05-09
+date_updated: 2026-05-14
 related_concepts:
   - skill-lifecycle
   - agentic-skill
   - experience-library
+  - graph-structured-skill-library
 ---
 
 ## Definition

@@ -22,7 +22,8 @@ keywords:
   - dynamic experience curation
 domain: "NLP"
 code_url: "https://github.com/Edaizi/EvolveR"
-cited_by: []
+cited_by:
+  - skillgraph-skill-augmented-reinforcement-learning-agents
 ---
 
 ## Problem

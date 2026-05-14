@@ -15,11 +15,13 @@ key_papers:
   - skillos-learning-skill-curation-self-evolving
   - skill-r1-agent-skill-evolution-reinforcement
   - skillgen-verified-inference-time-agent-skill
+  - skillgraph-skill-augmented-reinforcement-learning-agents
 first_introduced: "2026"
-date_updated: 2026-05-02
+date_updated: 2026-05-14
 related_concepts:
   - agentic-skill
   - skill-marketplace-supply-chain-risk
+  - graph-structured-skill-library
 ---
 
 ## Definition

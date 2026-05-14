@@ -48,6 +48,9 @@ _Auto-generated open questions. Do not edit._
 - [paper/skillgen-verified-inference-time-agent-skill] Can contrastive induction be applied incrementally as new trajectories arrive (online setting)?
 - [paper/skillgen-verified-inference-time-agent-skill] How does SkillGen interact with skill libraries containing many existing skills (retrieval and composition)?
 - [paper/skillgen-verified-inference-time-agent-skill] Can the verification gate be extended to multi-skill portfolios to maximize net gain across a skill library?
+- [paper/skillgraph-skill-augmented-reinforcement-learning-agents] Can self-distillation (agent distills its own skills) replace the expensive teacher model in graph evolution operations?
+- [paper/skillgraph-skill-augmented-reinforcement-learning-agents] How does a pre-trained SkillGraph transfer to a new environment via few-shot graph bootstrapping?
+- [paper/skillgraph-skill-augmented-reinforcement-learning-agents] Does graph topology eventually converge, or does it grow unboundedly as task diversity increases?
 - [paper/skillos-learning-skill-curation-self-evolving] Can skill curators transfer across agent ecosystems without executor-specific fine-tuning?
 - [paper/skillos-learning-skill-curation-self-evolving] How should `SkillRepo` be pruned or reorganised when the executor itself is updated?
 - [paper/skillos-learning-skill-curation-self-evolving] Can agentic skill search (finding the right skill in a large repo) be co-optimised with curation?
@@ -92,6 +95,9 @@ _Auto-generated open questions. Do not edit._
 - [concept/forward-learning-from-experience] Formalizing the "semantic gradient" enough to produce convergence theorems.
 - [concept/forward-learning-from-experience] Robustness to adversarial or low-quality trajectories during exploration.
 - [concept/forward-learning-from-experience] Curriculum design — how should the order of training samples shape library quality?
+- [concept/graph-structured-skill-library] Can the graph be shared across environments with minimal adaptation (cross-domain skill transfer)?
+- [concept/graph-structured-skill-library] What graph topology invariants (e.g., depth, diameter, branching factor) correlate with agent performance?
+- [concept/graph-structured-skill-library] Can the graph be learned end-to-end rather than constructed by a separate teacher model?
 - [concept/hierarchical-experience-memory] How to scale procedural memory to thousands of SOPs without degrading retrieval precision or context cost.
 - [concept/hierarchical-experience-memory] How to learn structurally from failures, not just successes.
 - [concept/hierarchical-experience-memory] How to formalize when two SOPs should be merged versus kept distinct.
@@ -148,6 +154,7 @@ _Auto-generated open questions. Do not edit._
 - [claim/curated-skills-outperform-self-generated] Curated agentic skills outperform self-generated skills (status: weakly_supported)
 - [claim/diversity-aware-population-selection-prevents-premature] Instance-wins (diversity-aware) selection outperforms greedy and top-k selection in evolutionary prompt search for heterogeneous tool-use tasks (status: weakly_supported)
 - [claim/execution-grounded-relevance-vs-semantic-similarity] Description-based retrieval underperforms execution-grounded relevance for selecting AI agents (status: weakly_supported)
+- [claim/graph-structured-skill-retrieval-outperforms-flat] Graph-structured skill retrieval outperforms flat skill libraries on compositional tasks (status: weakly_supported)
 - [claim/memory-evolution-gain-correlates-with-task-similarity] Self-evolving memory's gain correlates with within-dataset task similarity (status: weakly_supported)
 - [claim/module-level-blame-attribution-enables-stable] Module-level blame attribution enables stable, targeted improvement of modular tool-use policies under sparse end-of-trajectory supervision (status: weakly_supported)
 - [claim/recurrent-skill-evolution-bilevel-grpo-outperforms-vanilla-grpo] Recurrent Bi-Level GRPO Skill Evolution Outperforms Vanilla GRPO on Multi-Step Agent Tasks (status: weakly_supported)

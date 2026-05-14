@@ -61,6 +61,11 @@ papers:
     tags: [agents, llm-agents, self-evolving-agents, skill-synthesis, skill-lifecycle, contrastive-learning, intervention-verification, multi-agent]
     importance: 3
     domain: NLP
+  - slug: skillgraph-skill-augmented-reinforcement-learning-agents
+    title: "SkillGraph: Skill-Augmented Reinforcement Learning for Agents via Evolving Skill Graphs"
+    tags: [agents, llm-agents, self-evolving-agents, skill-management, skill-lifecycle, reinforcement-learning, graph-structured, compositional-tasks]
+    importance: 3
+    domain: NLP
   - slug: sok-agentic-skills-beyond-tool-use
     title: "SoK: Agentic Skills - Beyond Tool Use in LLM Agents"
     tags: [agents, llm-agents, agentic-skills, skill-lifecycle, design-patterns, security, governance, sok]
@@ -168,6 +173,10 @@ concepts:
   - slug: skill-intervention-verification
     title: "Skill Intervention Verification"
     tags: [agents, skills, skill-synthesis, causal-inference, intervention, credit-assignment]
+    maturity: emerging
+  - slug: graph-structured-skill-library
+    title: "Graph-Structured Skill Library"
+    tags: [agents, skills, skill-management, graph, compositional-tasks]
     maturity: emerging
   - slug: trajectory-grounded-blame-attribution
     title: "Trajectory-Grounded Blame Attribution"
@@ -318,6 +327,12 @@ claims:
     tags: [skill-curation, self-evolving-agents, reinforcement-learning, executor-alignment]
     status: weakly_supported
     confidence: 0.68
+    domain: NLP
+  - slug: graph-structured-skill-retrieval-outperforms-flat
+    title: "Graph-structured skill retrieval outperforms flat skill libraries on compositional tasks"
+    tags: [skill-management, agents, compositional-tasks, graph, retrieval]
+    status: weakly_supported
+    confidence: 0.72
     domain: NLP
   - slug: sota-agents-fail-deep-wide-information-seeking
     title: "State-of-the-art LLM agents fail at combined deep + wide information seeking"
