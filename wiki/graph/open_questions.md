@@ -34,6 +34,11 @@ _Auto-generated open questions. Do not edit._
 - [paper/flex-continuous-agent-evolution-forward-learning] What governs negative transfer when libraries from differently-aligned models are merged?
 - [paper/flex-continuous-agent-evolution-forward-learning] How does FLEX compare against well-tuned RL fine-tuning (DAPO, GRPO) on equivalent compute?
 - [paper/flex-continuous-agent-evolution-forward-learning] Is the "semantic gradient" formalism a useful theoretical bridge or a metaphor — i.e., are convergence guarantees attainable?
+- [paper/forge-self-evolving-agent-memory-no] Does FORGE generalize to other POMDP domains, attacker types, or long-horizon planning tasks beyond CybORG?
+- [paper/forge-self-evolving-agent-memory-no] Can cross-model artifact transfer work (e.g., sharing champion Rules from Gemini to Qwen)?
+- [paper/forge-self-evolving-agent-memory-no] Does replacing the inner Reflexion loop with TextGrad or Dynamic Cheatsheet preserve population-broadcast gains?
+- [paper/forge-self-evolving-agent-memory-no] Multi-threshold triggering strategies and cross-strategy seeding (Mixed from Rules) remain unexplored.
+- [paper/forge-self-evolving-agent-memory-no] Cost-controlled comparison against LoRA fine-tuning to clarify prompt-only vs parameter-update trade-offs.
 - [paper/learning-job-experience-driven-self-evolving] How does procedural memory scale (retrieval quality, context cost) under thousands of accumulated SOPs?
 - [paper/learning-job-experience-driven-self-evolving] Can the agent learn from *failed* trajectories as effectively as from successful ones, beyond replanning hints?
 - [paper/learning-job-experience-driven-self-evolving] How robust is the cross-LLM memory transfer when target and source models differ in tool-use conventions or tokenizer assumptions?
@@ -111,6 +116,9 @@ _Auto-generated open questions. Do not edit._
 - [concept/modular-tool-use-policy] Are there principled criteria (information-theoretic or empirical) for choosing the right number / boundaries of modules per task family?
 - [concept/modular-tool-use-policy] Can module boundaries be *learned* rather than hand-specified?
 - [concept/modular-tool-use-policy] How does the modular structure interact with longer agent loops that include verification, self-correction, or memory updates?
+- [concept/population-broadcast-memory-evolution] Soft broadcast (weighted mixture or ranking-based selection) rather than single-best replacement.
+- [concept/population-broadcast-memory-evolution] Cross-model artifact transfer: can Rules produced by one LLM family improve another?
+- [concept/population-broadcast-memory-evolution] Extending broadcast to multi-agent coordination (Swarm Skills) where the "memory" is a shared skill registry.
 - [concept/self-evolving-agent] Standardized benchmarks that disentangle base-model gains from genuine self-evolution gains.
 - [concept/self-evolving-agent] Long-horizon lifelong evaluation protocols that survive model swaps.
 - [concept/self-evolving-agent] Provable bounds on alignment drift during evolution.
@@ -157,6 +165,7 @@ _Auto-generated open questions. Do not edit._
 - [claim/graph-structured-skill-retrieval-outperforms-flat] Graph-structured skill retrieval outperforms flat skill libraries on compositional tasks (status: weakly_supported)
 - [claim/memory-evolution-gain-correlates-with-task-similarity] Self-evolving memory's gain correlates with within-dataset task similarity (status: weakly_supported)
 - [claim/module-level-blame-attribution-enables-stable] Module-level blame attribution enables stable, targeted improvement of modular tool-use policies under sparse end-of-trajectory supervision (status: weakly_supported)
+- [claim/population-broadcast-outperforms-isolated-reflexion-across] Population broadcast improves over isolated Reflexion in all tested model-representation conditions (status: weakly_supported)
 - [claim/recurrent-skill-evolution-bilevel-grpo-outperforms-vanilla-grpo] Recurrent Bi-Level GRPO Skill Evolution Outperforms Vanilla GRPO on Multi-Step Agent Tasks (status: weakly_supported)
 - [claim/rl-trained-skill-curator-outperforms-frontier-curator] RL-Trained Skill Curator Outperforms Frontier Model Curator Due to Executor Alignment (status: weakly_supported)
 - [claim/self-distillation-vs-external-teacher-crossover] Self-distilled experience principles outperform external-teacher distillation once the agent's base model crosses a capacity threshold (status: weakly_supported)

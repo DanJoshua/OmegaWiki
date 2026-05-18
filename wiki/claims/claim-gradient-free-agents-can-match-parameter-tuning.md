@@ -2,7 +2,7 @@
 title: "Gradient-free experience-library learning can match or exceed gradient-based parameter tuning on agentic reasoning benchmarks"
 slug: claim-gradient-free-agents-can-match-parameter-tuning
 status: weakly_supported
-confidence: 0.45
+confidence: 0.50
 tags:
   - self-evolving-agents
   - llm-agents
@@ -11,14 +11,19 @@ tags:
 domain: "NLP"
 source_papers:
   - flex-continuous-agent-evolution-forward-learning
+  - forge-self-evolving-agent-memory-no
 evidence:
   - source: flex-continuous-agent-evolution-forward-learning
     type: supports
     strength: moderate
     detail: "FLEX yields large absolute gains over vanilla, ICL, and ReAct baselines on AIME25 (+10 to +23), USPTO50k (+7 to +10), and ProteinGym (+8.9 to +13.7) using only 49-100 training samples and zero parameter updates, on benchmarks where parameter-based reasoning post-training (DAPO, R1-style RL) is the established route."
-conditions: "Reported on small test sets (AIME25 n=30, USPTO50k slice n=100); no head-to-head comparison against PEFT (LoRA) or recent RL post-training baselines on equivalent compute."
+  - source: forge-self-evolving-agent-memory-no
+    type: supports
+    strength: moderate
+    detail: "FORGE achieves 1.7-7.7× improvement over zero-shot on CybORG CAGE-2 B_line (30-step POMDP) using only prompt-injected NL memory and champion broadcast — no weight updates, no stronger teacher model. Peak checkpoint return −3.60 approaches DRL top score of −3.47. Evaluated across four LLM families (Gemini-2.5-Flash-Lite, Grok-4-Fast, Llama-4-Maverick, Qwen3-235B), all benefiting from gradient-free memory evolution."
+conditions: "FLEX: reported on small test sets (AIME25 n=30, USPTO50k slice n=100); no head-to-head comparison against PEFT (LoRA) or recent RL post-training baselines on equivalent compute. FORGE: evaluated on single POMDP environment (CybORG CAGE-2 B_line); no cost comparison against parameter-efficient fine-tuning."
 date_proposed: 2026-05-02
-date_updated: 2026-05-02
+date_updated: 2026-05-18
 ---
 
 ## Statement
@@ -27,7 +32,7 @@ A purely gradient-free learning paradigm — keeping the LLM frozen and evolving
 
 ## Evidence summary
 
-Direct evidence is FLEX's main results table. Examples:
+Direct evidence is FLEX's main results table and FORGE's CybORG evaluation. Examples:
 
 - **AIME25**: Claude-Sonnet-4 baseline 40% to 63.3% (+23.3); DeepSeek-V3.1-Terminus 56.7% to 66.6% (+10.0).
 - **USPTO50k**: Claude-Sonnet-4.5 20% to 30% (+10); GPT-5 9% to 16% (+7).
@@ -46,6 +51,7 @@ Across these, ICL and ReAct baselines are also dominated by FLEX. The key ambigu
 - No published RL post-training baseline at matched compute on the same FLEX configurations.
 - Parameter-based reasoning fine-tunes (DeepSeek-R1, DAPO) report comparable or larger absolute reasoning gains in their own settings, leaving open which paradigm wins under matched evaluation.
 - Test slices are small (AIME25 n=30; USPTO50k n=100), so confidence intervals overlap baseline noise.
+- FORGE evaluation is confined to a single POMDP environment; no matched compute comparison against LoRA or parameter-based cyber-defense agents.
 
 ## Linked ideas
 

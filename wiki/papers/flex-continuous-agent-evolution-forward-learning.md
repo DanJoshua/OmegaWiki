@@ -88,3 +88,4 @@ FLEX is a clean, well-engineered restatement of the experience-driven self-evolv
 - [[claim-gradient-free-agents-can-match-parameter-tuning]]
 - [[hao-zhou]]
 - [[jiangtao-feng]]
+- [[forge-self-evolving-agent-memory-no]] — complementary: both are gradient-free self-improvement protocols; FORGE uses population broadcast vs FLEX's experience-library scaling

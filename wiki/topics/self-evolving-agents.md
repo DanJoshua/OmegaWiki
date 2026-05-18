@@ -6,7 +6,7 @@ tags:
   - continual-learning
   - tool-use
 my_involvement: reading
-sota_updated: 2026-05-14
+sota_updated: 2026-05-18
 key_venues:
   - arXiv
   - ICLR
@@ -38,6 +38,7 @@ To be filled in. The two recent surveys provide structural framing:
 - [[skill-r1-agent-skill-evolution-reinforcement]] (2026, COLM submitted) — bi-level GRPO trains a separate lightweight skill generator (Qwen3-4B) to iteratively revise skills for a frozen task LLM; +12.1pp over Vanilla GRPO on GAIA (41.8% total); introduces recurrent-skill-evolution with intra/inter-generation advantages.
 - [[skillgen-verified-inference-time-agent-skill]] (2026, NeurIPS submitted) — multi-agent framework synthesizes a single auditable skill via contrastive induction over success/failure trajectories + intervention-based verification gate; +3.27 to +10.08pp across 8 base models on 7+ benchmarks; cross-model skill transfer holds for 70% of off-diagonal pairs.
 - [[skillgraph-skill-augmented-reinforcement-learning-agents]] (2026, NeurIPS 2026 preprint) — graph-structured skill library with typed dependency edges; graph-aware topological retrieval + co-evolution via RL; +44.3pp over ExpeL on ALFWorld; +11.7 over SkillRL on WebShop; zero-shot transfer across 5 QA datasets.
+- [[forge-self-evolving-agent-memory-no]] (2026, ACM CAIS '26) — population-broadcast memory evolution: champion broadcast + Reflexion inner loop, no weight updates; 1.7-7.7× over zero-shot and 29-72% over Reflexion in all 12 model-representation conditions on CybORG CAGE-2; peak checkpoint -3.60 approaches DRL top score -3.47.
 
 ## Open problems
 

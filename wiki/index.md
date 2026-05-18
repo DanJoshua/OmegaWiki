@@ -36,6 +36,11 @@ papers:
     tags: [self-evolving-agents, llm-agents, gradient-free-learning, experience-replay, continual-learning, reasoning]
     importance: 4
     domain: NLP
+  - slug: forge-self-evolving-agent-memory-no
+    title: "FORGE: Self-Evolving Agent Memory With No Weight Updates via Population Broadcast"
+    tags: [self-evolving-agents, agent-memory, gradient-free-learning, population-based-training, reflexion, cyber-defense, POMDP]
+    importance: 3
+    domain: NLP
   - slug: learning-supervision-semantic-episodic-memory-reflective
     title: "Learning from Supervision with Semantic and Episodic Memory: A Reflective Approach to Agent Adaptation"
     tags: [agent-memory, episodic-memory, semantic-memory, test-time-learning, in-context-learning, agent-adaptation, reflective-learning]
@@ -129,6 +134,10 @@ concepts:
   - slug: modular-tool-use-policy
     title: "Modular Tool-Use Policy"
     tags: [llm-agents, tool-use, agent-architecture, policy-decomposition]
+    maturity: emerging
+  - slug: population-broadcast-memory-evolution
+    title: "Population Broadcast Memory Evolution"
+    tags: [self-evolving-agents, agent-memory, gradient-free-learning, population-based-training]
     maturity: emerging
   - slug: suggestibility-metric-model-receptivity-external-reasoning
     title: "Suggestibility Metric"
@@ -248,7 +257,7 @@ claims:
     title: "Gradient-free experience-library learning can match or exceed gradient-based parameter tuning on agentic reasoning benchmarks"
     tags: [self-evolving-agents, llm-agents, gradient-free-learning, parameter-efficient-tuning]
     status: weakly_supported
-    confidence: 0.45
+    confidence: 0.50
     domain: NLP
   - slug: claim-self-evolution-introduces-emergent-safety-risks
     title: "Self-evolution introduces emergent safety risks (misevolution, reward hacking, alignment drift) not present in static agents"
@@ -345,6 +354,12 @@ claims:
     tags: [llm-agents, memory, benchmark, test-time-learning]
     status: weakly_supported
     confidence: 0.6
+    domain: NLP
+  - slug: population-broadcast-outperforms-isolated-reflexion-across
+    title: "Population broadcast improves over isolated Reflexion in all tested model-representation conditions"
+    tags: [self-evolving-agents, agent-memory, gradient-free-learning, population-based-training, reflexion]
+    status: weakly_supported
+    confidence: 0.65
     domain: NLP
 
 Summary:

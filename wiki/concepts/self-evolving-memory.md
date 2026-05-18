@@ -13,8 +13,9 @@ maturity: emerging
 key_papers:
   - evo-memory-benchmarking-llm-agent-test
   - learning-supervision-semantic-episodic-memory-reflective
+  - forge-self-evolving-agent-memory-no
 first_introduced: "2025"
-date_updated: 2026-05-02
+date_updated: 2026-05-18
 related_concepts:
   - test-time-learning
 ---
@@ -76,6 +77,7 @@ The signature $U: \mathcal{M} \times \mathcal{E} \to \mathcal{M}$ is the definin
 
 - [[evo-memory-benchmarking-llm-agent-test]] — introduces the streaming benchmark and the ReMem refine operator that operationalize the concept.
 - [[learning-supervision-semantic-episodic-memory-reflective]] — instantiates the episodic+semantic memory split in a supervised classification setting; introduces the suggestibility metric to explain variance in memory augmentation gains.
+- [[forge-self-evolving-agent-memory-no]] — extends: demonstrates population-broadcast as a specific $U$ operator that propagates the best-discovered memory to the full agent population between stages, achieving 1.7-7.7× zero-shot improvement in a stochastic POMDP.
 
 ## My understanding
 
